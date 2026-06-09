@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CITMail — E-mail corporativo profissional com domínio próprio. Planos a partir de R$ 19,90/mês. Configuração em minutos, sem burocracia." />
+  <title>CITMail — E-mail Corporativo Profissional</title>
+
+  <!-- Google Fonts: Montserrat + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* =========================================================
+       RESET & TOKENS
+    ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand-900: #0F2057;
+      --brand-800: #172B6E;
+      --brand-700: #1E3A8A;
+      --brand-600: #2563EB;
+      --brand-500: #3B82F6;
+      --brand-400: #60A5FA;
+      --brand-100: #DBEAFE;
+      --brand-50:  #EFF6FF;
+      --accent:    #0EA5E9;
+      --green:     #10B981;
+      --green-light: #D1FAE5;
+      --yellow:    #F59E0B;
+      --red:       #EF4444;
+      --gray-900: #111827;
+      --gray-700: #374151;
+      --gray-500: #6B7280;
+      --gray-300: #D1D5DB;
+      --gray-100: #F3F4F6;
+      --white:    #FFFFFF;
+
+      --font-title: 'Montserrat', sans-serif;
+      --font-body:  'Inter', system-ui, sans-serif;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,.14);
+      --transition: .25s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      color: var(--gray-900);
+      background: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* =========================================================
+       TYPOGRAPHY
+    ========================================================= */
+    h1, h2, h3, h4 {
+      font-family: var(--font-title);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; }
+    h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); }
+    h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
+    p   { line-height: 1.7; color: var(--gray-700); }
+
+    /* =========================================================
+       UTILITIES
+    ========================================================= */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 48px);
+    }
+    .section { padding: clamp(56px, 8vw, 112px) 0; }
+    .section-sm { padding: clamp(40px, 6vw, 72px) 0; }
+    .text-center { text-align: center; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--brand-50); color: var(--brand-700);
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 100px;
+      border: 1px solid var(--brand-100);
+    }
+    .section-header { max-width: 640px; margin: 0 auto 56px; }
+    .section-header p { font-size: 1.05rem; margin-top: 12px; }
+
+    /* =========================================================
+       BUTTONS
+    ========================================================= */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .9rem; letter-spacing: .02em;
+      padding: 14px 28px; border-radius: var(--radius-md);
+      border: none; cursor: pointer; text-decoration: none;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--brand-600); color: var(--white);
+      box-shadow: 0 4px 14px rgba(37,99,235,.35);
+    }
+    .btn-primary:hover {
+      background: var(--brand-700);
+      box-shadow: 0 6px 20px rgba(37,99,235,.45);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: transparent; color: var(--brand-600);
+      border: 2px solid var(--brand-600);
+    }
+    .btn-outline:hover { background: var(--brand-50); }
+    .btn-white {
+      background: var(--white); color: var(--brand-700);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-white:hover {
+      background: var(--brand-50);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    .btn-lg { padding: 17px 36px; font-size: 1rem; }
+    .btn-sm { padding: 9px 18px; font-size: .82rem; }
+
+    /* =========================================================
+       HEADER / NAV
+    ========================================================= */
+    #header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(15,32,87,.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      transition: box-shadow var(--transition);
+    }
+    #header.scrolled { box-shadow: var(--shadow-md); }
+
+    .nav {
+      display: flex; align-items: center;
+      height: 68px; gap: 24px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .nav-logo-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--brand-500), var(--accent));
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 20px; height: 20px; fill: white; }
+    .nav-logo-text {
+      font-family: var(--font-title); font-weight: 800;
+      font-size: 1.3rem; color: var(--white);
+      letter-spacing: -.02em;
+    }
+    .nav-logo-text span { color: var(--brand-400); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+      list-style: none; margin-left: auto;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,.78);
+      font-size: .875rem; font-weight: 500;
+      text-decoration: none; padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition);
+    }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,.08); }
+
+    .nav-ctas { display: flex; align-items: center; gap: 10px; margin-left: 16px; }
+    .nav-ctas .btn-outline {
+      color: var(--white); border-color: rgba(255,255,255,.4);
+      padding: 9px 18px; font-size: .82rem;
+    }
+    .nav-ctas .btn-outline:hover { background: rgba(255,255,255,.1); border-color: var(--white); }
+
+    .nav-toggle {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer;
+      padding: 8px; margin-left: auto;
+    }
+    .nav-toggle span {
+      display: block; width: 24px; height: 2px;
+      background: var(--white); border-radius: 2px;
+      transition: all var(--transition);
+    }
+
+    @media (max-width: 900px) {
+      .nav-links, .nav-ctas { display: none; }
+      .nav-toggle { display: flex; }
+
+      .nav-mobile-open .nav-links {
+        display: flex; flex-direction: column;
+        position: fixed; top: 68px; left: 0; right: 0;
+        background: var(--brand-900);
+        padding: 20px 24px 32px;
+        border-bottom: 1px solid rgba(255,255,255,.1);
+        gap: 0;
+      }
+      .nav-mobile-open .nav-links a {
+        padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.06);
+        border-radius: 0; font-size: 1rem;
+      }
+      .nav-mobile-open .nav-ctas {
+        display: flex; flex-direction: column;
+        position: fixed; top: calc(68px + var(--mobile-links-height, 320px));
+        left: 0; right: 0; padding: 20px 24px;
+        background: var(--brand-900);
+      }
+      .nav-mobile-open .nav-ctas .btn { width: 100%; justify-content: center; }
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(160deg, var(--brand-900) 0%, var(--brand-800) 45%, #1a3a6b 100%);
+      display: flex; align-items: center;
+      padding-top: 68px;
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 80% 20%, rgba(59,130,246,.18) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(14,165,233,.12) 0%, transparent 55%);
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+      position: relative; z-index: 1;
+      padding: clamp(56px, 8vw, 96px) 0;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(59,130,246,.2); color: var(--brand-400);
+      border: 1px solid rgba(59,130,246,.35);
+      font-size: .78rem; font-weight: 700; font-family: var(--font-title);
+      text-transform: uppercase; letter-spacing: .08em;
+      padding: 5px 14px; border-radius: 100px; margin-bottom: 20px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: var(--green); border-radius: 50%;
+      animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .6; transform: scale(1.5); }
+    }
+
+    .hero-title { color: var(--white); margin-bottom: 20px; }
+    .hero-title .highlight {
+      background: linear-gradient(90deg, var(--brand-400), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-subtitle {
+      color: rgba(255,255,255,.72); font-size: clamp(.95rem, 1.5vw, 1.1rem);
+      margin-bottom: 36px; max-width: 480px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
+    .hero-stats {
+      display: flex; flex-wrap: wrap; gap: 28px;
+      padding-top: 32px; border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .hero-stat { }
+    .hero-stat .number {
+      font-family: var(--font-title); font-weight: 800;
+      font-size: 1.6rem; color: var(--white);
+    }
+    .hero-stat .label {
+      font-size: .8rem; color: rgba(255,255,255,.5);
+    }
+
+    /* Hero visual — email mockup */
+    .hero-visual {
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-mockup {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      backdrop-filter: blur(20px);
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg), 0 0 80px rgba(59,130,246,.15);
+    }
+    .mockup-bar {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+    }
+    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-dot:nth-child(1) { background: #ff5f57; }
+    .mockup-dot:nth-child(2) { background: #febc2e; }
+    .mockup-dot:nth-child(3) { background: #28c840; }
+    .mockup-url {
+      flex: 1; background: rgba(255,255,255,.08);
+      border-radius: 6px; padding: 6px 12px;
+      color: rgba(255,255,255,.5); font-size: .78rem;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .mockup-email-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border-radius: var(--radius-sm);
+      margin-bottom: 6px; transition: background var(--transition);
+      cursor: default;
+    }
+    .mockup-email-row:hover { background: rgba(255,255,255,.06); }
+    .mockup-email-row.unread { background: rgba(59,130,246,.12); }
+    .avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-title); font-weight: 700; font-size: .8rem; color: white;
+      flex-shrink: 0;
+    }
+    .mockup-email-info { flex: 1; min-width: 0; }
+    .mockup-sender { color: white; font-size: .82rem; font-weight: 600; }
+    .mockup-subject { color: rgba(255,255,255,.5); font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mockup-time { color: rgba(255,255,255,.35); font-size: .7rem; }
+    .mockup-footer {
+      margin-top: 18px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .mockup-address {
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .8rem; color: var(--brand-400);
+    }
+    .mockup-pill {
+      font-size: .7rem; background: var(--green); color: white;
+      padding: 3px 10px; border-radius: 100px; font-weight: 600;
+    }
+
+    /* Floating badges on hero */
+    .hero-float {
+      position: absolute;
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 10px;
+      font-size: .8rem; font-weight: 600; color: var(--gray-900);
+      animation: float 4s ease-in-out infinite;
+    }
+    .hero-float:nth-child(2) { animation-delay: -2s; }
+    .hero-float-1 { top: -20px; right: -24px; animation-name: float; }
+    .hero-float-2 { bottom: -16px; left: -24px; animation-delay: -1.5s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-8px); }
+    }
+    .hero-float .icon { font-size: 1.2rem; }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero-visual { order: -1; }
+      .hero-mockup { max-width: 100%; }
+      .hero-float-1 { top: -12px; right: 12px; }
+      .hero-float-2 { bottom: -12px; left: 12px; }
+    }
+
+    /* =========================================================
+       TRUST BAR
+    ========================================================= */
+    .trust-bar {
+      background: var(--gray-100);
+      padding: 20px 0;
+      border-top: 1px solid var(--gray-300);
+      border-bottom: 1px solid var(--gray-300);
+    }
+    .trust-bar-inner {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 24px 40px;
+      justify-content: center;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .82rem; font-weight: 600; color: var(--gray-700);
+    }
+    .trust-item i { color: var(--brand-600); font-size: .9rem; }
+
+    /* =========================================================
+       FEATURES
+    ========================================================= */
+    #features { background: var(--white); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: all var(--transition);
+    }
+    .feature-card:hover {
+      border-color: var(--brand-400);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      width: 52px; height: 52px;
+      background: var(--brand-50);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .feature-icon i { font-size: 1.3rem; color: var(--brand-600); }
+    .feature-card h3 { margin-bottom: 8px; }
+    .feature-card p { font-size: .9rem; }
+
+    /* =========================================================
+       DOMAIN SEARCH
+    ========================================================= */
+    #domain-search {
+      background: linear-gradient(135deg, var(--brand-900), var(--brand-800));
+    }
+    .domain-search-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+    .domain-search-inner h2, .domain-search-inner p { color: white; }
+    .domain-search-inner p { color: rgba(255,255,255,.7); margin-top: 12px; margin-bottom: 36px; }
+
+    .domain-form {
+      display: flex; gap: 0;
+      background: white; border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .domain-prefix {
+      display: flex; align-items: center;
+      background: var(--gray-100); border-right: 1px solid var(--gray-300);
+      padding: 0 16px;
+      font-weight: 600; color: var(--gray-500); font-size: .9rem;
+      white-space: nowrap;
+    }
+    .domain-input {
+      flex: 1; border: none; outline: none;
+      padding: 16px; font-size: 1rem; font-family: var(--font-body);
+      color: var(--gray-900);
+    }
+    .domain-suffix {
+      display: flex; align-items: center;
+      padding: 0 14px;
+      font-size: .85rem; font-weight: 600; color: var(--brand-600);
+      border-left: 1px solid var(--gray-300);
+      background: var(--gray-100);
+    }
+    .domain-form .btn-primary { border-radius: 0; padding: 16px 28px; }
+
+    .domain-result { margin-top: 16px; min-height: 32px; }
+    .domain-available {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--green-light); color: #065f46;
+      padding: 8px 16px; border-radius: 8px;
+      font-weight: 600; font-size: .9rem;
+    }
+    .domain-taken {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fee2e2; color: #991b1b;
+      padding: 8px 16px; border-radius: 8px;
+      font-weight: 600; font-size: .9rem;
+    }
+    .domain-loading {
+      color: rgba(255,255,255,.6); font-size: .9rem;
+    }
+
+    .tld-list {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; margin-top: 20px;
+    }
+    .tld-chip {
+      background: rgba(255,255,255,.1); color: rgba(255,255,255,.7);
+      border: 1px solid rgba(255,255,255,.2);
+      padding: 4px 12px; border-radius: 100px;
+      font-size: .78rem; font-weight: 600; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .tld-chip:hover, .tld-chip.active { background: white; color: var(--brand-700); }
+
+    @media (max-width: 600px) {
+      .domain-form { flex-direction: column; border-radius: var(--radius-md); }
+      .domain-prefix, .domain-suffix { display: none; }
+      .domain-input { border-bottom: 1px solid var(--gray-300); }
+      .domain-form .btn-primary { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+    }
+
+    /* =========================================================
+       PRICING — CALCULADORA
+    ========================================================= */
+    #pricing { background: var(--gray-100); }
+
+    /* Billing toggle */
+    .billing-toggle {
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; margin-bottom: 40px;
+    }
+    .billing-toggle span {
+      font-weight: 600; font-size: .9rem; color: var(--gray-700);
+      cursor: pointer; transition: color var(--transition);
+    }
+    .billing-toggle span.active { color: var(--brand-700); }
+    .toggle-switch {
+      width: 48px; height: 26px;
+      background: var(--brand-600); border-radius: 100px;
+      position: relative; cursor: pointer; flex-shrink: 0;
+      transition: background var(--transition);
+    }
+    .toggle-knob {
+      position: absolute; top: 3px; left: 3px;
+      width: 20px; height: 20px;
+      background: white; border-radius: 50%;
+      transition: transform var(--transition);
+    }
+    .toggle-switch.annual .toggle-knob { transform: translateX(22px); }
+    .save-badge {
+      background: var(--green); color: white;
+      font-size: .7rem; font-weight: 700; font-family: var(--font-title);
+      padding: 2px 8px; border-radius: 100px;
+    }
+
+    /* Calculadora layout */
+    .calc-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .calc-wrapper { grid-template-columns: 1fr; }
+      .calc-summary { order: -1; }
+    }
+
+    /* Incluso label */
+    .included-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--gray-500);
+      background: var(--gray-100); border: 1px solid var(--gray-300);
+      padding: 4px 12px; border-radius: 100px; margin-bottom: 14px;
+    }
+
+    /* Conta type card */
+    .account-type-card {
+      background: var(--white);
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      margin-bottom: 12px;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .account-type-card:hover { border-color: var(--brand-300, #93c5fd); }
+    .account-type-card.has-qty {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.08);
+    }
+
+    .atc-top {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .atc-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .atc-icon.c5   { background: #EFF6FF; }
+    .atc-icon.c25  { background: #F0FDF4; }
+    .atc-icon.c50  { background: #FFF7ED; }
+    .atc-info { flex: 1; }
+    .atc-name {
+      font-family: var(--font-title); font-weight: 700;
+      font-size: 1rem; color: var(--gray-900);
+    }
+    .atc-storage { font-size: .8rem; color: var(--gray-500); }
+    .atc-unit-price {
+      text-align: right;
+    }
+    .atc-unit-price .from { font-size: .7rem; color: var(--gray-500); }
+    .atc-unit-price .price {
+      font-family: var(--font-title); font-weight: 800;
+      font-size: 1.3rem; color: var(--brand-700);
+    }
+    .atc-unit-price .period { font-size: .72rem; color: var(--gray-500); }
+
+    /* Volume discount badge */
+    .vol-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--green-light, #D1FAE5); color: #065f46;
+      border: 1px solid var(--green); border-radius: 100px;
+      font-size: .72rem; font-weight: 700; font-family: var(--font-title);
+      padding: 3px 10px; margin-bottom: 10px;
+    }
+    /* Price breakdown */
+    .price-breakdown {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .price-original {
+      font-size: .82rem; color: var(--gray-400); text-decoration: line-through;
+    }
+    .price-final {
+      font-family: var(--font-title); font-weight: 800;
+      font-size: 1.2rem; color: var(--brand-700);
+    }
+    .price-saving {
+      font-size: .72rem; font-weight: 700; color: var(--green);
+      background: var(--green-light, #D1FAE5);
+      padding: 2px 8px; border-radius: 100px;
+    }
+
+    /* Quantity control */
+    .atc-bottom {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .atc-discount-tag {
+      font-size: .78rem; font-weight: 700; min-height: 20px;
+      color: var(--green); transition: all var(--transition);
+    }
+    .qty-control {
+      display: flex; align-items: center; gap: 0;
+      border: 2px solid var(--gray-200); border-radius: var(--radius-md);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .account-type-card.has-qty .qty-control { border-color: var(--brand-400); }
+    .qty-btn {
+      width: 38px; height: 38px;
+      background: var(--gray-100); border: none; cursor: pointer;
+      font-size: 1.1rem; color: var(--gray-600);
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+    .qty-btn:hover { background: var(--brand-50); color: var(--brand-700); }
+    .qty-btn:active { background: var(--brand-100); }
+    .qty-input {
+      width: 52px; height: 38px; border: none; outline: none;
+      text-align: center; font-family: var(--font-title); font-weight: 700;
+      font-size: .95rem; color: var(--gray-900);
+      background: white;
+    }
+    .qty-input::-webkit-inner-spin-button,
+    .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+    .atc-subtotal {
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .9rem; color: var(--gray-500); min-width: 110px; text-align: right;
+    }
+    .atc-subtotal.has-value { color: var(--brand-700); }
+
+    /* Summary panel */
+    .calc-summary {
+      position: sticky; top: 84px;
+    }
+    .calc-summary-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .cs-title {
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .95rem; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px; color: var(--gray-900);
+    }
+    .cs-title i { color: var(--brand-600); }
+    .cs-lines { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .cs-line {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: .85rem;
+    }
+    .cs-line .lbl { color: var(--gray-600); }
+    .cs-line .val { font-weight: 600; color: var(--gray-900); }
+    .cs-line .val.discount { color: var(--green); }
+    .cs-line.total-line {
+      border-top: 2px solid var(--gray-200); padding-top: 12px; margin-top: 4px;
+    }
+    .cs-line.total-line .lbl {
+      font-family: var(--font-title); font-weight: 700; font-size: 1rem;
+      color: var(--gray-900);
+    }
+    .cs-line.total-line .val {
+      font-family: var(--font-title); font-weight: 800;
+      font-size: 1.5rem; color: var(--brand-700);
+    }
+    .cs-period { font-size: .72rem; color: var(--gray-400); text-align: right; margin-top: -4px; }
+    .cs-annual-note {
+      background: var(--green-light, #D1FAE5); color: #065f46;
+      border-radius: var(--radius-sm); padding: 8px 12px;
+      font-size: .78rem; font-weight: 600; margin-bottom: 16px;
+      display: none; align-items: center; gap: 6px;
+    }
+    .cs-annual-note.visible { display: flex; }
+    .cs-empty {
+      text-align: center; padding: 20px 0;
+      color: var(--gray-400); font-size: .85rem;
+    }
+    .cs-empty i { font-size: 2rem; margin-bottom: 8px; display: block; color: var(--gray-300); }
+    .cs-features {
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid var(--gray-200);
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .cs-feature {
+      display: flex; align-items: center; gap: 7px;
+      font-size: .78rem; color: var(--gray-600);
+    }
+    .cs-feature i { color: var(--green); font-size: .72rem; }
+
+    /* Discount info note */
+    .discount-info {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: var(--brand-50); border: 1px solid var(--brand-100);
+      border-radius: var(--radius-md); padding: 14px 16px;
+      margin-bottom: 20px; font-size: .82rem; color: var(--brand-700);
+    }
+    .discount-info i { color: var(--brand-500); flex-shrink: 0; margin-top: 2px; }
+
+    /* =========================================================
+       HOW IT WORKS
+    ========================================================= */
+    #how-it-works { background: var(--white); }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0; position: relative;
+    }
+    .steps-grid::before {
+      content: '';
+      position: absolute; top: 36px; left: calc(12.5% + 36px); right: calc(12.5% + 36px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--brand-200, #bfdbfe), var(--brand-600));
+    }
+    .step-card { text-align: center; padding: 0 20px 0; }
+    .step-number {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--brand-700); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-title); font-weight: 800; font-size: 1.5rem;
+      margin: 0 auto 20px; position: relative; z-index: 1;
+      box-shadow: 0 0 0 6px var(--brand-50);
+    }
+    .step-card h3 { margin-bottom: 8px; }
+    .step-card p { font-size: .875rem; }
+
+    @media (max-width: 700px) {
+      .steps-grid { grid-template-columns: 1fr; gap: 32px; }
+      .steps-grid::before { display: none; }
+    }
+
+    /* =========================================================
+       TESTIMONIALS
+    ========================================================= */
+    #testimonials { background: var(--brand-900); }
+    #testimonials .section-header h2,
+    #testimonials .section-header p { color: white; }
+    #testimonials .section-header p { color: rgba(255,255,255,.6); }
+    #testimonials .tag { background: rgba(59,130,246,.2); color: var(--brand-400); border-color: rgba(59,130,246,.3); }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .testimonial-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: background var(--transition);
+    }
+    .testimonial-card:hover { background: rgba(255,255,255,.09); }
+    .stars { color: var(--yellow); margin-bottom: 14px; font-size: .9rem; }
+    .testimonial-text { color: rgba(255,255,255,.85); font-size: .9rem; line-height: 1.7; margin-bottom: 20px; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .testimonial-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--brand-600);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-title); font-weight: 700;
+      color: white; font-size: .85rem;
+    }
+    .testimonial-name { font-weight: 700; color: white; font-size: .875rem; }
+    .testimonial-role { font-size: .78rem; color: rgba(255,255,255,.4); }
+
+    /* =========================================================
+       FAQ
+    ========================================================= */
+    #faq { background: var(--gray-100); }
+    .faq-list { max-width: 760px; margin: 0 auto; }
+    .faq-item {
+      background: white; border-radius: var(--radius-md);
+      border: 1px solid var(--gray-300);
+      margin-bottom: 10px; overflow: hidden;
+      transition: box-shadow var(--transition);
+    }
+    .faq-item:hover { box-shadow: var(--shadow-sm); }
+    .faq-question {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 20px 24px;
+      cursor: pointer; background: none; border: none; width: 100%;
+      text-align: left;
+    }
+    .faq-question span {
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .95rem; color: var(--gray-900);
+    }
+    .faq-icon {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: var(--brand-50); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--brand-600); transition: transform var(--transition);
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0; overflow: hidden;
+      transition: max-height .4s ease, padding .3s ease;
+    }
+    .faq-item.open .faq-answer { max-height: 400px; }
+    .faq-answer p {
+      padding: 0 24px 20px;
+      font-size: .9rem; color: var(--gray-700); line-height: 1.7;
+    }
+
+    /* =========================================================
+       CTA FINAL
+    ========================================================= */
+    #cta-final {
+      background: linear-gradient(135deg, var(--brand-700), var(--brand-900));
+      text-align: center;
+    }
+    #cta-final h2 { color: white; }
+    #cta-final p { color: rgba(255,255,255,.7); font-size: 1.05rem; margin: 16px auto 36px; max-width: 520px; }
+    .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+    .guarantee-note {
+      margin-top: 20px; font-size: .8rem; color: rgba(255,255,255,.45);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    footer {
+      background: var(--gray-900); color: rgba(255,255,255,.6);
+      padding: 56px 0 32px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px; margin-bottom: 48px;
+    }
+    .footer-brand p { font-size: .875rem; margin-top: 14px; max-width: 260px; }
+    .footer-brand .nav-logo { margin-bottom: 0; }
+    .footer-col h4 {
+      font-family: var(--font-title); font-weight: 700;
+      color: white; font-size: .875rem; margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a {
+      color: rgba(255,255,255,.55); text-decoration: none;
+      font-size: .875rem; transition: color var(--transition);
+    }
+    .footer-col ul li a:hover { color: white; }
+    .footer-bottom {
+      padding-top: 28px; border-top: 1px solid rgba(255,255,255,.08);
+      display: flex; flex-wrap: wrap; gap: 12px;
+      align-items: center; justify-content: space-between;
+    }
+    .footer-bottom p { font-size: .8rem; }
+    .footer-social { display: flex; gap: 12px; }
+    .footer-social a {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: rgba(255,255,255,.07);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.5); text-decoration: none;
+      transition: all var(--transition);
+    }
+    .footer-social a:hover { background: var(--brand-600); color: white; }
+
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 580px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================================
+       MISC
+    ========================================================= */
+    .scroll-top {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 46px; height: 46px;
+      background: var(--brand-600); color: white;
+      border: none; border-radius: 50%;
+      cursor: pointer; font-size: 1rem;
+      box-shadow: var(--shadow-md);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: all var(--transition);
+      z-index: 999;
+    }
+    .scroll-top.visible { opacity: 1; pointer-events: all; }
+    .scroll-top:hover { background: var(--brand-700); transform: translateY(-2px); }
+
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* =========================================================
+       MARKETPLACE PREVIEW
+    ========================================================= */
+    #marketplace { background: white; }
+    .marketplace-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .marketplace-card {
+      border: 1px solid var(--gray-300); border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: all var(--transition);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .marketplace-card:hover { border-color: var(--brand-500); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .marketplace-card .badge {
+      font-size: .7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; padding: 3px 10px; border-radius: 100px;
+      font-family: var(--font-title);
+    }
+    .badge-blue { background: var(--brand-50); color: var(--brand-700); }
+    .badge-green { background: var(--green-light); color: #065f46; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-purple { background: #ede9fe; color: #5b21b6; }
+    .marketplace-icon { font-size: 2rem; }
+    .marketplace-card h3 { font-size: 1rem; }
+    .marketplace-card p { font-size: .85rem; flex: 1; }
+    .marketplace-card .from { font-size: .8rem; color: var(--gray-500); }
+    .marketplace-card .price { font-family: var(--font-title); font-weight: 800; color: var(--brand-700); }
+
+    /* =========================================================
+       PAINEL PREVIEW (Client Portal teaser)
+    ========================================================= */
+    #painel-preview {
+      background: linear-gradient(160deg, var(--gray-100) 0%, white 100%);
+    }
+    .painel-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .painel-grid .text-col {}
+    .painel-grid .text-col p { margin-top: 14px; margin-bottom: 28px; }
+    .painel-features-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .painel-features-list li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: .9rem; font-weight: 500; color: var(--gray-700);
+    }
+    .painel-features-list li i { color: var(--brand-600); font-size: .9rem; }
+
+    .painel-mockup {
+      background: var(--gray-900);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg), 0 0 60px rgba(0,0,0,.2);
+    }
+    .painel-topbar {
+      background: var(--brand-900);
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .painel-topbar .dots { display: flex; gap: 6px; }
+    .painel-topbar .dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .painel-topbar .dots span:nth-child(1) { background: #ff5f57; }
+    .painel-topbar .dots span:nth-child(2) { background: #febc2e; }
+    .painel-topbar .dots span:nth-child(3) { background: #28c840; }
+    .painel-topbar .title { color: rgba(255,255,255,.5); font-size: .78rem; font-weight: 600; margin-left: auto; margin-right: auto; }
+    .painel-body {
+      display: grid; grid-template-columns: 180px 1fr;
+      min-height: 280px;
+    }
+    .painel-sidebar {
+      background: rgba(255,255,255,.04);
+      padding: 16px 12px;
+      border-right: 1px solid rgba(255,255,255,.06);
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 10px; border-radius: 8px;
+      font-size: .75rem; color: rgba(255,255,255,.45);
+      cursor: default; margin-bottom: 2px;
+      transition: background var(--transition);
+    }
+    .sidebar-item.active { background: rgba(37,99,235,.25); color: var(--brand-400); }
+    .sidebar-item i { width: 16px; text-align: center; }
+    .painel-content { padding: 18px; }
+    .painel-stat-row { display: flex; gap: 10px; margin-bottom: 14px; }
+    .painel-stat {
+      flex: 1; background: rgba(255,255,255,.06);
+      border-radius: 10px; padding: 12px;
+    }
+    .painel-stat .label { font-size: .65rem; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .06em; }
+    .painel-stat .value { font-family: var(--font-title); font-weight: 700; color: white; font-size: 1.1rem; }
+    .painel-emails { }
+    .painel-email-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 8px;
+      background: rgba(255,255,255,.04);
+      margin-bottom: 6px;
+    }
+    .painel-email-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .painel-email-name { color: rgba(255,255,255,.8); font-size: .75rem; flex: 1; }
+    .painel-email-status { font-size: .65rem; color: var(--green); font-weight: 600; }
+
+    @media (max-width: 900px) {
+      .painel-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .painel-body { grid-template-columns: 1fr; }
+      .painel-sidebar { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header id="header">
+    <div class="container">
+      <nav class="nav" id="nav">
+        <a href="#" class="nav-logo" aria-label="CITMail">
+          <img src="assets/logo.svg" alt="CITMail" style="height:36px;width:auto">
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="#features">Recursos</a></li>
+          <li><a href="#pricing">Planos</a></li>
+          <li><a href="#marketplace">Marketplace</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#domain-search">Buscar Domínio</a></li>
+        </ul>
+
+        <div class="nav-ctas">
+          <a href="https://painel.citmail.com.br" class="btn btn-outline btn-sm">Entrar no Painel</a>
+          <a href="checkout.html" class="btn btn-primary btn-sm">Começar Agora</a>
+        </div>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Content -->
+        <div>
+          <div class="hero-badge">E-mail corporativo profissional</div>
+          <h1 class="hero-title">
+            Seu e-mail com<br/>
+            <span class="highlight">domínio próprio</span><br/>
+            em minutos
+          </h1>
+          <p class="hero-subtitle">
+            Venda, pagamento, configuração e entrega 100% automáticos.
+            Planos para empresas de todos os portes — do autônomo à equipe completa.
+          </p>
+          <div class="hero-actions">
+            <a href="checkout.html" class="btn btn-primary btn-lg">
+              <i class="fa-solid fa-bolt"></i> Começar Agora
+            </a>
+            <a href="#domain-search" class="btn btn-white btn-lg">
+              <i class="fa-solid fa-magnifying-glass"></i> Buscar Domínio
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="number">5 min</div>
+              <div class="label">Ativação após pagamento</div>
+            </div>
+            <div class="hero-stat">
+              <div class="number">99,5%</div>
+              <div class="label">Uptime garantido</div>
+            </div>
+            <div class="hero-stat">
+              <div class="number">500+</div>
+              <div class="label">Clientes ativos</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual -->
+        <div class="hero-visual">
+          <div class="hero-mockup">
+            <div class="mockup-bar">
+              <div class="mockup-dot"></div>
+              <div class="mockup-dot"></div>
+              <div class="mockup-dot"></div>
+              <div class="mockup-url">
+                <i class="fa-solid fa-lock" style="font-size:.65rem"></i>
+                webmail.suaempresa.com.br
+              </div>
+            </div>
+            <div class="mockup-email-row unread">
+              <div class="avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">CL</div>
+              <div class="mockup-email-info">
+                <div class="mockup-sender">Cliente Potencial</div>
+                <div class="mockup-subject">Solicitação de Orçamento</div>
+              </div>
+              <div class="mockup-time">09:42</div>
+            </div>
+            <div class="mockup-email-row">
+              <div class="avatar" style="background:linear-gradient(135deg,#0ea5e9,#3b82f6)">MK</div>
+              <div class="mockup-email-info">
+                <div class="mockup-sender">Marketing Interno</div>
+                <div class="mockup-subject">Campanha de junho pronta</div>
+              </div>
+              <div class="mockup-time">08:15</div>
+            </div>
+            <div class="mockup-email-row">
+              <div class="avatar" style="background:linear-gradient(135deg,#10b981,#059669)">FN</div>
+              <div class="mockup-email-info">
+                <div class="mockup-sender">Financeiro</div>
+                <div class="mockup-subject">NF-e referente ao contrato</div>
+              </div>
+              <div class="mockup-time">Ontem</div>
+            </div>
+            <div class="mockup-email-row">
+              <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">DI</div>
+              <div class="mockup-email-info">
+                <div class="mockup-sender">Diretoria</div>
+                <div class="mockup-subject">Reunião semanal — pauta</div>
+              </div>
+              <div class="mockup-time">Ontem</div>
+            </div>
+            <div class="mockup-footer">
+              <div class="mockup-address">contato@suaempresa.com.br</div>
+              <div class="mockup-pill">Ativo</div>
+            </div>
+          </div>
+
+          <!-- Floating badges -->
+          <div class="hero-float hero-float-1">
+            <span class="icon">🔒</span> <span>SSL Grátis</span>
+          </div>
+          <div class="hero-float hero-float-2">
+            <span class="icon">⚡</span> <span>Ativo em 5 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TRUST BAR
+  ============================================================ -->
+  <div class="trust-bar">
+    <div class="container">
+      <div class="trust-bar-inner">
+        <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Proteção antivírus e antispam</div>
+        <div class="trust-item"><i class="fa-solid fa-lock"></i> SSL/TLS em todas as conexões</div>
+        <div class="trust-item"><i class="fa-solid fa-rotate"></i> Pagamento recorrente automático</div>
+        <div class="trust-item"><i class="fa-brands fa-pix"></i> Pix, boleto e cartão</div>
+        <div class="trust-item"><i class="fa-solid fa-headset"></i> Suporte técnico especializado</div>
+        <div class="trust-item"><i class="fa-solid fa-leaf"></i> Conformidade LGPD</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       FEATURES
+  ============================================================ -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header text-center fade-in">
+        <div class="tag"><i class="fa-solid fa-star"></i> Recursos</div>
+        <h2 style="margin-top:14px">Tudo que você precisa<br/>em um só lugar</h2>
+        <p>E-mail corporativo com domínio, webmail, app mobile e ferramentas de produtividade — sem complicações.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+          <h3>Domínio Próprio</h3>
+          <p>Registramos ou transferimos o seu domínio. Configuração de DNS, MX, SPF, DKIM e DMARC automatizados.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+          <h3>Webmail Moderno</h3>
+          <p>Interface limpa e responsiva acessível de qualquer dispositivo. Suporte a IMAP, POP3 e SMTP para clientes de e-mail.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+          <h3>App Mobile</h3>
+          <p>Configure no Outlook, Gmail App, Apple Mail ou qualquer outro cliente em segundos. Sincronização em tempo real.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon"><i class="fa-solid fa-shield-virus"></i></div>
+          <h3>Antispam & Antivírus</h3>
+          <p>Filtros multicamada contra spam, phishing e vírus. Sua caixa sempre limpa e seus dados protegidos.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <h3>Backup Automático</h3>
+          <p>Seus e-mails replicados em múltiplos servidores. Recuperação de mensagens a qualquer momento.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon"><i class="fa-solid fa-sliders"></i></div>
+          <h3>Painel de Controle</h3>
+          <p>Gerencie caixas de e-mail, senhas, armazenamento e faturamento sem precisar acionar o suporte.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       DOMAIN SEARCH
+  ============================================================ -->
+  <section id="domain-search" class="section">
+    <div class="container">
+      <div class="domain-search-inner fade-in">
+        <div class="tag" style="background:rgba(59,130,246,.2);color:var(--brand-400);border-color:rgba(59,130,246,.3)">
+          <i class="fa-solid fa-magnifying-glass"></i> Buscar Domínio
+        </div>
+        <h2 style="margin-top:14px">Verifique se o seu domínio<br/>está disponível</h2>
+        <p>Digite o nome da sua empresa e veja a disponibilidade em segundos.</p>
+
+        <div class="domain-form">
+          <div class="domain-prefix"><i class="fa-solid fa-at" style="color:var(--brand-600);margin-right:6px"></i> @</div>
+          <input class="domain-input" id="domainInput" type="text" placeholder="suaempresa" autocomplete="off" />
+          <div class="domain-suffix" id="domainSuffix">.com.br</div>
+          <button class="btn btn-primary" onclick="checkDomain()">
+            <i class="fa-solid fa-search"></i> Verificar
+          </button>
+        </div>
+
+        <div class="tld-list">
+          <span class="tld-chip active" data-tld=".com.br">.com.br</span>
+          <span class="tld-chip" data-tld=".com">.com</span>
+          <span class="tld-chip" data-tld=".net.br">.net.br</span>
+          <span class="tld-chip" data-tld=".org.br">.org.br</span>
+          <span class="tld-chip" data-tld=".adv.br">.adv.br</span>
+          <span class="tld-chip" data-tld=".med.br">.med.br</span>
+        </div>
+
+        <div class="domain-result" id="domainResult"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRICING — CALCULADORA
+  ============================================================ -->
+  <section id="pricing" class="section">
+    <div class="container">
+      <div class="section-header text-center fade-in">
+        <div class="tag"><i class="fa-solid fa-calculator"></i> Preços</div>
+        <h2 style="margin-top:14px">Monte seu plano,<br/>pague só pelo que usar</h2>
+        <p>Escolha a quantidade de contas de cada tipo. Quanto mais contas, maior o desconto automático.</p>
+      </div>
+
+      <!-- Desconto info -->
+      <div class="discount-info fade-in">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>
+          <strong>Mínimo de 2 contas por plano.</strong>
+          Contrate 5 ou mais contas do mesmo tipo e ganhe <strong>5% de desconto</strong> sobre todas as contas daquele tipo.
+          No plano anual, economize <strong>20% adicionais</strong> sobre o valor mensal.
+        </span>
+      </div>
+
+      <!-- Billing toggle -->
+      <div class="billing-toggle fade-in">
+        <span id="toggleMonthly" class="active" onclick="setBilling('monthly')">Mensal</span>
+        <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+          <div class="toggle-knob"></div>
+        </div>
+        <span id="toggleAnnual" onclick="setBilling('annual')">Anual</span>
+        <span class="save-badge">20% off no anual</span>
+      </div>
+
+      <div class="calc-wrapper">
+
+        <!-- LEFT: account type cards -->
+        <div class="calc-left fade-in">
+
+          <!-- 5 GB -->
+          <div class="account-type-card" id="card5" data-base="10" data-type="5gb">
+            <div class="atc-top">
+              <div class="atc-icon c5">📧</div>
+              <div class="atc-info">
+                <div class="atc-name">Conta E-mail 5 GB</div>
+                <div class="atc-storage">5 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
+              </div>
+              <div class="atc-unit-price">
+                <div class="from">a partir de</div>
+                <div class="price" id="unitPrice5">R$ 10,00</div>
+                <div class="period">/conta/mês</div>
+              </div>
+            </div>
+            <div class="price-breakdown" id="breakdown5" style="display:none">
+              <span class="price-original" id="origPrice5"></span>
+              <span class="price-final" id="finalPrice5"></span>
+              <span class="price-saving" id="saving5"></span>
+            </div>
+            <div class="atc-bottom">
+              <div class="atc-discount-tag" id="discTag5"></div>
+              <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
+                <div class="qty-control">
+                  <button class="qty-btn" onclick="changeQty('5gb', -1)" aria-label="Diminuir">−</button>
+                  <input class="qty-input" id="qty5" type="number" value="0" min="0" max="999" onchange="updateQty('5gb', this.value)" />
+                  <button class="qty-btn" onclick="changeQty('5gb', 1)"  aria-label="Aumentar">+</button>
+                </div>
+                <div class="atc-subtotal" id="sub5">R$ 0,00/mês</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 25 GB -->
+          <div class="account-type-card" id="card25" data-base="16" data-type="25gb">
+            <div class="atc-top">
+              <div class="atc-icon c25">📬</div>
+              <div class="atc-info">
+                <div class="atc-name">Conta E-mail 25 GB</div>
+                <div class="atc-storage">25 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
+              </div>
+              <div class="atc-unit-price">
+                <div class="from">a partir de</div>
+                <div class="price" id="unitPrice25">R$ 16,00</div>
+                <div class="period">/conta/mês</div>
+              </div>
+            </div>
+            <div class="price-breakdown" id="breakdown25" style="display:none">
+              <span class="price-original" id="origPrice25"></span>
+              <span class="price-final" id="finalPrice25"></span>
+              <span class="price-saving" id="saving25"></span>
+            </div>
+            <div class="atc-bottom">
+              <div class="atc-discount-tag" id="discTag25"></div>
+              <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
+                <div class="qty-control">
+                  <button class="qty-btn" onclick="changeQty('25gb', -1)" aria-label="Diminuir">−</button>
+                  <input class="qty-input" id="qty25" type="number" value="0" min="0" max="999" onchange="updateQty('25gb', this.value)" />
+                  <button class="qty-btn" onclick="changeQty('25gb', 1)"  aria-label="Aumentar">+</button>
+                </div>
+                <div class="atc-subtotal" id="sub25">R$ 0,00/mês</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 50 GB -->
+          <div class="account-type-card" id="card50" data-base="25" data-type="50gb">
+            <div class="atc-top">
+              <div class="atc-icon c50">📮</div>
+              <div class="atc-info">
+                <div class="atc-name">Conta E-mail 50 GB <span style="font-size:.7rem;background:linear-gradient(90deg,#7c3aed,#2563eb);color:white;padding:2px 8px;border-radius:100px;font-weight:700;margin-left:6px;vertical-align:middle">✨ IA inclusa</span></div>
+                <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
+              </div>
+              <div class="atc-unit-price">
+                <div class="from">a partir de</div>
+                <div class="price" id="unitPrice50">R$ 25,00</div>
+                <div class="period">/conta/mês</div>
+              </div>
+            </div>
+            <div class="price-breakdown" id="breakdown50" style="display:none">
+              <span class="price-original" id="origPrice50"></span>
+              <span class="price-final" id="finalPrice50"></span>
+              <span class="price-saving" id="saving50"></span>
+            </div>
+            <div class="atc-bottom">
+              <div class="atc-discount-tag" id="discTag50"></div>
+              <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
+                <div class="qty-control">
+                  <button class="qty-btn" onclick="changeQty('50gb', -1)" aria-label="Diminuir">−</button>
+                  <input class="qty-input" id="qty50" type="number" value="0" min="0" max="999" onchange="updateQty('50gb', this.value)" />
+                  <button class="qty-btn" onclick="changeQty('50gb', 1)"  aria-label="Aumentar">+</button>
+                </div>
+                <div class="atc-subtotal" id="sub50">R$ 0,00/mês</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Incluso em todas as contas -->
+          <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:0">
+            <div class="included-label"><i class="fa-solid fa-circle-check" style="color:var(--green)"></i> Incluso em todas as contas</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Webmail moderno responsivo</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Agenda de contatos</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Calendário</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Protocolos IMAP / POP3 / SMTP</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Antispam e antivírus premium</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Certificado SSL/TLS grátis</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> 10 apelidos (aliases) por conta</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Painel de gerenciamento</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Backup automático 30 dias</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Compatível com Outlook, Gmail App e Apple Mail</div>
+            </div>
+            <p style="margin-top:12px;font-size:.78rem;color:var(--gray-500)">
+              <i class="fa-solid fa-circle-info" style="color:var(--brand-500)"></i>
+              Domínio não incluído — use um domínio que você já possui ou adquira durante o checkout.
+            </p>
+          </div>
+        </div>
+
+        <!-- RIGHT: summary panel -->
+        <aside class="calc-summary">
+          <div class="calc-summary-card">
+            <div class="cs-title"><i class="fa-solid fa-receipt"></i> Resumo</div>
+
+            <!-- Annual saving note -->
+            <div class="cs-annual-note" id="csAnnualNote">
+              <i class="fa-solid fa-circle-check"></i>
+              Cobrança anual — 20% off aplicado!
+            </div>
+
+            <!-- Empty state -->
+            <div class="cs-empty" id="csEmpty">
+              <i class="fa-solid fa-cart-shopping"></i>
+              Adicione contas ao lado para ver o resumo do seu plano.
+            </div>
+
+            <!-- Lines (hidden when empty) -->
+            <div id="csLines" style="display:none">
+              <div class="cs-lines" id="csSummaryLines"></div>
+              <div class="cs-line total-line">
+                <span class="lbl">Total</span>
+                <span class="val" id="csTotal">R$ 0,00</span>
+              </div>
+              <div class="cs-period" id="csPeriod">/mês</div>
+            </div>
+
+            <div class="cs-features">
+              <div class="cs-feature"><i class="fa-solid fa-check"></i> Cancele quando quiser</div>
+              <div class="cs-feature"><i class="fa-solid fa-check"></i> Sem taxa de adesão</div>
+              <div class="cs-feature"><i class="fa-brands fa-pix" style="color:#32bcad;font-size:.8rem"></i> Pix, boleto e cartão</div>
+            </div>
+
+            <div style="margin-top:18px">
+              <a href="#" id="calcCtaBtn" class="btn btn-primary" style="pointer-events:none;opacity:.45;justify-content:center">
+                <i class="fa-solid fa-bolt"></i> Contratar Agora
+              </a>
+              <p style="text-align:center;font-size:.72rem;color:var(--gray-400);margin-top:8px">
+                <i class="fa-solid fa-lock" style="color:var(--green)"></i> Pagamento seguro via Asaas
+              </p>
+            </div>
+          </div>
+        </aside>
+
+      </div><!-- /calc-wrapper -->
+
+      <!-- Reseller note -->
+      <div style="text-align:center;margin-top:32px;padding:20px 24px;background:var(--brand-50);border-radius:var(--radius-lg);border:1px solid var(--brand-100)" class="fade-in">
+        <p style="font-size:.875rem;color:var(--brand-700)">
+          <strong><i class="fa-solid fa-store"></i> É revendedor ou agência?</strong>
+          Temos condições especiais para volumes acima de 50 contas.
+          <a href="mailto:comercial@citmail.com.br" style="color:var(--brand-600);font-weight:700">Fale com nossa equipe →</a>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HOW IT WORKS
+  ============================================================ -->
+  <section id="how-it-works" class="section" style="background:var(--brand-50)">
+    <div class="container">
+      <div class="section-header text-center fade-in">
+        <div class="tag"><i class="fa-solid fa-list-check"></i> Como funciona</div>
+        <h2 style="margin-top:14px">Do pagamento ao e-mail ativo<br/>em 4 passos simples</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card fade-in">
+          <div class="step-number">1</div>
+          <h3>Escolha o Plano</h3>
+          <p>Selecione o plano ideal para seu negócio e o domínio desejado.</p>
+        </div>
+        <div class="step-card fade-in">
+          <div class="step-number">2</div>
+          <h3>Pague com Facilidade</h3>
+          <p>Pix, boleto ou cartão de crédito via Asaas. Cobrança recorrente automática.</p>
+        </div>
+        <div class="step-card fade-in">
+          <div class="step-number">3</div>
+          <h3>Ativação Automática</h3>
+          <p>Confirmado o pagamento, criamos o domínio e as caixas em até 5 minutos.</p>
+        </div>
+        <div class="step-card fade-in">
+          <div class="step-number">4</div>
+          <h3>Acesse e Gerencie</h3>
+          <p>Receba as credenciais por e-mail e acesse seu painel para gerenciar tudo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PAINEL PREVIEW
+  ============================================================ -->
+  <section id="painel-preview" class="section">
+    <div class="container">
+      <div class="painel-grid">
+        <div class="text-col fade-in">
+          <div class="tag"><i class="fa-solid fa-gauge-high"></i> Painel do Cliente</div>
+          <h2 style="margin-top:14px">Controle total<br/>na sua mão</h2>
+          <p>Gerencie domínios, caixas de e-mail, faturas e muito mais — sem precisar acionar o suporte.</p>
+          <ul class="painel-features-list">
+            <li><i class="fa-solid fa-circle-check"></i> Dashboard com visão geral do plano</li>
+            <li><i class="fa-solid fa-circle-check"></i> Criação e exclusão de caixas de e-mail</li>
+            <li><i class="fa-solid fa-circle-check"></i> Troca de senhas pelo próprio cliente</li>
+            <li><i class="fa-solid fa-circle-check"></i> Histórico de faturas com download em PDF</li>
+            <li><i class="fa-solid fa-circle-check"></i> Contratação de novos produtos no Marketplace</li>
+            <li><i class="fa-solid fa-circle-check"></i> Configuração de domínios e DNS</li>
+          </ul>
+          <div style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="https://painel.citmail.com.br" class="btn btn-primary">Acessar Painel</a>
+            <a href="#pricing" class="btn btn-outline">Criar Conta</a>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <div class="painel-mockup">
+            <div class="painel-topbar">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <div class="title">painel.citmail.com.br</div>
+            </div>
+            <div class="painel-body">
+              <div class="painel-sidebar">
+                <div class="sidebar-item active"><i class="fa-solid fa-gauge"></i> Dashboard</div>
+                <div class="sidebar-item"><i class="fa-solid fa-envelope"></i> E-mails</div>
+                <div class="sidebar-item"><i class="fa-solid fa-globe"></i> Domínios</div>
+                <div class="sidebar-item"><i class="fa-solid fa-file-invoice-dollar"></i> Financeiro</div>
+                <div class="sidebar-item"><i class="fa-solid fa-store"></i> Marketplace</div>
+                <div class="sidebar-item"><i class="fa-solid fa-gear"></i> Configurações</div>
+              </div>
+              <div class="painel-content">
+                <div class="painel-stat-row">
+                  <div class="painel-stat">
+                    <div class="label">Caixas Ativas</div>
+                    <div class="value">8 / 20</div>
+                  </div>
+                  <div class="painel-stat">
+                    <div class="label">Próxima Fatura</div>
+                    <div class="value">R$ 59,90</div>
+                  </div>
+                </div>
+                <div class="painel-emails">
+                  <div class="painel-email-row">
+                    <div class="painel-email-dot"></div>
+                    <div class="painel-email-name">contato@suaempresa.com.br</div>
+                    <div class="painel-email-status">Ativo</div>
+                  </div>
+                  <div class="painel-email-row">
+                    <div class="painel-email-dot"></div>
+                    <div class="painel-email-name">financeiro@suaempresa.com.br</div>
+                    <div class="painel-email-status">Ativo</div>
+                  </div>
+                  <div class="painel-email-row">
+                    <div class="painel-email-dot"></div>
+                    <div class="painel-email-name">comercial@suaempresa.com.br</div>
+                    <div class="painel-email-status">Ativo</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MARKETPLACE PREVIEW
+  ============================================================ -->
+  <section id="marketplace" class="section" style="background:var(--gray-100)">
+    <div class="container">
+      <div class="section-header text-center fade-in">
+        <div class="tag"><i class="fa-solid fa-store"></i> Marketplace</div>
+        <h2 style="margin-top:14px">Expanda com um clique<br/>no seu painel</h2>
+        <p>Muito além do e-mail — contrate novos produtos e serviços diretamente pelo painel do cliente.</p>
+      </div>
+      <div class="marketplace-grid">
+        <div class="marketplace-card fade-in">
+          <div class="badge badge-blue">Incluído</div>
+          <div class="marketplace-icon">📧</div>
+          <h3>E-mail Corporativo</h3>
+          <p>Caixas de e-mail com domínio próprio, webmail, IMAP/POP3/SMTP e proteção avançada.</p>
+          <div class="from">A partir de</div>
+          <div class="price">R$ 19,90/mês</div>
+        </div>
+        <div class="marketplace-card fade-in">
+          <div class="badge badge-green">Disponível</div>
+          <div class="marketplace-icon">☁️</div>
+          <h3>Backup em Nuvem</h3>
+          <p>Backup automático de arquivos, bancos de dados e sistemas. Restauração em um clique.</p>
+          <div class="from">A partir de</div>
+          <div class="price">R$ 39,90/mês</div>
+        </div>
+        <div class="marketplace-card fade-in">
+          <div class="badge badge-yellow">Em breve</div>
+          <div class="marketplace-icon">🖥️</div>
+          <h3>Servidores Cloud</h3>
+          <p>VPS e servidores dedicados na nuvem. Alta disponibilidade com suporte técnico 24/7.</p>
+          <div class="from">A partir de</div>
+          <div class="price">R$ 79,90/mês</div>
+        </div>
+        <div class="marketplace-card fade-in">
+          <div class="badge badge-purple">Especializado</div>
+          <div class="marketplace-icon">⚙️</div>
+          <h3>DevOps & Consultoria</h3>
+          <p>Serviços especializados de infraestrutura, CI/CD, Docker, Kubernetes e consultoria de TI.</p>
+          <div class="from">Sob consulta</div>
+          <div class="price">Fale conosco →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TESTIMONIALS
+  ============================================================ -->
+  <section id="testimonials" class="section">
+    <div class="container">
+      <div class="section-header text-center fade-in">
+        <div class="tag"><i class="fa-solid fa-comments"></i> Depoimentos</div>
+        <h2 style="margin-top:14px">Clientes que já confiam<br/>na CITMail</h2>
+        <p>Veja o que nossos clientes dizem sobre a experiência com o e-mail corporativo.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card fade-in">
+          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-text">"A ativação foi surpreendentemente rápida — em menos de 10 minutos já estava acessando meu e-mail corporativo. Processo 100% automático, sem precisar falar com ninguém."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">RS</div>
+            <div>
+              <div class="testimonial-name">Ricardo S.</div>
+              <div class="testimonial-role">Advogado — OAB/SP</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card fade-in">
+          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-text">"Migrei 15 caixas de e-mail do Google Workspace e economiei mais de 60% no custo mensal. O suporte foi impecável durante toda a migração."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AM</div>
+            <div>
+              <div class="testimonial-name">Ana M.</div>
+              <div class="testimonial-role">Gestora de TI — PME</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card fade-in">
+          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-text">"Sou revendedor e o painel de controle facilitou muito minha vida. Consigo gerenciar todos os meus clientes em um único lugar, com faturamento automático."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">FO</div>
+            <div>
+              <div class="testimonial-name">Fábio O.</div>
+              <div class="testimonial-role">Revendedor de TI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FAQ
+  ============================================================ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header text-center fade-in">
+        <div class="tag"><i class="fa-solid fa-circle-question"></i> FAQ</div>
+        <h2 style="margin-top:14px">Perguntas frequentes</h2>
+        <p>Tire suas dúvidas mais comuns sobre o serviço.</p>
+      </div>
+      <div class="faq-list fade-in">
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Preciso ter um domínio próprio para contratar?</span>
+            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+          </button>
+          <div class="faq-answer"><p>Não é obrigatório ter um domínio previamente. Ao contratar qualquer plano, podemos registrar um domínio novo para você como parte da ativação do serviço. Se já tiver um domínio, também podemos transferi-lo ou apenas configurar os registros DNS para apontar para nossos servidores.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Quanto tempo leva para o e-mail ser ativado?</span>
+            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+          </button>
+          <div class="faq-answer"><p>Após a confirmação do pagamento, a ativação é automática e ocorre em até 5 minutos. Você receberá um e-mail com todas as credenciais de acesso. A propagação de DNS pode levar até 48h para se completar globalmente, mas na maioria dos casos ocorre em menos de 2 horas.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Quais formas de pagamento são aceitas?</span>
+            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+          </button>
+          <div class="faq-answer"><p>Aceitamos Pix (crédito imediato), boleto bancário e cartão de crédito (com possibilidade de parcelamento). O pagamento é processado de forma segura pelo Asaas, e para planos mensais ou anuais, a cobrança é recorrente e automática.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Posso adicionar mais caixas de e-mail depois?</span>
+            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+          </button>
+          <div class="faq-answer"><p>Sim! Através do painel do cliente, você pode adicionar novas caixas de e-mail a qualquer momento. A fatura é atualizada automaticamente de forma proporcional ao período restante do ciclo de cobrança.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Como funciona o suporte técnico?</span>
+            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+          </button>
+          <div class="faq-answer"><p>Oferecemos suporte técnico via ticket no painel do cliente, chat e e-mail. Planos Profissional e Enterprise têm atendimento prioritário. O plano Enterprise inclui suporte 24/7 com SLA garantido.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>O serviço é compatível com Outlook, Gmail e Apple Mail?</span>
+            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+          </button>
+          <div class="faq-answer"><p>Sim. Nosso serviço suporta os protocolos IMAP, POP3 e SMTP, sendo compatível com qualquer cliente de e-mail, incluindo Microsoft Outlook, Apple Mail, Thunderbird, Gmail App e outros aplicativos mobile. Fornecemos as configurações detalhadas por e-mail após a ativação.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Posso cancelar quando quiser?</span>
+            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+          </button>
+          <div class="faq-answer"><p>Sim. Não há fidelidade nem multa por cancelamento. Você pode solicitar o cancelamento diretamente pelo painel do cliente a qualquer momento. Para planos anuais, o cancelamento encerra as renovações futuras, não havendo reembolso proporcional para o período já pago.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Os dados são protegidos pela LGPD?</span>
+            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+          </button>
+          <div class="faq-answer"><p>Sim. Todos os nossos processos estão em conformidade com a Lei Geral de Proteção de Dados (LGPD). Seus dados são armazenados com criptografia, as senhas com hash seguro (bcrypt/Argon2), e você pode solicitar a exclusão de seus dados a qualquer momento através do painel do cliente.</p></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA FINAL
+  ============================================================ -->
+  <section id="cta-final" class="section">
+    <div class="container">
+      <div class="fade-in">
+        <div class="tag" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.2)">
+          <i class="fa-solid fa-rocket"></i> Pronto para começar?
+        </div>
+        <h2 style="margin-top:14px">Seu e-mail corporativo<br/>começa agora</h2>
+        <p>Configure em minutos. Sem contratos longos. Sem complicações.</p>
+        <div class="cta-actions">
+          <a href="checkout.html" class="btn btn-white btn-lg">
+            <i class="fa-solid fa-bolt"></i> Começar Agora
+          </a>
+          <a href="#domain-search" class="btn btn-lg" style="background:rgba(255,255,255,.15);color:white;border:2px solid rgba(255,255,255,.4)">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar meu Domínio
+          </a>
+        </div>
+        <p class="guarantee-note">
+          <i class="fa-solid fa-shield-halved"></i>
+          Pagamento seguro via Asaas · SSL em todas as páginas · Sem fidelidade
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo">
+            <img src="assets/logo.svg" alt="CITMail" style="height:34px;width:auto;filter:brightness(0) invert(1)">
+          </a>
+          <p>E-mail corporativo profissional com domínio próprio. Ativação automática, faturamento simplificado e painel de controle completo.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Produto</h4>
+          <ul>
+            <li><a href="#features">Recursos</a></li>
+            <li><a href="#pricing">Planos e Preços</a></li>
+            <li><a href="#marketplace">Marketplace</a></li>
+            <li><a href="#domain-search">Buscar Domínio</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Empresa</h4>
+          <ul>
+            <li><a href="#">Sobre nós</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Parceiros</a></li>
+            <li><a href="mailto:comercial@citmail.com.br">Contato</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Suporte</h4>
+          <ul>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="https://painel.citmail.com.br">Painel do Cliente</a></li>
+            <li><a href="#">Política de Privacidade</a></li>
+            <li><a href="#">Termos de Uso</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 CITMail. Todos os direitos reservados. CNPJ: XX.XXX.XXX/0001-XX</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to top -->
+  <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    // ---- HEADER scroll effect ----
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 10);
+      document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 400);
+    });
+
+    // ---- MOBILE NAV ----
+    const navToggle = document.getElementById('navToggle');
+    const nav = document.getElementById('nav');
+    navToggle.addEventListener('click', () => {
+      document.getElementById('header').classList.toggle('nav-mobile-open');
+    });
+
+    // ---- BILLING TOGGLE ----
+    let billing = 'monthly';
+
+    function toggleBilling() {
+      setBilling(billing === 'monthly' ? 'annual' : 'monthly');
+    }
+    function setBilling(mode) {
+      billing = mode;
+      document.getElementById('billingToggle').classList.toggle('annual', mode === 'annual');
+      document.getElementById('toggleMonthly').classList.toggle('active', mode === 'monthly');
+      document.getElementById('toggleAnnual').classList.toggle('active', mode === 'annual');
+      document.getElementById('csAnnualNote').classList.toggle('visible', mode === 'annual');
+      recalcAll();
+    }
+
+    // ---- CALCULADORA DE CONTAS ----
+    const ACCOUNT_TYPES = {
+      '5gb':  { base:10, inputId:'qty5',  subId:'sub5',  discTagId:'discTag5',  cardId:'card5',  unitId:'unitPrice5',  bdId:'breakdown5',  origId:'origPrice5',  finalId:'finalPrice5',  savId:'saving5'  },
+      '25gb': { base:16, inputId:'qty25', subId:'sub25', discTagId:'discTag25', cardId:'card25', unitId:'unitPrice25', bdId:'breakdown25', origId:'origPrice25', finalId:'finalPrice25', savId:'saving25' },
+      '50gb': { base:25, inputId:'qty50', subId:'sub50', discTagId:'discTag50', cardId:'card50', unitId:'unitPrice50', bdId:'breakdown50', origId:'origPrice50', finalId:'finalPrice50', savId:'saving50' },
+    };
+    const quantities = { '5gb': 0, '25gb': 0, '50gb': 0 };
+    const MIN_QTY = 2;
+
+    function calcVolDisc(qty) { return qty >= 5 ? 5 : 0; }
+
+    function fmt(val) {
+      return val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function changeQty(type, delta) {
+      const cfg = ACCOUNT_TYPES[type];
+      let next  = quantities[type] + delta;
+      if (next > 0 && next < MIN_QTY) next = delta > 0 ? MIN_QTY : 0;
+      next = Math.max(0, next);
+      quantities[type] = next;
+      document.getElementById(cfg.inputId).value = next;
+      recalcType(type);
+      recalcSummary();
+    }
+
+    function updateQty(type, raw) {
+      const cfg = ACCOUNT_TYPES[type];
+      let val   = parseInt(raw) || 0;
+      if (val > 0 && val < MIN_QTY) val = MIN_QTY;
+      val = Math.max(0, val);
+      quantities[type] = val;
+      document.getElementById(cfg.inputId).value = val;
+      recalcType(type);
+      recalcSummary();
+    }
+
+    function recalcType(type) {
+      const cfg      = ACCOUNT_TYPES[type];
+      const qty      = quantities[type];
+      const baseUnit = cfg.base;
+      const annDisc  = billing === 'annual' ? 20 : 0;
+      const volDisc  = calcVolDisc(qty);
+      const totalDiscPct = annDisc + volDisc;
+      const unitFinal    = baseUnit * (1 - totalDiscPct / 100);
+      const subtotal     = qty * unitFinal;
+      const fullTotal    = qty * baseUnit;
+
+      const subEl = document.getElementById(cfg.subId);
+      subEl.textContent = qty > 0 ? `R$ ${fmt(subtotal)}/mês` : 'R$ 0,00/mês';
+      subEl.classList.toggle('has-value', qty > 0);
+      document.getElementById(cfg.unitId).textContent = qty > 0 ? `R$ ${fmt(unitFinal)}` : `R$ ${fmt(baseUnit)}`;
+      document.getElementById(cfg.cardId).classList.toggle('has-qty', qty > 0);
+
+      const bdEl = document.getElementById(cfg.bdId);
+      if (qty > 0 && totalDiscPct > 0) {
+        bdEl.style.display = 'flex';
+        document.getElementById(cfg.origId).textContent  = `R$ ${fmt(fullTotal)}/mês`;
+        document.getElementById(cfg.finalId).textContent = `R$ ${fmt(subtotal)}/mês`;
+        const parts = [];
+        if (annDisc > 0) parts.push(`−${annDisc}% anual`);
+        if (volDisc > 0) parts.push(`−${volDisc}% volume`);
+        document.getElementById(cfg.savId).textContent = parts.join(' + ') + ` → economize R$ ${fmt(fullTotal - subtotal)}/mês`;
+      } else {
+        bdEl.style.display = 'none';
+      }
+
+      const discTagEl = document.getElementById(cfg.discTagId);
+      if (qty > 0) {
+        if (volDisc > 0) {
+          discTagEl.innerHTML = '<span class="vol-badge"><i class="fa-solid fa-tag"></i> −5% por volume aplicado</span>';
+        } else {
+          const need = 5 - qty;
+          discTagEl.textContent = need > 0 ? `Adicione mais ${need} conta(s) para −5% de volume` : '';
+        }
+      } else { discTagEl.textContent = ''; }
+    }
+
+    function recalcAll() {
+      Object.keys(ACCOUNT_TYPES).forEach(recalcType);
+      recalcSummary();
+    }
+
+    function recalcSummary() {
+      const csEmpty  = document.getElementById('csEmpty');
+      const csLines  = document.getElementById('csLines');
+      const linesEl  = document.getElementById('csSummaryLines');
+      const totalEl  = document.getElementById('csTotal');
+      const periodEl = document.getElementById('csPeriod');
+      const ctaBtn   = document.getElementById('calcCtaBtn');
+      const names    = { '5gb':'E-mail 5 GB', '25gb':'E-mail 25 GB', '50gb':'E-mail 50 GB' };
+      let grandTotal = 0, grandFull = 0, totalAccounts = 0, html = '';
+
+      Object.entries(ACCOUNT_TYPES).forEach(([type, cfg]) => {
+        const qty = quantities[type];
+        if (qty === 0) return;
+        totalAccounts += qty;
+        const annDisc = billing === 'annual' ? 20 : 0;
+        const volDisc = calcVolDisc(qty);
+        const unit    = cfg.base * (1 - (annDisc + volDisc) / 100);
+        const sub     = qty * unit;
+        const full    = qty * cfg.base;
+        grandTotal += sub; grandFull += full;
+        html += `<div class="cs-line"><span class="lbl">${qty}\u00d7 ${names[type]}</span><span class="val">R$ ${fmt(full)}</span></div>`;
+        if (annDisc + volDisc > 0) {
+          html += `<div class="cs-line" style="padding-left:8px"><span class="lbl" style="color:var(--green);font-size:.73rem"><i class="fa-solid fa-tag"></i> Desc. \u2212${annDisc+volDisc}%</span><span class="val discount" style="font-size:.76rem">\u2212R$ ${fmt(full-sub)}</span></div>`;
+        }
+      });
+
+      const isEmpty = totalAccounts === 0;
+      csEmpty.style.display = isEmpty ? 'block' : 'none';
+      csLines.style.display = isEmpty ? 'none'  : 'block';
+
+      if (!isEmpty) {
+        if (grandFull > grandTotal) {
+          html += `<div class="cs-line" style="margin-top:6px;border-top:1px dashed var(--gray-200);padding-top:6px"><span class="lbl" style="font-weight:700">Subtotal s/ desc.</span><span class="val" style="text-decoration:line-through;color:var(--gray-400)">R$ ${fmt(grandFull)}</span></div>`;
+        }
+        linesEl.innerHTML = html;
+        totalEl.textContent = `R$ ${fmt(grandTotal)}`;
+        periodEl.textContent = billing === 'annual' ? `/m\u00eas \u00b7 R$ ${fmt(grandTotal*12)}/ano` : '/m\u00eas';
+      }
+
+      const params = new URLSearchParams({ qty5:quantities['5gb'], qty25:quantities['25gb'], qty50:quantities['50gb'], cycle:billing });
+      ctaBtn.href = isEmpty ? '#' : `checkout.html?${params}`;
+      ctaBtn.style.pointerEvents = isEmpty ? 'none' : 'all';
+      ctaBtn.style.opacity = isEmpty ? '0.45' : '1';
+    }
+
+    // ---- DOMAIN SEARCH ----
+    let selectedTld = '.com.br';
+    document.querySelectorAll('.tld-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.tld-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        selectedTld = chip.dataset.tld;
+        document.getElementById('domainSuffix').textContent = selectedTld;
+      });
+    });
+
+    function checkDomain() {
+      const input = document.getElementById('domainInput').value.trim().toLowerCase()
+        .replace(/[^a-z0-9-]/g, '');
+      const result = document.getElementById('domainResult');
+      if (!input) { result.innerHTML = ''; return; }
+
+      result.innerHTML = '<span class="domain-loading"><i class="fa-solid fa-spinner fa-spin"></i> Verificando disponibilidade…</span>';
+
+      // Simulate async check (replace with real API call)
+      setTimeout(() => {
+        const full = input + selectedTld;
+        // Demo: domains containing "citmail" or "test" are "taken"
+        const taken = input.includes('citmail') || input === 'google' || input === 'microsoft';
+        if (taken) {
+          result.innerHTML = `<span class="domain-taken"><i class="fa-solid fa-xmark"></i> <strong>${full}</strong> já está registrado.</span>`;
+        } else {
+          result.innerHTML = `<span class="domain-available"><i class="fa-solid fa-check"></i> <strong>${full}</strong> está disponível! <a href="#pricing" style="color:inherit;font-weight:800;margin-left:8px">Contratar →</a></span>`;
+        }
+      }, 1200);
+    }
+
+    document.getElementById('domainInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkDomain();
+    });
+
+    // ---- FAQ ACCORDION ----
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+
+    // ---- INTERSECTION OBSERVER (fade-in) ----
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
