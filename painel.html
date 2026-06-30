@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel do Cliente — CITMail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand-900: #0F2057;
+      --brand-800: #172B6E;
+      --brand-700: #1E3A8A;
+      --brand-600: #2563EB;
+      --brand-500: #3B82F6;
+      --brand-400: #60A5FA;
+      --brand-100: #DBEAFE;
+      --brand-50:  #EFF6FF;
+      --accent:    #0EA5E9;
+      --green:     #10B981;
+      --green-bg:  #D1FAE5;
+      --green-dark:#065f46;
+      --yellow:    #F59E0B;
+      --yellow-bg: #FEF3C7;
+      --red:       #EF4444;
+      --red-bg:    #FEE2E2;
+      --gray-900:  #111827;
+      --gray-700:  #374151;
+      --gray-500:  #6B7280;
+      --gray-300:  #D1D5DB;
+      --gray-200:  #E5E7EB;
+      --gray-100:  #F3F4F6;
+      --white:     #FFFFFF;
+      --font-title: 'Montserrat', sans-serif;
+      --font-body:  'Inter', system-ui, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+      --sidebar-w: 248px;
+      --topbar-h: 62px;
+      --transition: .2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--gray-100);
+      color: var(--gray-900);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+    h1,h2,h3,h4 {
+      font-family: var(--font-title);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--brand-900);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 200;
+      transition: transform var(--transition);
+    }
+    .sidebar-logo {
+      display: flex; align-items: center;
+      height: var(--topbar-h);
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      flex-shrink: 0;
+    }
+    .sidebar-logo img { height: 32px; width: auto; filter: brightness(0) invert(1); }
+
+    .sidebar-nav {
+      flex: 1; overflow-y: auto;
+      padding: 12px 0;
+    }
+    .nav-section-label {
+      font-family: var(--font-title);
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      padding: 16px 20px 6px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 11px;
+      padding: 10px 20px;
+      color: rgba(255,255,255,.62);
+      font-size: .875rem; font-weight: 500;
+      text-decoration: none;
+      border-radius: 0;
+      cursor: pointer;
+      transition: all var(--transition);
+      border-left: 3px solid transparent;
+      position: relative;
+    }
+    .nav-item:hover { color: white; background: rgba(255,255,255,.06); }
+    .nav-item.active {
+      color: white;
+      background: rgba(37,99,235,.28);
+      border-left-color: var(--brand-400);
+    }
+    .nav-item i { width: 18px; text-align: center; font-size: .9rem; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--red);
+      color: white;
+      font-size: .65rem; font-weight: 700;
+      padding: 1px 6px; border-radius: 100px;
+      min-width: 18px; text-align: center;
+    }
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sidebar-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-500), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-title); font-weight: 800;
+      font-size: .82rem; color: white; flex-shrink: 0;
+    }
+    .sidebar-user-info { flex: 1; min-width: 0; }
+    .sidebar-user-name {
+      font-size: .82rem; font-weight: 600; color: white;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sidebar-user-plan { font-size: .7rem; color: rgba(255,255,255,.45); }
+    .sidebar-logout {
+      color: rgba(255,255,255,.4);
+      background: none; border: none;
+      cursor: pointer; font-size: .85rem;
+      padding: 4px;
+      transition: color var(--transition);
+    }
+    .sidebar-logout:hover { color: var(--red); }
+
+    /* ── MAIN AREA ── */
+    .main-wrap {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      height: var(--topbar-h);
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center;
+      padding: 0 clamp(16px,3vw,32px);
+      gap: 12px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .topbar-title {
+      font-family: var(--font-title);
+      font-weight: 700; font-size: 1.05rem;
+      color: var(--brand-900); flex: 1;
+    }
+    .topbar-search {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--gray-100);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 0 12px;
+      height: 36px;
+      max-width: 240px; flex: 1;
+    }
+    .topbar-search i { color: var(--gray-500); font-size: .8rem; }
+    .topbar-search input {
+      border: none; background: none; outline: none;
+      font-family: var(--font-body); font-size: .82rem;
+      color: var(--gray-900); width: 100%;
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 4px; }
+    .topbar-btn {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      border: none; background: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500); font-size: .9rem;
+      transition: all var(--transition); position: relative;
+    }
+    .topbar-btn:hover { background: var(--gray-100); color: var(--gray-900); }
+    .topbar-notif-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--red); border: 1.5px solid white;
+    }
+    .topbar-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-600), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-title); font-weight: 800;
+      font-size: .78rem; color: white; cursor: pointer;
+      border: 2px solid var(--brand-100);
+      margin-left: 4px;
+    }
+    .sidebar-toggle {
+      display: none;
+      width: 36px; height: 36px;
+      border: none; background: none; cursor: pointer;
+      align-items: center; justify-content: center;
+      color: var(--gray-700); font-size: 1.1rem;
+      border-radius: var(--radius-sm);
+    }
+    .sidebar-toggle:hover { background: var(--gray-100); }
+
+    /* ── PAGE CONTENT ── */
+    .page-content {
+      flex: 1;
+      padding: clamp(20px,3vw,32px) clamp(16px,3vw,32px);
+    }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── CARDS ── */
+    .card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: clamp(18px,3vw,28px);
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .card-title {
+      font-family: var(--font-title);
+      font-weight: 700; font-size: .95rem;
+      display: flex; align-items: center; gap: 8px;
+      color: var(--brand-900);
+    }
+    .card-title i { color: var(--brand-600); }
+
+    /* ── STAT CARDS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .stat-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .stat-icon {
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .stat-icon.blue  { background: var(--brand-50);  color: var(--brand-600); }
+    .stat-icon.green { background: var(--green-bg);   color: var(--green); }
+    .stat-icon.yellow{ background: var(--yellow-bg);  color: var(--yellow); }
+    .stat-icon.red   { background: var(--red-bg);     color: var(--red); }
+    .stat-trend {
+      font-size: .72rem; font-weight: 700;
+      padding: 2px 7px; border-radius: 100px;
+    }
+    .stat-trend.up   { background: var(--green-bg); color: var(--green-dark); }
+    .stat-trend.warn { background: var(--yellow-bg); color: #92400e; }
+    .stat-value {
+      font-family: var(--font-title);
+      font-size: 1.65rem; font-weight: 800;
+      color: var(--brand-900);
+      line-height: 1;
+    }
+    .stat-label { font-size: .78rem; color: var(--gray-500); font-weight: 500; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .82rem; padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      border: none; cursor: pointer; text-decoration: none;
+      transition: all var(--transition);
+    }
+    .btn-primary { background: var(--brand-600); color: white; box-shadow: 0 2px 8px rgba(37,99,235,.3); }
+    .btn-primary:hover { background: var(--brand-700); transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--brand-600); border: 1.5px solid var(--brand-200, #BFDBFE); }
+    .btn-outline:hover { background: var(--brand-50); }
+    .btn-ghost { background: transparent; color: var(--gray-500); font-family: var(--font-body); font-weight: 500; }
+    .btn-ghost:hover { background: var(--gray-100); color: var(--gray-700); }
+    .btn-danger { background: var(--red-bg); color: var(--red); }
+    .btn-danger:hover { background: var(--red); color: white; }
+    .btn-green { background: var(--green); color: white; }
+    .btn-green:hover { background: #059669; }
+    .btn-sm { padding: 6px 13px; font-size: .75rem; }
+    .btn-icon { width: 32px; height: 32px; padding: 0; border-radius: var(--radius-sm); }
+
+    /* ── GRID LAYOUTS ── */
+    .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    @media(max-width:900px) { .grid-2,.grid-3 { grid-template-columns:1fr; } }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+    thead th {
+      text-align: left; padding: 10px 14px;
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .72rem; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--gray-500);
+      border-bottom: 1px solid var(--gray-200);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      vertical-align: middle;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--gray-100); }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: .72rem; font-weight: 700;
+      padding: 3px 9px; border-radius: 100px;
+    }
+    .badge-green  { background: var(--green-bg);  color: var(--green-dark); }
+    .badge-blue   { background: var(--brand-50);  color: var(--brand-700); }
+    .badge-yellow { background: var(--yellow-bg); color: #92400e; }
+    .badge-red    { background: var(--red-bg);    color: #991b1b; }
+    .badge-gray   { background: var(--gray-200);  color: var(--gray-500); }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap { margin-top: 6px; }
+    .progress-bar {
+      height: 6px; border-radius: 100px;
+      background: var(--gray-200); overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--brand-600), var(--accent));
+      transition: width .6s ease;
+    }
+    .progress-fill.warn { background: linear-gradient(90deg, var(--yellow), #f97316); }
+    .progress-fill.danger { background: linear-gradient(90deg, var(--red), #dc2626); }
+
+    /* ── FORM FIELDS ── */
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .field label { font-size: .82rem; font-weight: 600; color: var(--gray-700); }
+    .field input, .field select, .field textarea {
+      padding: 10px 13px;
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body); font-size: .9rem;
+      color: var(--gray-900); background: white; outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+    }
+    .field textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+    .field-hint { font-size: .75rem; color: var(--gray-500); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width:600px) { .form-row { grid-template-columns:1fr; } }
+
+    /* ── PAGE HEADER ── */
+    .page-hdr {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
+    }
+    .page-hdr-left h2 { font-size: 1.3rem; color: var(--brand-900); }
+    .page-hdr-left p { font-size: .875rem; color: var(--gray-500); margin-top: 3px; }
+
+    /* ── ACTIVITY FEED ── */
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem; flex-shrink: 0; margin-top: 2px;
+    }
+    .activity-body { flex: 1; }
+    .activity-text { font-size: .875rem; color: var(--gray-700); }
+    .activity-text strong { color: var(--gray-900); font-weight: 600; }
+    .activity-time { font-size: .72rem; color: var(--gray-500); margin-top: 2px; }
+
+    /* ── PRODUCT CARDS ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .product-card {
+      background: white;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: 14px;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .product-card-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .product-card-name { font-family: var(--font-title); font-weight: 700; font-size: .95rem; }
+    .product-card-desc { font-size: .82rem; color: var(--gray-500); line-height: 1.5; }
+    .product-card-price {
+      font-family: var(--font-title); font-weight: 800;
+      font-size: 1.2rem; color: var(--brand-700);
+    }
+    .product-card-price span { font-size: .75rem; font-weight: 500; color: var(--gray-500); }
+    .product-card-features { display: flex; flex-direction: column; gap: 6px; }
+    .product-feat {
+      display: flex; align-items: center; gap: 7px;
+      font-size: .78rem; color: var(--gray-700);
+    }
+    .product-feat i { color: var(--green); font-size: .7rem; }
+
+    /* ── EMAIL ACCOUNTS ── */
+    .email-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--brand-50); color: var(--brand-700);
+      border-radius: var(--radius-sm); padding: 4px 10px;
+      font-size: .8rem; font-weight: 600;
+    }
+
+    /* ── TICKET STATUS ── */
+    .ticket-row { cursor: pointer; }
+    .ticket-subject { font-weight: 600; font-size: .875rem; color: var(--gray-900); }
+    .ticket-preview { font-size: .78rem; color: var(--gray-500); margin-top: 2px; }
+
+    /* ── DNS TABLE ── */
+    .dns-record {
+      display: grid;
+      grid-template-columns: 80px 80px 1fr 1fr;
+      gap: 10px; align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: .82rem;
+    }
+    .dns-record:last-child { border-bottom: none; }
+    .dns-type {
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .72rem; padding: 2px 8px;
+      background: var(--brand-50); color: var(--brand-700);
+      border-radius: 4px; text-align: center;
+    }
+    .dns-value {
+      font-family: monospace; font-size: .78rem;
+      color: var(--gray-700); word-break: break-all;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(15,32,87,.6); backdrop-filter: blur(4px);
+      z-index: 500; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white; border-radius: var(--radius-lg);
+      width: 100%; max-width: 480px;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp .25s ease;
+    }
+    @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .modal-header h3 { font-size: 1rem; }
+    .modal-close {
+      width: 30px; height: 30px; border-radius: var(--radius-sm);
+      border: none; background: var(--gray-100); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500); font-size: .85rem;
+      transition: all var(--transition);
+    }
+    .modal-close:hover { background: var(--gray-200); }
+    .modal-body { padding: 20px 24px; }
+    .modal-footer {
+      padding: 14px 24px 20px;
+      display: flex; gap: 10px; justify-content: flex-end;
+    }
+
+    /* ── TOAST ── */
+    .toast-wrap {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .toast {
+      background: var(--gray-900); color: white;
+      padding: 12px 18px; border-radius: var(--radius-md);
+      font-size: .875rem; box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 10px;
+      animation: toastIn .25s ease;
+      max-width: 320px;
+    }
+    @keyframes toastIn { from { transform:translateX(40px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+    .toast.success i { color: var(--green); }
+    .toast.error   i { color: var(--red); }
+    .toast.info    i { color: var(--brand-400); }
+
+    /* ── INVOICE ── */
+    .invoice-amount {
+      font-family: var(--font-title); font-weight: 800;
+      color: var(--brand-900);
+    }
+
+    /* ── MOBILE ── */
+    .sidebar-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.5); z-index: 190;
+    }
+    @media(max-width:768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-backdrop.open { display: block; }
+      .main-wrap { margin-left: 0; }
+      .sidebar-toggle { display: flex; }
+      .topbar-search { display: none; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media(max-width:480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── MISC ── */
+    .divider { height: 1px; background: var(--gray-200); margin: 20px 0; }
+    .text-muted { color: var(--gray-500); font-size: .875rem; }
+    .gap-stack { display: flex; flex-direction: column; gap: 16px; }
+    .flex-between { display: flex; align-items: center; justify-content: space-between; }
+    .mb-0 { margin-bottom: 0 !important; }
+    .inline-flex { display: inline-flex; align-items: center; gap: 8px; }
+    .storage-bar-wrap { display: flex; flex-direction: column; gap: 4px; }
+    .storage-bar-label { display: flex; justify-content: space-between; font-size: .75rem; color: var(--gray-500); }
+
+    /* ── ALERT ── */
+    .alert {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px; border-radius: var(--radius-md);
+      font-size: .875rem; margin-bottom: 20px;
+    }
+    .alert-yellow { background: var(--yellow-bg); color: #92400e; border: 1px solid #fde68a; }
+    .alert-blue   { background: var(--brand-50); color: var(--brand-700); border: 1px solid var(--brand-100); }
+    .alert i { margin-top: 1px; flex-shrink: 0; }
+
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--gray-200); margin-bottom: 24px; }
+    .tab-btn {
+      padding: 10px 18px; font-size: .875rem; font-weight: 600;
+      color: var(--gray-500); background: none; border: none;
+      cursor: pointer; border-bottom: 2px solid transparent;
+      margin-bottom: -2px; transition: all var(--transition);
+      font-family: var(--font-title);
+    }
+    .tab-btn:hover { color: var(--brand-600); }
+    .tab-btn.active { color: var(--brand-600); border-bottom-color: var(--brand-600); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR BACKDROP (mobile) -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo.svg" alt="CITMail">
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <a class="nav-item active" data-section="dashboard" onclick="navigate('dashboard')">
+      <i class="fa-solid fa-gauge-high"></i> Dashboard
+    </a>
+    <a class="nav-item" data-section="email" onclick="navigate('email')">
+      <i class="fa-solid fa-envelope"></i> E-mail
+    </a>
+
+    <div class="nav-section-label">Gestão</div>
+    <a class="nav-item" data-section="financeiro" onclick="navigate('financeiro')">
+      <i class="fa-solid fa-file-invoice-dollar"></i> Financeiro
+    </a>
+    <a class="nav-item" data-section="produtos" onclick="navigate('produtos')">
+      <i class="fa-solid fa-box"></i> Meus Produtos
+    </a>
+    <a class="nav-item" data-section="marketplace" onclick="navigate('marketplace')">
+      <i class="fa-solid fa-store"></i> Marketplace
+    </a>
+
+    <div class="nav-section-label">Conta</div>
+    <a class="nav-item" data-section="configuracoes" onclick="navigate('configuracoes')">
+      <i class="fa-solid fa-sliders"></i> Configurações
+    </a>
+    <a class="nav-item" data-section="suporte" onclick="navigate('suporte')">
+      <i class="fa-solid fa-headset"></i> Suporte
+      <span class="nav-badge" id="ticketBadge">2</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebarInitials">JS</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarName">João da Silva</div>
+        <div class="sidebar-user-plan">E-mail 25 GB · Mensal</div>
+      </div>
+      <button class="sidebar-logout" title="Sair" onclick="showToast('Sessão encerrada.','info')">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Buscar…" />
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" title="Notificações" onclick="navigate('suporte')">
+        <i class="fa-solid fa-bell"></i>
+        <span class="topbar-notif-dot"></span>
+      </button>
+      <button class="topbar-btn" title="Ajuda">
+        <i class="fa-solid fa-circle-question"></i>
+      </button>
+      <div class="topbar-avatar" id="topbarAvatar" onclick="navigate('configuracoes')">JS</div>
+    </div>
+  </header>
+
+  <!-- PAGE CONTENT -->
+  <main class="page-content">
+
+    <!-- ===================== DASHBOARD ===================== -->
+    <section class="section active" id="sec-dashboard">
+      <div class="alert alert-blue" style="margin-bottom:20px">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Bem-vindo ao Painel CITMail! Seu serviço está ativo e funcionando normalmente. <strong>DNS configurado com sucesso.</strong></span>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div class="stat-icon blue"><i class="fa-solid fa-envelope"></i></div>
+            <span class="stat-trend up">Ativo</span>
+          </div>
+          <div class="stat-value">5</div>
+          <div class="stat-label">Contas de e-mail ativas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div class="stat-icon green"><i class="fa-solid fa-hard-drive"></i></div>
+            <span class="stat-trend up">62%</span>
+          </div>
+          <div class="stat-value">15,5 GB</div>
+          <div class="stat-label">de 25 GB utilizados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div class="stat-icon yellow"><i class="fa-solid fa-calendar-days"></i></div>
+            <span class="stat-trend warn">Em 8 dias</span>
+          </div>
+          <div class="stat-value">R$ 80,00</div>
+          <div class="stat-label">Próxima fatura · 08/jul</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div class="stat-icon red"><i class="fa-solid fa-headset"></i></div>
+            <span class="stat-trend warn">2 abertos</span>
+          </div>
+          <div class="stat-value">2</div>
+          <div class="stat-label">Tickets de suporte</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Contas de e-mail (resumo) -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-envelope"></i> Contas de E-mail</div>
+            <button class="btn btn-primary btn-sm" onclick="navigate('email')">Gerenciar</button>
+          </div>
+          <div class="gap-stack" style="gap:10px">
+            <div class="flex-between" style="padding:10px 12px;background:var(--gray-100);border-radius:var(--radius-sm)">
+              <div>
+                <div style="font-weight:600;font-size:.875rem">joao@empresa.com.br</div>
+                <div class="storage-bar-wrap" style="width:180px;margin-top:5px">
+                  <div class="storage-bar-label"><span>3,2 GB</span><span>25 GB</span></div>
+                  <div class="progress-bar"><div class="progress-fill" style="width:13%"></div></div>
+                </div>
+              </div>
+              <span class="badge badge-green">Ativo</span>
+            </div>
+            <div class="flex-between" style="padding:10px 12px;background:var(--gray-100);border-radius:var(--radius-sm)">
+              <div>
+                <div style="font-weight:600;font-size:.875rem">contato@empresa.com.br</div>
+                <div class="storage-bar-wrap" style="width:180px;margin-top:5px">
+                  <div class="storage-bar-label"><span>8,1 GB</span><span>25 GB</span></div>
+                  <div class="progress-bar"><div class="progress-fill warn" style="width:32%"></div></div>
+                </div>
+              </div>
+              <span class="badge badge-green">Ativo</span>
+            </div>
+            <div class="flex-between" style="padding:10px 12px;background:var(--gray-100);border-radius:var(--radius-sm)">
+              <div>
+                <div style="font-weight:600;font-size:.875rem">financeiro@empresa.com.br</div>
+                <div class="storage-bar-wrap" style="width:180px;margin-top:5px">
+                  <div class="storage-bar-label"><span>4,2 GB</span><span>25 GB</span></div>
+                  <div class="progress-bar"><div class="progress-fill" style="width:17%"></div></div>
+                </div>
+              </div>
+              <span class="badge badge-green">Ativo</span>
+            </div>
+            <button class="btn btn-outline" style="width:100%;margin-top:4px" onclick="openModal('modalNovaContaEmail')">
+              <i class="fa-solid fa-plus"></i> Nova conta de e-mail
+            </button>
+          </div>
+        </div>
+
+        <!-- Atividade recente -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Atividade Recente</div>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--green-bg);color:var(--green)"><i class="fa-solid fa-check"></i></div>
+              <div class="activity-body">
+                <div class="activity-text">Pagamento <strong>R$ 80,00</strong> confirmado via Pix</div>
+                <div class="activity-time">Hoje, 09:14</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--brand-50);color:var(--brand-600)"><i class="fa-solid fa-user-plus"></i></div>
+              <div class="activity-body">
+                <div class="activity-text">Nova conta <strong>ti@empresa.com.br</strong> criada</div>
+                <div class="activity-time">Ontem, 15:32</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--yellow-bg);color:var(--yellow)"><i class="fa-solid fa-headset"></i></div>
+              <div class="activity-body">
+                <div class="activity-text">Ticket <strong>#1042</strong> respondido pelo suporte</div>
+                <div class="activity-time">28/jun, 11:07</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--green-bg);color:var(--green)"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="activity-body">
+                <div class="activity-text">Certificado SSL renovado automaticamente</div>
+                <div class="activity-time">25/jun, 03:00</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--brand-50);color:var(--brand-600)"><i class="fa-solid fa-globe"></i></div>
+              <div class="activity-body">
+                <div class="activity-text">DNS configurado para <strong>empresa.com.br</strong></div>
+                <div class="activity-time">20/jun, 14:18</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações rápidas -->
+      <div class="card" style="margin-top:20px">
+        <div class="card-title" style="margin-bottom:16px"><i class="fa-solid fa-bolt"></i> Ações Rápidas</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <button class="btn btn-outline" onclick="openModal('modalNovaContaEmail')"><i class="fa-solid fa-user-plus"></i> Nova conta e-mail</button>
+          <button class="btn btn-outline" onclick="navigate('financeiro')"><i class="fa-solid fa-file-invoice"></i> Ver faturas</button>
+          <button class="btn btn-outline" onclick="navigate('configuracoes')"><i class="fa-solid fa-globe"></i> Configurar DNS</button>
+          <button class="btn btn-outline" onclick="openModal('modalNovoTicket')"><i class="fa-solid fa-headset"></i> Abrir ticket</button>
+          <button class="btn btn-outline" onclick="navigate('marketplace')"><i class="fa-solid fa-store"></i> Contratar serviço</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== E-MAIL ===================== -->
+    <section class="section" id="sec-email">
+      <div class="page-hdr">
+        <div class="page-hdr-left">
+          <h2>Contas de E-mail</h2>
+          <p>Gerencie suas caixas postais, aliases e configurações</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modalNovaContaEmail')">
+          <i class="fa-solid fa-plus"></i> Nova conta
+        </button>
+      </div>
+
+      <!-- Storage total -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="flex-between" style="margin-bottom:12px">
+          <div>
+            <div style="font-family:var(--font-title);font-weight:700;font-size:.9rem">Armazenamento total</div>
+            <div style="font-size:.78rem;color:var(--gray-500);margin-top:2px">Plano 25 GB por conta · 5 contas</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:var(--font-title);font-weight:800;font-size:1.1rem;color:var(--brand-700)">15,5 GB</div>
+            <div style="font-size:.72rem;color:var(--gray-500)">de 125 GB totais</div>
+          </div>
+        </div>
+        <div class="progress-bar" style="height:8px">
+          <div class="progress-fill" style="width:12.4%"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Endereço</th>
+                <th>Armazenamento</th>
+                <th>Aliases</th>
+                <th>Último acesso</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="email-chip"><i class="fa-solid fa-envelope" style="font-size:.7rem"></i> joao@empresa.com.br</div></td>
+                <td>
+                  <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">3,2 / 25 GB</div>
+                  <div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:13%"></div></div>
+                </td>
+                <td><span class="badge badge-blue">3 aliases</span></td>
+                <td style="font-size:.82rem;color:var(--gray-500)">Hoje, 08:41</td>
+                <td><span class="badge badge-green"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> Ativo</span></td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('Abrindo configurações…','info')"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('Conta removida.','error')"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><div class="email-chip"><i class="fa-solid fa-envelope" style="font-size:.7rem"></i> contato@empresa.com.br</div></td>
+                <td>
+                  <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">8,1 / 25 GB</div>
+                  <div class="progress-bar" style="width:100px"><div class="progress-fill warn" style="width:32%"></div></div>
+                </td>
+                <td><span class="badge badge-blue">1 alias</span></td>
+                <td style="font-size:.82rem;color:var(--gray-500)">Hoje, 10:15</td>
+                <td><span class="badge badge-green"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> Ativo</span></td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><div class="email-chip"><i class="fa-solid fa-envelope" style="font-size:.7rem"></i> financeiro@empresa.com.br</div></td>
+                <td>
+                  <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">4,2 / 25 GB</div>
+                  <div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:17%"></div></div>
+                </td>
+                <td><span class="badge badge-gray">0 aliases</span></td>
+                <td style="font-size:.82rem;color:var(--gray-500)">29/jun, 16:02</td>
+                <td><span class="badge badge-green"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> Ativo</span></td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><div class="email-chip"><i class="fa-solid fa-envelope" style="font-size:.7rem"></i> rh@empresa.com.br</div></td>
+                <td>
+                  <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">0,0 / 25 GB</div>
+                  <div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:0%"></div></div>
+                </td>
+                <td><span class="badge badge-gray">0 aliases</span></td>
+                <td style="font-size:.82rem;color:var(--gray-500)">Nunca</td>
+                <td><span class="badge badge-yellow"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> Pendente</span></td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><div class="email-chip"><i class="fa-solid fa-envelope" style="font-size:.7rem"></i> ti@empresa.com.br</div></td>
+                <td>
+                  <div style="font-size:.82rem;font-weight:600;margin-bottom:4px">0,0 / 25 GB</div>
+                  <div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:0%"></div></div>
+                </td>
+                <td><span class="badge badge-gray">0 aliases</span></td>
+                <td style="font-size:.82rem;color:var(--gray-500)">Nunca</td>
+                <td><span class="badge badge-green"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> Ativo</span></td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FINANCEIRO ===================== -->
+    <section class="section" id="sec-financeiro">
+      <div class="page-hdr">
+        <div class="page-hdr-left">
+          <h2>Financeiro</h2>
+          <p>Assinaturas, faturas e formas de pagamento</p>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <!-- Assinatura ativa -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px"><i class="fa-solid fa-rotate"></i> Assinatura Ativa</div>
+          <div style="background:linear-gradient(135deg,var(--brand-900),var(--brand-700));border-radius:var(--radius-md);padding:20px;color:white;margin-bottom:16px">
+            <div style="font-size:.72rem;opacity:.6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Plano atual</div>
+            <div style="font-family:var(--font-title);font-weight:800;font-size:1.2rem">E-mail Corporativo 25 GB</div>
+            <div style="font-size:.8rem;opacity:.7;margin-top:4px">5 contas · Cobrança mensal</div>
+            <div style="margin-top:16px;display:flex;align-items:baseline;gap:4px">
+              <span style="font-family:var(--font-title);font-weight:800;font-size:1.8rem">R$ 80,00</span>
+              <span style="font-size:.78rem;opacity:.7">/mês</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="flex-between" style="font-size:.875rem">
+              <span style="color:var(--gray-500)">Próxima cobrança</span>
+              <span style="font-weight:600">08/jul/2026</span>
+            </div>
+            <div class="flex-between" style="font-size:.875rem">
+              <span style="color:var(--gray-500)">Método de pagamento</span>
+              <span style="font-weight:600"><i class="fa-brands fa-pix" style="color:#32bcad"></i> Pix</span>
+            </div>
+            <div class="flex-between" style="font-size:.875rem">
+              <span style="color:var(--gray-500)">Status</span>
+              <span class="badge badge-green">Em dia</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-outline" style="flex:1" onclick="navigate('marketplace')"><i class="fa-solid fa-arrow-up"></i> Upgrade</button>
+            <button class="btn btn-ghost" style="flex:1" onclick="showToast('Entre em contato com o suporte para cancelar.','info')"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+          </div>
+        </div>
+
+        <!-- Próxima fatura -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px"><i class="fa-solid fa-file-invoice-dollar"></i> Próxima Fatura</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+            <div class="flex-between" style="font-size:.875rem;padding:8px 0;border-bottom:1px solid var(--gray-100)">
+              <span style="color:var(--gray-700)">5× E-mail 25 GB</span>
+              <span style="font-weight:600">R$ 80,00</span>
+            </div>
+            <div class="flex-between" style="font-size:.875rem;padding:8px 0;border-bottom:1px solid var(--gray-100)">
+              <span style="color:var(--gray-700)">Talk — Videoconferência (5 contas)</span>
+              <span style="font-weight:600">R$ 23,50</span>
+            </div>
+            <div class="flex-between" style="font-size:.875rem;padding:8px 0">
+              <span style="color:var(--gray-700)">Backup 90 dias (5 contas)</span>
+              <span style="font-weight:600">R$ 30,00</span>
+            </div>
+          </div>
+          <div style="background:var(--brand-50);border-radius:var(--radius-sm);padding:14px 16px">
+            <div class="flex-between">
+              <span style="font-family:var(--font-title);font-weight:700">Total em 08/jul</span>
+              <span style="font-family:var(--font-title);font-weight:800;font-size:1.3rem;color:var(--brand-700)">R$ 133,50</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-primary" style="flex:1" onclick="showToast('Pix gerado! Escaneie o QR Code.','success')">
+              <i class="fa-brands fa-pix"></i> Pagar agora
+            </button>
+            <button class="btn btn-outline" onclick="showToast('Fatura baixada.','success')">
+              <i class="fa-solid fa-download"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Histórico de faturas -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Faturas</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nº</th>
+                <th>Período</th>
+                <th>Vencimento</th>
+                <th>Valor</th>
+                <th>Pagamento</th>
+                <th>Status</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-size:.82rem;color:var(--gray-500)">#0012</td>
+                <td style="font-size:.82rem">jun/2026</td>
+                <td style="font-size:.82rem">08/jun/2026</td>
+                <td class="invoice-amount">R$ 133,50</td>
+                <td style="font-size:.82rem"><i class="fa-brands fa-pix" style="color:#32bcad"></i> Pix</td>
+                <td><span class="badge badge-green">Pago</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="showToast('Baixando PDF…','info')"><i class="fa-solid fa-download"></i></button></td>
+              </tr>
+              <tr>
+                <td style="font-size:.82rem;color:var(--gray-500)">#0011</td>
+                <td style="font-size:.82rem">mai/2026</td>
+                <td style="font-size:.82rem">08/mai/2026</td>
+                <td class="invoice-amount">R$ 133,50</td>
+                <td style="font-size:.82rem"><i class="fa-brands fa-pix" style="color:#32bcad"></i> Pix</td>
+                <td><span class="badge badge-green">Pago</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="showToast('Baixando PDF…','info')"><i class="fa-solid fa-download"></i></button></td>
+              </tr>
+              <tr>
+                <td style="font-size:.82rem;color:var(--gray-500)">#0010</td>
+                <td style="font-size:.82rem">abr/2026</td>
+                <td style="font-size:.82rem">08/abr/2026</td>
+                <td class="invoice-amount">R$ 80,00</td>
+                <td style="font-size:.82rem">💳 Cartão</td>
+                <td><span class="badge badge-green">Pago</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="showToast('Baixando PDF…','info')"><i class="fa-solid fa-download"></i></button></td>
+              </tr>
+              <tr>
+                <td style="font-size:.82rem;color:var(--gray-500)">#0009</td>
+                <td style="font-size:.82rem">mar/2026</td>
+                <td style="font-size:.82rem">08/mar/2026</td>
+                <td class="invoice-amount">R$ 80,00</td>
+                <td style="font-size:.82rem">💳 Cartão</td>
+                <td><span class="badge badge-green">Pago</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="showToast('Baixando PDF…','info')"><i class="fa-solid fa-download"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PRODUTOS ===================== -->
+    <section class="section" id="sec-produtos">
+      <div class="page-hdr">
+        <div class="page-hdr-left">
+          <h2>Meus Produtos</h2>
+          <p>Serviços ativos na sua conta CITMail</p>
+        </div>
+        <button class="btn btn-primary" onclick="navigate('marketplace')">
+          <i class="fa-solid fa-plus"></i> Contratar mais
+        </button>
+      </div>
+
+      <div class="product-grid">
+        <div class="product-card">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="product-card-icon" style="background:var(--brand-50)">📧</div>
+            <span class="badge badge-green">Ativo</span>
+          </div>
+          <div>
+            <div class="product-card-name">E-mail Corporativo 25 GB</div>
+            <div class="product-card-desc" style="margin-top:4px">5 contas · domínio empresa.com.br</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Webmail + IMAP/POP3/SMTP</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Antispam e antivírus</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Backup automático 30 dias</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> SSL/TLS grátis</div>
+          </div>
+          <div class="flex-between" style="margin-top:4px">
+            <div class="product-card-price">R$ 80,00 <span>/mês</span></div>
+            <button class="btn btn-outline btn-sm" onclick="navigate('email')">Gerenciar</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="product-card-icon" style="background:#f0fdf4">🎥</div>
+            <span class="badge badge-green">Ativo</span>
+          </div>
+          <div>
+            <div class="product-card-name">Talk — Videoconferência</div>
+            <div class="product-card-desc" style="margin-top:4px">5 licenças · integrado ao e-mail</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Reuniões ilimitadas</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Compartilhamento de tela</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Gravação na nuvem</div>
+          </div>
+          <div class="flex-between" style="margin-top:4px">
+            <div class="product-card-price">R$ 23,50 <span>/mês</span></div>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Abrindo Talk…','info')">Acessar</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="product-card-icon" style="background:#fffbeb">🗄️</div>
+            <span class="badge badge-green">Ativo</span>
+          </div>
+          <div>
+            <div class="product-card-name">Backup 90 dias</div>
+            <div class="product-card-desc" style="margin-top:4px">5 contas · retenção de 90 dias</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Backup diário automático</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Restauração por e-mail</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Painel de controle</div>
+          </div>
+          <div class="flex-between" style="margin-top:4px">
+            <div class="product-card-price">R$ 30,00 <span>/mês</span></div>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Abrindo Backup…','info')">Gerenciar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MARKETPLACE ===================== -->
+    <section class="section" id="sec-marketplace">
+      <div class="page-hdr">
+        <div class="page-hdr-left">
+          <h2>Marketplace</h2>
+          <p>Expanda sua infraestrutura com serviços CITMail</p>
+        </div>
+      </div>
+
+      <div class="alert alert-blue">
+        <i class="fa-solid fa-tag"></i>
+        <span>Todos os serviços são cobrados junto com sua assinatura mensal. Ativação imediata após contratação.</span>
+      </div>
+
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-card-icon" style="background:var(--brand-50)">☁️</div>
+          <div>
+            <div class="product-card-name">Skybox — Armazenamento Cloud</div>
+            <div class="product-card-desc">Guarde e compartilhe arquivos com segurança. Integrado ao e-mail e acessível de qualquer dispositivo.</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> 50 GB · R$ 17,70/conta/mês</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> 100 GB · R$ 28,70/conta/mês</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> 1 TB · R$ 319,00/conta/mês</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:auto" onclick="showToast('Redirecionando para contratação…','info')">
+            <i class="fa-solid fa-cart-plus"></i> Contratar
+          </button>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-icon" style="background:#f0fdf4">🖥️</div>
+          <div>
+            <div class="product-card-name">Servidores Cloud</div>
+            <div class="product-card-desc">VPS e servidores dedicados de alto desempenho com SLA garantido e suporte 24/7.</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> vCPU dedicado</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> SSD NVMe</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Banda ilimitada</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Backup automático</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:auto" onclick="openModal('modalContratarServidor')">
+            <i class="fa-solid fa-cart-plus"></i> Ver planos
+          </button>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-icon" style="background:#fdf4ff">🗄️</div>
+          <div>
+            <div class="product-card-name">Backup em Nuvem</div>
+            <div class="product-card-desc">Proteja seus dados críticos com backups automatizados, criptografados e redundantes.</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Backup incremental</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Criptografia AES-256</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Retenção configurável</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Restauração rápida</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:auto" onclick="showToast('Redirecionando para contratação…','info')">
+            <i class="fa-solid fa-cart-plus"></i> Contratar
+          </button>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-icon" style="background:#fff7ed">⚙️</div>
+          <div>
+            <div class="product-card-name">DevOps & Infraestrutura</div>
+            <div class="product-card-desc">Automação, CI/CD, containers e gestão de infraestrutura com especialistas certificados.</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Pipeline CI/CD</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Docker / Kubernetes</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Monitoramento 24/7</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> IaC com Terraform</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:auto" onclick="openModal('modalContratarConsultoria')">
+            <i class="fa-solid fa-calendar-check"></i> Agendar conversa
+          </button>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-icon" style="background:#f0f9ff">🔒</div>
+          <div>
+            <div class="product-card-name">Consultoria em TI</div>
+            <div class="product-card-desc">Projetos personalizados de TI, segurança da informação, migração e gestão de ambientes.</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Diagnóstico gratuito</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Plano de ação detalhado</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> Profissionais certificados</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:auto" onclick="openModal('modalContratarConsultoria')">
+            <i class="fa-solid fa-calendar-check"></i> Agendar conversa
+          </button>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-icon" style="background:#fdf2f8">🌐</div>
+          <div>
+            <div class="product-card-name">Domínio extra .com.br</div>
+            <div class="product-card-desc">Registre ou transfira domínios adicionais para sua conta. Gestão centralizada no painel.</div>
+          </div>
+          <div class="product-card-features">
+            <div class="product-feat"><i class="fa-solid fa-check"></i> .com.br — R$ 79,00/ano</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> .com — R$ 150,00/ano</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> DNS gerenciado</div>
+            <div class="product-feat"><i class="fa-solid fa-check"></i> WHOIS protegido</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:auto" onclick="showToast('Redirecionando…','info')">
+            <i class="fa-solid fa-cart-plus"></i> Registrar domínio
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONFIGURAÇÕES ===================== -->
+    <section class="section" id="sec-configuracoes">
+      <div class="page-hdr">
+        <div class="page-hdr-left">
+          <h2>Configurações</h2>
+          <p>Perfil, segurança, domínio e preferências</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'tab-perfil')">Perfil</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-dns')">DNS / Domínio</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-seguranca')">Segurança</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-notif')">Notificações</button>
+      </div>
+
+      <!-- TAB PERFIL -->
+      <div class="tab-panel active" id="tab-perfil">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:20px"><i class="fa-solid fa-user"></i> Dados Cadastrais</div>
+            <div class="form-row">
+              <div class="field">
+                <label>Nome completo</label>
+                <input type="text" value="João da Silva" />
+              </div>
+              <div class="field">
+                <label>E-mail de contato</label>
+                <input type="email" value="joao@empresa.com.br" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Telefone / WhatsApp</label>
+                <input type="tel" value="(11) 99999-9999" />
+              </div>
+              <div class="field">
+                <label>CNPJ</label>
+                <input type="text" value="12.345.678/0001-90" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Razão Social</label>
+              <input type="text" value="Empresa Exemplo Ltda" />
+            </div>
+            <button class="btn btn-primary" onclick="showToast('Dados salvos com sucesso!','success')">
+              <i class="fa-solid fa-floppy-disk"></i> Salvar alterações
+            </button>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:20px"><i class="fa-solid fa-location-dot"></i> Endereço</div>
+            <div class="form-row">
+              <div class="field">
+                <label>CEP</label>
+                <input type="text" value="01310-100" />
+              </div>
+              <div class="field">
+                <label>Estado</label>
+                <select><option>SP</option><option>RJ</option><option>MG</option></select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Logradouro</label>
+              <input type="text" value="Av. Paulista" />
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Número</label>
+                <input type="text" value="1000" />
+              </div>
+              <div class="field">
+                <label>Bairro</label>
+                <input type="text" value="Bela Vista" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Cidade</label>
+              <input type="text" value="São Paulo" />
+            </div>
+            <button class="btn btn-primary" onclick="showToast('Endereço salvo!','success')">
+              <i class="fa-solid fa-floppy-disk"></i> Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB DNS -->
+      <div class="tab-panel" id="tab-dns">
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-globe"></i> Domínio: empresa.com.br</div>
+            <span class="badge badge-green"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> DNS Ativo</span>
+          </div>
+          <div class="alert alert-blue" style="margin-bottom:16px">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Adicione os registros abaixo no painel do seu registrador de domínio para ativar os serviços de e-mail.</span>
+          </div>
+          <div style="border:1px solid var(--gray-200);border-radius:var(--radius-md);overflow:hidden">
+            <div style="display:grid;grid-template-columns:80px 80px 1fr 1fr;gap:10px;padding:8px 14px;background:var(--gray-100)">
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500)">Tipo</div>
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500)">Nome</div>
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500)">Valor</div>
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500)">Prioridade</div>
+            </div>
+            <div class="dns-record">
+              <span class="dns-type">MX</span>
+              <span style="font-size:.82rem">@</span>
+              <span class="dns-value">mail.citmail.com.br</span>
+              <span style="font-size:.82rem;color:var(--gray-500)">10</span>
+            </div>
+            <div class="dns-record">
+              <span class="dns-type">MX</span>
+              <span style="font-size:.82rem">@</span>
+              <span class="dns-value">mail2.citmail.com.br</span>
+              <span style="font-size:.82rem;color:var(--gray-500)">20</span>
+            </div>
+            <div class="dns-record">
+              <span class="dns-type">TXT</span>
+              <span style="font-size:.82rem">@</span>
+              <span class="dns-value">v=spf1 include:citmail.com.br ~all</span>
+              <span style="font-size:.82rem;color:var(--gray-500)">—</span>
+            </div>
+            <div class="dns-record">
+              <span class="dns-type">CNAME</span>
+              <span style="font-size:.82rem">webmail</span>
+              <span class="dns-value">webmail.citmail.com.br</span>
+              <span style="font-size:.82rem;color:var(--gray-500)">—</span>
+            </div>
+            <div class="dns-record">
+              <span class="dns-type">TXT</span>
+              <span style="font-size:.82rem">_dmarc</span>
+              <span class="dns-value">v=DMARC1; p=quarantine; rua=mailto:dmarc@citmail.com.br</span>
+              <span style="font-size:.82rem;color:var(--gray-500)">—</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:16px">
+            <button class="btn btn-outline" onclick="showToast('Registros copiados!','success')"><i class="fa-solid fa-copy"></i> Copiar todos</button>
+            <button class="btn btn-ghost" onclick="showToast('Verificando propagação DNS…','info')"><i class="fa-solid fa-rotate"></i> Verificar propagação</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB SEGURANÇA -->
+      <div class="tab-panel" id="tab-seguranca">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:20px"><i class="fa-solid fa-lock"></i> Alterar Senha do Painel</div>
+            <div class="field">
+              <label>Senha atual</label>
+              <input type="password" placeholder="••••••••" />
+            </div>
+            <div class="field">
+              <label>Nova senha</label>
+              <input type="password" placeholder="Mínimo 8 caracteres" />
+            </div>
+            <div class="field">
+              <label>Confirmar nova senha</label>
+              <input type="password" placeholder="Repita a nova senha" />
+            </div>
+            <button class="btn btn-primary" onclick="showToast('Senha alterada com sucesso!','success')">
+              <i class="fa-solid fa-lock"></i> Alterar senha
+            </button>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:20px"><i class="fa-solid fa-shield-halved"></i> Sessões Ativas</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--brand-50);border-radius:var(--radius-sm);border:1px solid var(--brand-100)">
+                <i class="fa-solid fa-laptop" style="color:var(--brand-600);font-size:1.1rem"></i>
+                <div style="flex:1">
+                  <div style="font-size:.875rem;font-weight:600">Computador — São Paulo, BR</div>
+                  <div style="font-size:.72rem;color:var(--gray-500)">Chrome 126 · Sessão atual</div>
+                </div>
+                <span class="badge badge-green">Ativa</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--gray-100);border-radius:var(--radius-sm)">
+                <i class="fa-solid fa-mobile-screen" style="color:var(--gray-500);font-size:1.1rem"></i>
+                <div style="flex:1">
+                  <div style="font-size:.875rem;font-weight:600">iPhone — São Paulo, BR</div>
+                  <div style="font-size:.72rem;color:var(--gray-500)">Safari · Há 2 horas</div>
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="showToast('Sessão encerrada.','success')">Encerrar</button>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <button class="btn btn-danger" onclick="showToast('Todas as outras sessões foram encerradas.','success')">
+              <i class="fa-solid fa-right-from-bracket"></i> Encerrar todas as outras sessões
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB NOTIFICAÇÕES -->
+      <div class="tab-panel" id="tab-notif">
+        <div class="card" style="max-width:560px">
+          <div class="card-title" style="margin-bottom:20px"><i class="fa-solid fa-bell"></i> Preferências de Notificação</div>
+          <div style="display:flex;flex-direction:column;gap:0">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100)">
+              <div>
+                <div style="font-size:.875rem;font-weight:600">Faturas e cobranças</div>
+                <div style="font-size:.75rem;color:var(--gray-500)">Lembretes de vencimento e confirmações</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Preferência salva.','success')" />
+                <span class="toggle-knob"></span>
+              </label>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100)">
+              <div>
+                <div style="font-size:.875rem;font-weight:600">Manutenções e atualizações</div>
+                <div style="font-size:.75rem;color:var(--gray-500)">Avisos de manutenção programada</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Preferência salva.','success')" />
+                <span class="toggle-knob"></span>
+              </label>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--gray-100)">
+              <div>
+                <div style="font-size:.875rem;font-weight:600">Respostas de tickets</div>
+                <div style="font-size:.75rem;color:var(--gray-500)">Notificar quando o suporte responder</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Preferência salva.','success')" />
+                <span class="toggle-knob"></span>
+              </label>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0">
+              <div>
+                <div style="font-size:.875rem;font-weight:600">Novidades e promoções</div>
+                <div style="font-size:.75rem;color:var(--gray-500)">Lançamentos e ofertas especiais</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" onchange="showToast('Preferência salva.','success')" />
+                <span class="toggle-knob"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SUPORTE ===================== -->
+    <section class="section" id="sec-suporte">
+      <div class="page-hdr">
+        <div class="page-hdr-left">
+          <h2>Suporte</h2>
+          <p>Abra tickets e acompanhe seus chamados</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modalNovoTicket')">
+          <i class="fa-solid fa-plus"></i> Novo ticket
+        </button>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card" style="display:flex;align-items:center;gap:16px">
+          <div style="width:44px;height:44px;border-radius:var(--radius-md);background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div>
+            <div style="font-size:.78rem;color:var(--gray-500)">Tempo médio de resposta</div>
+            <div style="font-family:var(--font-title);font-weight:800;font-size:1.2rem;color:var(--brand-900)">≤ 2 horas</div>
+          </div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:16px">
+          <div style="width:44px;height:44px;border-radius:var(--radius-md);background:var(--brand-50);color:var(--brand-600);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">
+            <i class="fa-solid fa-headset"></i>
+          </div>
+          <div>
+            <div style="font-size:.78rem;color:var(--gray-500)">Suporte disponível</div>
+            <div style="font-family:var(--font-title);font-weight:800;font-size:1.2rem;color:var(--brand-900)">Seg–Sex 8h–18h</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-list"></i> Meus Tickets</div>
+          <div style="display:flex;gap:8px">
+            <select style="padding:6px 10px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.82rem;color:var(--gray-700);background:white;outline:none">
+              <option>Todos</option>
+              <option>Abertos</option>
+              <option>Resolvidos</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Assunto</th>
+                <th>Categoria</th>
+                <th>Aberto em</th>
+                <th>Última atualização</th>
+                <th>Status</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="ticket-row" onclick="openModal('modalVerTicket')">
+                <td style="font-size:.8rem;color:var(--gray-500)">#1044</td>
+                <td>
+                  <div class="ticket-subject">E-mail não chega no iPhone</div>
+                  <div class="ticket-preview">Configurei o IMAP mas não consigo receber…</div>
+                </td>
+                <td><span class="badge badge-blue">Técnico</span></td>
+                <td style="font-size:.82rem;color:var(--gray-500)">30/jun, 10:22</td>
+                <td style="font-size:.82rem;color:var(--gray-500)">30/jun, 14:08</td>
+                <td><span class="badge badge-yellow">Aguardando</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openModal('modalVerTicket')"><i class="fa-solid fa-eye"></i></button></td>
+              </tr>
+              <tr class="ticket-row">
+                <td style="font-size:.8rem;color:var(--gray-500)">#1042</td>
+                <td>
+                  <div class="ticket-subject">Configuração SPF / DKIM</div>
+                  <div class="ticket-preview">Preciso de ajuda para validar os registros DNS…</div>
+                </td>
+                <td><span class="badge badge-blue">Técnico</span></td>
+                <td style="font-size:.82rem;color:var(--gray-500)">28/jun, 09:15</td>
+                <td style="font-size:.82rem;color:var(--gray-500)">29/jun, 11:07</td>
+                <td><span class="badge badge-yellow">Em andamento</span></td>
+                <td><button class="btn btn-ghost btn-sm"><i class="fa-solid fa-eye"></i></button></td>
+              </tr>
+              <tr class="ticket-row">
+                <td style="font-size:.8rem;color:var(--gray-500)">#1038</td>
+                <td>
+                  <div class="ticket-subject">Nota fiscal da fatura #0011</div>
+                  <div class="ticket-preview">Preciso da NF para prestação de contas…</div>
+                </td>
+                <td><span class="badge badge-gray">Financeiro</span></td>
+                <td style="font-size:.82rem;color:var(--gray-500)">15/jun, 16:40</td>
+                <td style="font-size:.82rem;color:var(--gray-500)">16/jun, 09:30</td>
+                <td><span class="badge badge-green">Resolvido</span></td>
+                <td><button class="btn btn-ghost btn-sm"><i class="fa-solid fa-eye"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- Nova conta de e-mail -->
+<div class="modal-overlay" id="modalNovaContaEmail">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-user-plus" style="color:var(--brand-600);margin-right:8px"></i>Nova Conta de E-mail</h3>
+      <button class="modal-close" onclick="closeModal('modalNovaContaEmail')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field mb-0">
+          <label>Nome do usuário <span style="color:var(--red)">*</span></label>
+          <input type="text" placeholder="joao.silva" id="newEmailUser" />
+          <span class="field-hint">Será: joao.silva@empresa.com.br</span>
+        </div>
+        <div class="field mb-0">
+          <label>Nome completo</label>
+          <input type="text" placeholder="João Silva" />
+        </div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Senha <span style="color:var(--red)">*</span></label>
+        <input type="password" placeholder="Mínimo 8 caracteres" />
+      </div>
+      <div class="field">
+        <label>Quota de armazenamento</label>
+        <select>
+          <option>25 GB (padrão do plano)</option>
+          <option>10 GB</option>
+          <option>5 GB</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalNovaContaEmail')">Cancelar</button>
+      <button class="btn btn-primary" onclick="closeModal('modalNovaContaEmail');showToast('Conta criada com sucesso!','success')">
+        <i class="fa-solid fa-plus"></i> Criar conta
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Novo ticket -->
+<div class="modal-overlay" id="modalNovoTicket">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-headset" style="color:var(--brand-600);margin-right:8px"></i>Novo Ticket de Suporte</h3>
+      <button class="modal-close" onclick="closeModal('modalNovoTicket')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field mb-0">
+          <label>Categoria <span style="color:var(--red)">*</span></label>
+          <select>
+            <option>Técnico — E-mail</option>
+            <option>Técnico — DNS</option>
+            <option>Financeiro</option>
+            <option>Acesso ao Painel</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label>Prioridade</label>
+          <select>
+            <option>Normal</option>
+            <option>Alta</option>
+            <option>Urgente</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Assunto <span style="color:var(--red)">*</span></label>
+        <input type="text" placeholder="Descreva brevemente o problema" />
+      </div>
+      <div class="field">
+        <label>Descrição <span style="color:var(--red)">*</span></label>
+        <textarea placeholder="Descreva o problema com o máximo de detalhes possível. Inclua mensagens de erro, horário do ocorrido e passos para reproduzir…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalNovoTicket')">Cancelar</button>
+      <button class="btn btn-primary" onclick="closeModal('modalNovoTicket');showToast('Ticket #1045 aberto! Você receberá uma resposta em até 2h.','success')">
+        <i class="fa-solid fa-paper-plane"></i> Abrir ticket
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Ver ticket -->
+<div class="modal-overlay" id="modalVerTicket">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <div>
+        <h3>Ticket #1044 — E-mail não chega no iPhone</h3>
+        <div style="margin-top:4px;display:flex;gap:8px">
+          <span class="badge badge-yellow">Aguardando sua resposta</span>
+          <span class="badge badge-blue">Técnico</span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalVerTicket')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" style="max-height:420px;overflow-y:auto">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="background:var(--brand-50);border-radius:var(--radius-md);padding:14px">
+          <div style="font-size:.72rem;color:var(--brand-700);font-weight:700;margin-bottom:6px">VOCÊ — 30/jun, 10:22</div>
+          <div style="font-size:.875rem;color:var(--gray-700)">Configurei o IMAP no iPhone mas não consigo receber mensagens. Já tentei com as configurações padrão do guia mas não funciona. O servidor é mail.empresa.com.br?</div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:var(--radius-md);padding:14px">
+          <div style="font-size:.72rem;color:var(--gray-500);font-weight:700;margin-bottom:6px">SUPORTE CITMAIL — 30/jun, 14:08</div>
+          <div style="font-size:.875rem;color:var(--gray-700)">Olá João! Identifiquei que as configurações IMAP devem ser:<br><br>
+            <strong>Servidor:</strong> imap.citmail.com.br<br>
+            <strong>Porta:</strong> 993 (SSL)<br>
+            <strong>Usuário:</strong> endereço completo de e-mail<br><br>
+            Por favor, tente com essas configurações e nos informe o resultado.
+          </div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:16px">
+        <label>Sua resposta</label>
+        <textarea placeholder="Digite sua resposta aqui…" style="min-height:70px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalVerTicket')">Fechar</button>
+      <button class="btn btn-primary" onclick="closeModal('modalVerTicket');showToast('Resposta enviada!','success')">
+        <i class="fa-solid fa-paper-plane"></i> Responder
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Contratar consultoria -->
+<div class="modal-overlay" id="modalContratarConsultoria">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-calendar-check" style="color:var(--brand-600);margin-right:8px"></i>Agendar Conversa</h3>
+      <button class="modal-close" onclick="closeModal('modalContratarConsultoria')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.875rem;color:var(--gray-700);margin-bottom:16px">Um especialista CITMail entrará em contato para entender sua necessidade e apresentar uma proposta personalizada.</p>
+      <div class="field">
+        <label>Serviço de interesse</label>
+        <select><option>DevOps & Infraestrutura</option><option>Consultoria em TI</option><option>Servidores Cloud</option></select>
+      </div>
+      <div class="field">
+        <label>Melhor horário para contato</label>
+        <select>
+          <option>Manhã (8h–12h)</option>
+          <option>Tarde (13h–18h)</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label>Descreva brevemente sua necessidade</label>
+        <textarea placeholder="Ex.: Precisamos configurar um pipeline CI/CD para 3 microserviços…" style="min-height:70px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalContratarConsultoria')">Cancelar</button>
+      <button class="btn btn-primary" onclick="closeModal('modalContratarConsultoria');showToast('Solicitação enviada! Um especialista entrará em contato em até 1 dia útil.','success')">
+        <i class="fa-solid fa-paper-plane"></i> Enviar solicitação
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Contratar servidor -->
+<div class="modal-overlay" id="modalContratarServidor">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-server" style="color:var(--brand-600);margin-right:8px"></i>Planos de Servidor Cloud</h3>
+      <button class="modal-close" onclick="closeModal('modalContratarServidor')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <label style="display:flex;align-items:center;gap:14px;padding:14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer" onclick="this.style.borderColor='var(--brand-500)';this.style.background='var(--brand-50)'">
+          <input type="radio" name="server" style="accent-color:var(--brand-600)" />
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:.9rem">VPS Starter</div>
+            <div style="font-size:.75rem;color:var(--gray-500)">2 vCPU · 4 GB RAM · 80 GB SSD</div>
+          </div>
+          <div style="font-family:var(--font-title);font-weight:800;color:var(--brand-700)">R$ 89/mês</div>
+        </label>
+        <label style="display:flex;align-items:center;gap:14px;padding:14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer" onclick="this.style.borderColor='var(--brand-500)';this.style.background='var(--brand-50)'">
+          <input type="radio" name="server" style="accent-color:var(--brand-600)" />
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:.9rem">VPS Pro</div>
+            <div style="font-size:.75rem;color:var(--gray-500)">4 vCPU · 8 GB RAM · 160 GB SSD</div>
+          </div>
+          <div style="font-family:var(--font-title);font-weight:800;color:var(--brand-700)">R$ 169/mês</div>
+        </label>
+        <label style="display:flex;align-items:center;gap:14px;padding:14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer" onclick="this.style.borderColor='var(--brand-500)';this.style.background='var(--brand-50)'">
+          <input type="radio" name="server" style="accent-color:var(--brand-600)" />
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:.9rem">Dedicado</div>
+            <div style="font-size:.75rem;color:var(--gray-500)">8 vCPU · 32 GB RAM · 500 GB NVMe</div>
+          </div>
+          <div style="font-family:var(--font-title);font-weight:800;color:var(--brand-700)">R$ 499/mês</div>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalContratarServidor')">Cancelar</button>
+      <button class="btn btn-primary" onclick="closeModal('modalContratarServidor');showToast('Servidor contratado! Ativação em até 5 minutos.','success')">
+        <i class="fa-solid fa-check"></i> Contratar plano
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<style>
+  /* toggle switch */
+  .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; cursor: pointer; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-knob {
+    position: absolute; inset: 0;
+    background: var(--gray-300); border-radius: 100px;
+    transition: background var(--transition);
+  }
+  .toggle-knob::before {
+    content: ''; position: absolute;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: white; top: 3px; left: 3px;
+    transition: transform var(--transition);
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  }
+  .toggle-switch input:checked + .toggle-knob { background: var(--brand-600); }
+  .toggle-switch input:checked + .toggle-knob::before { transform: translateX(18px); }
+</style>
+
+<script>
+  /* ── NAVIGATION ── */
+  const SECTION_TITLES = {
+    dashboard: 'Dashboard',
+    email: 'E-mail',
+    financeiro: 'Financeiro',
+    produtos: 'Meus Produtos',
+    marketplace: 'Marketplace',
+    configuracoes: 'Configurações',
+    suporte: 'Suporte',
+  };
+
+  function navigate(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('sec-' + id).classList.add('active');
+    const navItem = document.querySelector(`.nav-item[data-section="${id}"]`);
+    if (navItem) navItem.classList.add('active');
+    document.getElementById('topbarTitle').textContent = SECTION_TITLES[id] || id;
+    closeSidebar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── SIDEBAR (mobile) ── */
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarBackdrop').classList.toggle('open');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarBackdrop').classList.remove('open');
+  }
+
+  /* ── TABS ── */
+  function switchTab(btn, panelId) {
+    const section = btn.closest('.section');
+    section.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    section.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+  }
+
+  /* ── MODALS ── */
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+
+  /* ── TOAST ── */
+  function showToast(msg, type = 'info') {
+    const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+    const wrap = document.getElementById('toastWrap');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fa-solid ${icons[type]}"></i><span>${msg}</span>`;
+    wrap.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity .3s';
+      setTimeout(() => toast.remove(), 300);
+    }, 3800);
+  }
+
+  /* ── DEMO: personalize sidebar with URL name param ── */
+  (function init() {
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('nome') || 'João da Silva';
+    const initials = name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+    document.getElementById('sidebarName').textContent = name;
+    document.getElementById('sidebarInitials').textContent = initials;
+    document.getElementById('topbarAvatar').textContent = initials;
+  })();
+</script>
+</body>
+</html>
