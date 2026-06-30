@@ -480,6 +480,96 @@
       color: var(--gray-700); word-break: break-all;
     }
 
+    /* ── DNS MANAGEMENT ── */
+    .domain-tabs {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px;
+    }
+    .domain-tab {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+      background: white; cursor: pointer;
+      font-size: .85rem; font-weight: 500;
+      transition: all var(--transition); box-shadow: var(--shadow-sm);
+    }
+    .domain-tab:hover { border-color: var(--brand-400); }
+    .domain-tab.active {
+      border-color: var(--brand-600);
+      background: var(--brand-50);
+      color: var(--brand-700); font-weight: 700;
+    }
+    .domain-tab .domain-status-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .domain-status-dot.active  { background: var(--green); }
+    .domain-status-dot.propagating { background: var(--yellow); }
+    .domain-status-dot.error   { background: var(--red); }
+
+    .dns-table-wrap {
+      border: 1px solid var(--gray-200); border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .dns-table-head {
+      display: grid;
+      grid-template-columns: 72px 120px 1fr 68px 68px 80px;
+      gap: 8px; padding: 9px 14px;
+      background: var(--gray-100);
+      font-family: var(--font-title); font-weight: 700;
+      font-size: .68rem; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--gray-500);
+    }
+    .dns-table-row {
+      display: grid;
+      grid-template-columns: 72px 120px 1fr 68px 68px 80px;
+      gap: 8px; align-items: center;
+      padding: 11px 14px;
+      border-top: 1px solid var(--gray-100);
+      font-size: .82rem;
+      transition: background var(--transition);
+    }
+    .dns-table-row:hover { background: var(--gray-100); }
+
+    /* Record type badges */
+    .rt { font-family: var(--font-title); font-weight: 700; font-size: .68rem;
+          padding: 3px 7px; border-radius: 5px; text-align: center; }
+    .rt-A     { background: #dbeafe; color: #1d4ed8; }
+    .rt-AAAA  { background: #e0e7ff; color: #4338ca; }
+    .rt-CNAME { background: #ccfbf1; color: #0f766e; }
+    .rt-MX    { background: #ffedd5; color: #c2410c; }
+    .rt-TXT   { background: #f3e8ff; color: #7e22ce; }
+    .rt-NS    { background: var(--gray-200); color: var(--gray-700); }
+    .rt-SRV   { background: #fce7f3; color: #9d174d; }
+    .rt-CAA   { background: #dcfce7; color: #15803d; }
+
+    .dns-host { font-family: monospace; font-size: .8rem; color: var(--gray-900); font-weight: 600; }
+    .dns-val  { font-family: monospace; font-size: .78rem; color: var(--gray-700);
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dns-ttl  { font-size: .78rem; color: var(--gray-500); }
+    .dns-prio { font-size: .78rem; color: var(--gray-500); text-align: center; }
+    .dns-actions { display: flex; gap: 4px; justify-content: flex-end; }
+    .dns-btn {
+      width: 28px; height: 28px; border-radius: var(--radius-sm);
+      border: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: .78rem;
+      transition: all var(--transition);
+    }
+    .dns-btn-edit  { background: var(--brand-50); color: var(--brand-600); }
+    .dns-btn-edit:hover  { background: var(--brand-100); }
+    .dns-btn-del   { background: var(--red-bg); color: var(--red); }
+    .dns-btn-del:hover   { background: #fca5a5; }
+
+    .dns-search-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .dns-filter-chip {
+      padding: 4px 12px; border-radius: 100px;
+      border: 1.5px solid var(--gray-200); background: white;
+      font-size: .75rem; font-weight: 600; cursor: pointer;
+      transition: all var(--transition); color: var(--gray-600);
+    }
+    .dns-filter-chip:hover { border-color: var(--brand-400); color: var(--brand-600); }
+    .dns-filter-chip.active { border-color: var(--brand-600); background: var(--brand-50); color: var(--brand-700); }
+
     /* ── MODAL ── */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
@@ -620,6 +710,9 @@
     </a>
     <a class="nav-item" data-section="marketplace" onclick="navigate('marketplace')">
       <i class="fa-solid fa-store"></i> Marketplace
+    </a>
+    <a class="nav-item" data-section="dns" onclick="navigate('dns')">
+      <i class="fa-solid fa-server"></i> DNS
     </a>
 
     <div class="nav-section-label">Conta</div>
@@ -1281,17 +1374,92 @@
     </section>
 
     <!-- ===================== CONFIGURAÇÕES ===================== -->
+    <!-- ===================== DNS ===================== -->
+    <section class="section" id="sec-dns">
+      <div class="page-hdr">
+        <div class="page-hdr-left">
+          <h2>DNS</h2>
+          <p>Gerencie os registros DNS dos seus domínios</p>
+        </div>
+        <button class="btn btn-primary" onclick="dnsOpenAddRecord()">
+          <i class="fa-solid fa-plus"></i> Adicionar registro
+        </button>
+      </div>
+
+      <!-- Domain selector -->
+      <div class="domain-tabs" id="dnsDomainTabs"></div>
+
+      <!-- Propagation status -->
+      <div class="card" style="margin-bottom:18px;padding:16px 20px" id="dnsPropCard">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div id="dnsPropIcon" style="width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem" id="dnsPropTitle"></div>
+            <div style="font-size:.75rem;color:var(--gray-500)" id="dnsPropSub"></div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="dnsCheckProp()">
+            <i class="fa-solid fa-rotate"></i> Verificar propagação
+          </button>
+        </div>
+      </div>
+
+      <!-- Records card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-list"></i> Registros DNS — <span id="dnsActiveDomainLabel" style="color:var(--brand-600)"></span></div>
+          <div style="font-size:.78rem;color:var(--gray-500)" id="dnsRecordCount"></div>
+        </div>
+
+        <!-- Search + type filter -->
+        <div class="dns-search-row">
+          <div class="topbar-search" style="max-width:220px;flex:none">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="dnsSearch" placeholder="Buscar registro…" oninput="dnsRender()" />
+          </div>
+          <div id="dnsTypeFilters" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+        </div>
+
+        <!-- Table header -->
+        <div class="dns-table-wrap">
+          <div class="dns-table-head">
+            <div>Tipo</div>
+            <div>Host</div>
+            <div>Valor / Destino</div>
+            <div>TTL</div>
+            <div style="text-align:center">Prio.</div>
+            <div></div>
+          </div>
+          <div id="dnsTableBody"></div>
+        </div>
+
+        <!-- Empty state -->
+        <div id="dnsEmpty" style="display:none;text-align:center;padding:40px 0;color:var(--gray-500)">
+          <i class="fa-solid fa-magnifying-glass" style="font-size:2rem;opacity:.3;margin-bottom:12px;display:block"></i>
+          Nenhum registro encontrado.
+        </div>
+      </div>
+
+      <!-- Recommended email records alert -->
+      <div class="alert alert-blue" style="margin-top:18px" id="dnsEmailAlert">
+        <i class="fa-solid fa-circle-info"></i>
+        <div>
+          <strong>Registros recomendados para e-mail:</strong>
+          MX (entrega de e-mails), SPF e DMARC (TXT) protegem contra spam e spoofing, CNAME webmail aponta para o webmail CITMail.
+          Todos os registros necessários já estão configurados automaticamente pela CITMail.
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="sec-configuracoes">
       <div class="page-hdr">
         <div class="page-hdr-left">
           <h2>Configurações</h2>
-          <p>Perfil, segurança, domínio e preferências</p>
+          <p>Perfil, segurança e preferências</p>
         </div>
       </div>
 
       <div class="tabs">
         <button class="tab-btn active" onclick="switchTab(this,'tab-perfil')">Perfil</button>
-        <button class="tab-btn" onclick="switchTab(this,'tab-dns')">DNS / Domínio</button>
         <button class="tab-btn" onclick="switchTab(this,'tab-seguranca')">Segurança</button>
         <button class="tab-btn" onclick="switchTab(this,'tab-notif')">Notificações</button>
       </div>
@@ -1362,62 +1530,6 @@
             <button class="btn btn-primary" onclick="showToast('Endereço salvo!','success')">
               <i class="fa-solid fa-floppy-disk"></i> Salvar
             </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB DNS -->
-      <div class="tab-panel" id="tab-dns">
-        <div class="card" style="margin-bottom:20px">
-          <div class="card-header">
-            <div class="card-title"><i class="fa-solid fa-globe"></i> Domínio: empresa.com.br</div>
-            <span class="badge badge-green"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> DNS Ativo</span>
-          </div>
-          <div class="alert alert-blue" style="margin-bottom:16px">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>Adicione os registros abaixo no painel do seu registrador de domínio para ativar os serviços de e-mail.</span>
-          </div>
-          <div style="border:1px solid var(--gray-200);border-radius:var(--radius-md);overflow:hidden">
-            <div style="display:grid;grid-template-columns:80px 80px 1fr 1fr;gap:10px;padding:8px 14px;background:var(--gray-100)">
-              <div style="font-family:var(--font-title);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500)">Tipo</div>
-              <div style="font-family:var(--font-title);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500)">Nome</div>
-              <div style="font-family:var(--font-title);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500)">Valor</div>
-              <div style="font-family:var(--font-title);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500)">Prioridade</div>
-            </div>
-            <div class="dns-record">
-              <span class="dns-type">MX</span>
-              <span style="font-size:.82rem">@</span>
-              <span class="dns-value">mail.citmail.com.br</span>
-              <span style="font-size:.82rem;color:var(--gray-500)">10</span>
-            </div>
-            <div class="dns-record">
-              <span class="dns-type">MX</span>
-              <span style="font-size:.82rem">@</span>
-              <span class="dns-value">mail2.citmail.com.br</span>
-              <span style="font-size:.82rem;color:var(--gray-500)">20</span>
-            </div>
-            <div class="dns-record">
-              <span class="dns-type">TXT</span>
-              <span style="font-size:.82rem">@</span>
-              <span class="dns-value">v=spf1 include:citmail.com.br ~all</span>
-              <span style="font-size:.82rem;color:var(--gray-500)">—</span>
-            </div>
-            <div class="dns-record">
-              <span class="dns-type">CNAME</span>
-              <span style="font-size:.82rem">webmail</span>
-              <span class="dns-value">webmail.citmail.com.br</span>
-              <span style="font-size:.82rem;color:var(--gray-500)">—</span>
-            </div>
-            <div class="dns-record">
-              <span class="dns-type">TXT</span>
-              <span style="font-size:.82rem">_dmarc</span>
-              <span class="dns-value">v=DMARC1; p=quarantine; rua=mailto:dmarc@citmail.com.br</span>
-              <span style="font-size:.82rem;color:var(--gray-500)">—</span>
-            </div>
-          </div>
-          <div style="display:flex;gap:10px;margin-top:16px">
-            <button class="btn btn-outline" onclick="showToast('Registros copiados!','success')"><i class="fa-solid fa-copy"></i> Copiar todos</button>
-            <button class="btn btn-ghost" onclick="showToast('Verificando propagação DNS…','info')"><i class="fa-solid fa-rotate"></i> Verificar propagação</button>
           </div>
         </div>
       </div>
@@ -1627,6 +1739,64 @@
 <!-- ===================== MODALS ===================== -->
 
 <!-- Nova conta de e-mail -->
+<!-- ── MODAL DNS RECORD ── -->
+<div class="modal-overlay" id="modalDnsRecord">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3 id="modalDnsTitle"><i class="fa-solid fa-server" style="color:var(--brand-600);margin-right:8px"></i>Adicionar Registro</h3>
+      <button class="modal-close" onclick="closeModal('modalDnsRecord')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field">
+          <label>Tipo</label>
+          <select id="dnsRType" onchange="dnsTogglePriority()">
+            <option>A</option>
+            <option>AAAA</option>
+            <option>CNAME</option>
+            <option>MX</option>
+            <option>TXT</option>
+            <option>NS</option>
+            <option>SRV</option>
+            <option>CAA</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>TTL</label>
+          <select id="dnsRTtl">
+            <option value="300">5 min (300)</option>
+            <option value="1800">30 min (1800)</option>
+            <option value="3600" selected>1 hora (3600)</option>
+            <option value="21600">6 horas (21600)</option>
+            <option value="86400">24 horas (86400)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Host / Nome</label>
+          <input type="text" id="dnsRHost" placeholder="@ ou subdomínio" />
+          <span class="field-hint">Use @ para o domínio raiz</span>
+        </div>
+        <div class="field" id="dnsRPrioField" style="display:none">
+          <label>Prioridade</label>
+          <input type="number" id="dnsRPrio" value="10" min="0" max="65535" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Valor / Destino</label>
+        <textarea id="dnsRValue" rows="3" placeholder="IP, hostname ou texto…" style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:var(--radius-sm);font-family:monospace;font-size:.82rem;resize:vertical;outline:none;transition:border-color var(--transition)"></textarea>
+        <span class="field-hint" id="dnsRValueHint">Ex: 177.126.48.201</span>
+      </div>
+      <input type="hidden" id="dnsREditId" value="" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalDnsRecord')">Cancelar</button>
+      <button class="btn btn-primary" onclick="dnsSaveRecord()"><i class="fa-solid fa-floppy-disk"></i> Salvar registro</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalNovaContaEmail">
   <div class="modal">
     <div class="modal-header">
@@ -1865,6 +2035,7 @@
     financeiro: 'Financeiro',
     produtos: 'Meus Produtos',
     marketplace: 'Marketplace',
+    dns: 'DNS',
     configuracoes: 'Configurações',
     suporte: 'Suporte',
   };
@@ -1938,6 +2109,223 @@
     document.getElementById('sidebarInitials').textContent = initials;
     document.getElementById('topbarAvatar').textContent = initials;
   })();
+
+  /* ── DNS MANAGEMENT ── */
+  const dnsData = {
+    'empresa.com.br': {
+      status: 'active',
+      lastCheck: '5 minutos atrás',
+      records: [
+        { id:1,  type:'A',     host:'@',            value:'177.126.48.201',                                          ttl:'300',  priority:null },
+        { id:2,  type:'MX',    host:'@',            value:'mail.citmail.com.br',                                     ttl:'3600', priority:'10' },
+        { id:3,  type:'MX',    host:'@',            value:'mail2.citmail.com.br',                                    ttl:'3600', priority:'20' },
+        { id:4,  type:'TXT',   host:'@',            value:'v=spf1 include:citmail.com.br ~all',                      ttl:'3600', priority:null },
+        { id:5,  type:'TXT',   host:'_dmarc',       value:'v=DMARC1; p=quarantine; rua=mailto:dmarc@citmail.com.br',ttl:'3600', priority:null },
+        { id:6,  type:'TXT',   host:'_domainkey',   value:'v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4G…',        ttl:'3600', priority:null },
+        { id:7,  type:'CNAME', host:'webmail',      value:'webmail.citmail.com.br',                                  ttl:'3600', priority:null },
+        { id:8,  type:'CNAME', host:'autodiscover', value:'autodiscover.citmail.com.br',                             ttl:'3600', priority:null },
+      ]
+    },
+    'empresa.com': {
+      status: 'propagating',
+      lastCheck: '10 minutos atrás',
+      records: [
+        { id:9,  type:'A',     host:'@',   value:'177.126.48.201',                     ttl:'300',  priority:null },
+        { id:10, type:'MX',    host:'@',   value:'mail.citmail.com.br',                ttl:'3600', priority:'10' },
+        { id:11, type:'TXT',   host:'@',   value:'v=spf1 include:citmail.com.br ~all', ttl:'3600', priority:null },
+        { id:12, type:'CNAME', host:'www', value:'empresa.com.br',                     ttl:'3600', priority:null },
+      ]
+    }
+  };
+  let activeDnsDomain = 'empresa.com.br';
+  let dnsActiveTypeFilter = 'Todos';
+  let dnsNextId = 30;
+
+  function dnsInit() {
+    const tabsEl = document.getElementById('dnsDomainTabs');
+    tabsEl.innerHTML = Object.keys(dnsData).map(d => {
+      const s = dnsData[d].status;
+      const dotClass = s === 'active' ? 'active' : s === 'propagating' ? 'propagating' : 'error';
+      const label = s === 'active' ? 'Ativo' : s === 'propagating' ? 'Propagando' : 'Erro';
+      return `<button class="domain-tab ${d === activeDnsDomain ? 'active' : ''}" onclick="dnsSwitchDomain('${d}')">
+        <span class="domain-status-dot ${dotClass}"></span>
+        <span>${d}</span>
+        <span style="font-size:.7rem;font-weight:500;opacity:.6;margin-left:2px">${label}</span>
+      </button>`;
+    }).join('');
+    dnsRenderTypeFilters();
+    dnsUpdatePropCard();
+    dnsRender();
+  }
+
+  function dnsSwitchDomain(domain) {
+    activeDnsDomain = domain;
+    dnsActiveTypeFilter = 'Todos';
+    dnsInit();
+  }
+
+  function dnsUpdatePropCard() {
+    const d = dnsData[activeDnsDomain];
+    const iconEl  = document.getElementById('dnsPropIcon');
+    const titleEl = document.getElementById('dnsPropTitle');
+    const subEl   = document.getElementById('dnsPropSub');
+    if (d.status === 'active') {
+      iconEl.style.background = 'var(--green-bg)';
+      iconEl.style.color = 'var(--green)';
+      iconEl.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+      titleEl.textContent = 'DNS Ativo e Propagado';
+      subEl.textContent   = `Todos os registros estão respondendo corretamente. Última verificação: ${d.lastCheck}.`;
+    } else if (d.status === 'propagating') {
+      iconEl.style.background = 'var(--yellow-bg)';
+      iconEl.style.color = 'var(--yellow)';
+      iconEl.innerHTML = '<i class="fa-solid fa-clock"></i>';
+      titleEl.textContent = 'Propagação em andamento';
+      subEl.textContent   = `Alterações recentes ainda podem estar propagando (até 48h). Última verificação: ${d.lastCheck}.`;
+    } else {
+      iconEl.style.background = 'var(--red-bg)';
+      iconEl.style.color = 'var(--red)';
+      iconEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+      titleEl.textContent = 'Problema detectado';
+      subEl.textContent   = `Um ou mais registros não estão respondendo. Última verificação: ${d.lastCheck}.`;
+    }
+  }
+
+  function dnsRenderTypeFilters() {
+    const records = dnsData[activeDnsDomain].records;
+    const types = ['Todos', ...new Set(records.map(r => r.type))];
+    document.getElementById('dnsTypeFilters').innerHTML = types.map(t =>
+      `<button class="dns-filter-chip ${t === dnsActiveTypeFilter ? 'active' : ''}" onclick="dnsSetFilter('${t}')">${t}</button>`
+    ).join('');
+  }
+
+  function dnsSetFilter(type) {
+    dnsActiveTypeFilter = type;
+    dnsRenderTypeFilters();
+    dnsRender();
+  }
+
+  function dnsRender() {
+    const search  = (document.getElementById('dnsSearch')?.value || '').toLowerCase();
+    const records = dnsData[activeDnsDomain].records;
+    document.getElementById('dnsActiveDomainLabel').textContent = activeDnsDomain;
+    const filtered = records.filter(r => {
+      const matchType   = dnsActiveTypeFilter === 'Todos' || r.type === dnsActiveTypeFilter;
+      const matchSearch = !search || r.host.toLowerCase().includes(search) || r.value.toLowerCase().includes(search) || r.type.toLowerCase().includes(search);
+      return matchType && matchSearch;
+    });
+    document.getElementById('dnsRecordCount').textContent = `${filtered.length} de ${records.length} registro${records.length !== 1 ? 's' : ''}`;
+    const body  = document.getElementById('dnsTableBody');
+    const empty = document.getElementById('dnsEmpty');
+    if (!filtered.length) {
+      body.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    body.innerHTML = filtered.map(r => {
+      const ttlLabel = r.ttl === '300' ? '5min' : r.ttl === '1800' ? '30min' : r.ttl === '3600' ? '1h' : r.ttl === '21600' ? '6h' : r.ttl === '86400' ? '24h' : r.ttl;
+      return `<div class="dns-table-row">
+        <span class="rt rt-${r.type}">${r.type}</span>
+        <span class="dns-host" title="${r.host}">${r.host}</span>
+        <span class="dns-val" title="${r.value}">${r.value}</span>
+        <span class="dns-ttl">${ttlLabel}</span>
+        <span class="dns-prio">${r.priority || '—'}</span>
+        <div class="dns-actions">
+          <button class="dns-btn dns-btn-edit" title="Editar" onclick="dnsOpenEditRecord(${r.id})"><i class="fa-solid fa-pen"></i></button>
+          <button class="dns-btn dns-btn-del"  title="Excluir" onclick="dnsDeleteRecord(${r.id})"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function dnsOpenAddRecord() {
+    document.getElementById('modalDnsTitle').innerHTML = '<i class="fa-solid fa-plus" style="color:var(--brand-600);margin-right:8px"></i>Adicionar Registro';
+    document.getElementById('dnsRType').value  = 'A';
+    document.getElementById('dnsRHost').value  = '';
+    document.getElementById('dnsRValue').value = '';
+    document.getElementById('dnsRTtl').value   = '3600';
+    document.getElementById('dnsRPrio').value  = '10';
+    document.getElementById('dnsREditId').value = '';
+    dnsTogglePriority();
+    openModal('modalDnsRecord');
+  }
+
+  function dnsOpenEditRecord(id) {
+    const records = dnsData[activeDnsDomain].records;
+    const r = records.find(x => x.id === id);
+    if (!r) return;
+    document.getElementById('modalDnsTitle').innerHTML = '<i class="fa-solid fa-pen" style="color:var(--brand-600);margin-right:8px"></i>Editar Registro';
+    document.getElementById('dnsRType').value  = r.type;
+    document.getElementById('dnsRHost').value  = r.host;
+    document.getElementById('dnsRValue').value = r.value;
+    document.getElementById('dnsRTtl').value   = r.ttl;
+    document.getElementById('dnsRPrio').value  = r.priority || '10';
+    document.getElementById('dnsREditId').value = id;
+    dnsTogglePriority();
+    openModal('modalDnsRecord');
+  }
+
+  function dnsTogglePriority() {
+    const type = document.getElementById('dnsRType').value;
+    const show = type === 'MX' || type === 'SRV';
+    document.getElementById('dnsRPrioField').style.display = show ? 'block' : 'none';
+    const hints = { A:'Ex: 177.126.48.201', AAAA:'Ex: 2001:db8::1', CNAME:'Ex: destino.exemplo.com.br', MX:'Ex: mail.citmail.com.br', TXT:'Ex: v=spf1 include:... ~all', NS:'Ex: ns1.citmail.com.br', SRV:'Ex: 10 20 443 srv.exemplo.com', CAA:'Ex: 0 issue "letsencrypt.org"' };
+    document.getElementById('dnsRValueHint').textContent = hints[type] || '';
+  }
+
+  function dnsSaveRecord() {
+    const type  = document.getElementById('dnsRType').value.trim();
+    const host  = document.getElementById('dnsRHost').value.trim();
+    const value = document.getElementById('dnsRValue').value.trim();
+    const ttl   = document.getElementById('dnsRTtl').value;
+    const prio  = document.getElementById('dnsRPrio').value;
+    const editId = parseInt(document.getElementById('dnsREditId').value) || null;
+    if (!host || !value) { showToast('Preencha Host e Valor.', 'error'); return; }
+    const records = dnsData[activeDnsDomain].records;
+    const priority = (type === 'MX' || type === 'SRV') ? prio : null;
+    if (editId) {
+      const idx = records.findIndex(r => r.id === editId);
+      if (idx > -1) records[idx] = { id: editId, type, host, value, ttl, priority };
+      showToast('Registro atualizado com sucesso!', 'success');
+    } else {
+      records.push({ id: dnsNextId++, type, host, value, ttl, priority });
+      showToast('Registro adicionado!', 'success');
+    }
+    closeModal('modalDnsRecord');
+    dnsRenderTypeFilters();
+    dnsRender();
+  }
+
+  function dnsDeleteRecord(id) {
+    const records = dnsData[activeDnsDomain].records;
+    const idx = records.findIndex(r => r.id === id);
+    if (idx === -1) return;
+    const r = records[idx];
+    if (!confirm(`Excluir registro ${r.type} "${r.host}" → ${r.value}?`)) return;
+    records.splice(idx, 1);
+    dnsRenderTypeFilters();
+    dnsRender();
+    showToast('Registro excluído.', 'success');
+  }
+
+  function dnsCheckProp() {
+    showToast('Verificando propagação DNS…', 'info');
+    const d = dnsData[activeDnsDomain];
+    d.lastCheck = 'agora mesmo';
+    setTimeout(() => {
+      d.status = 'active';
+      dnsUpdatePropCard();
+      dnsInit();
+      showToast('DNS propagado e ativo!', 'success');
+    }, 2200);
+  }
+
+  // Init DNS when section becomes visible
+  const _origNavigate = navigate;
+  navigate = function(id) {
+    _origNavigate(id);
+    if (id === 'dns') dnsInit();
+  };
 </script>
 </body>
 </html>

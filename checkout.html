@@ -909,159 +909,185 @@
       <div class="step-panel card" id="step3">
         <div class="card-title"><i class="fa-solid fa-puzzle-piece"></i> Add-ons e Serviços Extras</div>
         <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:20px">
-          Potencialize sua conta com serviços adicionais. Valores por conta/mês, cobrados junto com sua assinatura.
+          Potencialize sua conta com serviços adicionais. Use <strong>+</strong> e <strong>−</strong> para ajustar a quantidade. O total é atualizado automaticamente.
         </p>
 
-        <!-- Addon checkboxes -->
+        <!-- Add-on rows with qty controls -->
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
 
-          <label class="addon-row" id="adTalk">
-            <div style="display:flex;align-items:center;gap:10px;flex:1">
-              <span style="font-size:1.2rem">🎥</span>
-              <div>
-                <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Talk — Videoconferência</div>
-                <div style="font-size:.75rem;color:var(--gray-500)">Reuniões, chamadas e webinars integrados ao e-mail</div>
-              </div>
+          <!-- Talk -->
+          <div class="addon-row" id="adTalk">
+            <span style="font-size:1.2rem;flex-shrink:0">🎥</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Talk — Videoconferência</div>
+              <div style="font-size:.75rem;color:var(--gray-500)">Reuniões, chamadas e webinars integrados ao e-mail</div>
+              <div style="font-size:.72rem;color:var(--brand-600);font-weight:600;margin-top:2px">R$ 4,70/conta/mês</div>
             </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="text-align:right">
-                <div style="font-weight:700;font-size:.88rem;color:var(--brand-700)">+ R$ 4,70</div>
-                <div style="font-size:.7rem;color:var(--gray-500)">/conta/mês</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+              <div class="mini-qty-ctrl" id="qcTalk">
+                <button class="mini-qty-btn" onclick="addonChange('talk',-1)">−</button>
+                <input class="mini-qty-val" id="aqTalk" type="number" value="0" min="0" onchange="addonInput('talk',this.value)" />
+                <button class="mini-qty-btn" onclick="addonChange('talk',1)">+</button>
               </div>
-              <input type="checkbox" id="chkTalk" class="addon-chk" onchange="refreshAddons()" style="width:18px;height:18px;cursor:pointer;accent-color:var(--brand-600)" />
-            </div>
-          </label>
-
-          <label class="addon-row" id="adBackup90">
-            <div style="display:flex;align-items:center;gap:10px;flex:1">
-              <span style="font-size:1.2rem">🗄️</span>
-              <div>
-                <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Backup 90 dias</div>
-                <div style="font-size:.75rem;color:var(--gray-500)">Retenção e restauração de e-mails por 90 dias</div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="text-align:right">
-                <div style="font-weight:700;font-size:.88rem;color:var(--brand-700)">+ R$ 6,00</div>
-                <div style="font-size:.7rem;color:var(--gray-500)">/conta/mês</div>
-              </div>
-              <input type="checkbox" id="chkBackup90" class="addon-chk" onchange="refreshAddons()" style="width:18px;height:18px;cursor:pointer;accent-color:var(--brand-600)" />
-            </div>
-          </label>
-
-          <label class="addon-row" id="adBackup365">
-            <div style="display:flex;align-items:center;gap:10px;flex:1">
-              <span style="font-size:1.2rem">🔒</span>
-              <div>
-                <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Backup 365 dias</div>
-                <div style="font-size:.75rem;color:var(--gray-500)">Retenção e restauração de e-mails por 1 ano</div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="text-align:right">
-                <div style="font-weight:700;font-size:.88rem;color:var(--brand-700)">+ R$ 19,00</div>
-                <div style="font-size:.7rem;color:var(--gray-500)">/conta/mês</div>
-              </div>
-              <input type="checkbox" id="chkBackup365" class="addon-chk" onchange="refreshAddons()" style="width:18px;height:18px;cursor:pointer;accent-color:var(--brand-600)" />
-            </div>
-          </label>
-
-          <label class="addon-row" id="adGrupo">
-            <div style="display:flex;align-items:center;gap:10px;flex:1">
-              <span style="font-size:1.2rem">👥</span>
-              <div>
-                <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Grupo de E-mail</div>
-                <div style="font-size:.75rem;color:var(--gray-500)">Listas de distribuição para equipes e departamentos</div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="text-align:right">
-                <div style="font-weight:700;font-size:.88rem;color:var(--brand-700)">+ R$ 2,00</div>
-                <div style="font-size:.7rem;color:var(--gray-500)">/conta/mês</div>
-              </div>
-              <input type="checkbox" id="chkGrupo" class="addon-chk" onchange="refreshAddons()" style="width:18px;height:18px;cursor:pointer;accent-color:var(--brand-600)" />
-            </div>
-          </label>
-
-          <!-- Skybox -->
-          <div class="addon-row" id="adSkybox" style="flex-direction:column;align-items:flex-start;gap:10px">
-            <div style="display:flex;align-items:center;gap:10px;width:100%">
-              <span style="font-size:1.2rem">☁️</span>
-              <div style="flex:1">
-                <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Skybox — Armazenamento em Nuvem</div>
-                <div style="font-size:.75rem;color:var(--gray-500)">Guarde arquivos com segurança na nuvem CITMail</div>
-              </div>
-              <input type="checkbox" id="chkSkybox" class="addon-chk" onchange="toggleSkyboxOpts()" style="width:18px;height:18px;cursor:pointer;accent-color:var(--brand-600)" />
-            </div>
-            <div id="skyboxOpts" style="display:none;width:100%;padding-left:30px;display:none">
-              <div style="display:flex;flex-direction:column;gap:6px">
-                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);transition:border-color .2s" id="skyOpt50" onclick="selectSkybox('50gb')">
-                  <input type="radio" name="skybox" value="50gb" style="accent-color:var(--brand-600)" />
-                  <div style="flex:1;font-size:.82rem;font-weight:600">50 GB por conta</div>
-                  <div style="font-weight:700;font-size:.82rem;color:var(--brand-700)">+ R$ 17,70/conta/mês</div>
-                </label>
-                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);transition:border-color .2s" id="skyOpt100" onclick="selectSkybox('100gb')">
-                  <input type="radio" name="skybox" value="100gb" style="accent-color:var(--brand-600)" />
-                  <div style="flex:1;font-size:.82rem;font-weight:600">100 GB por conta</div>
-                  <div style="font-weight:700;font-size:.82rem;color:var(--brand-700)">+ R$ 28,70/conta/mês</div>
-                </label>
-                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);transition:border-color .2s" id="skyOpt1tb" onclick="selectSkybox('1tb')">
-                  <input type="radio" name="skybox" value="1tb" style="accent-color:var(--brand-600)" />
-                  <div style="flex:1;font-size:.82rem;font-weight:600">1 TB por conta</div>
-                  <div style="font-weight:700;font-size:.82rem;color:var(--brand-700)">+ R$ 319,00/conta/mês</div>
-                </label>
+              <div style="min-width:80px;text-align:right">
+                <div style="font-family:var(--font-title);font-weight:800;font-size:.88rem;color:var(--brand-700)" id="asTalk">R$ 0,00</div>
+                <div style="font-size:.68rem;color:var(--gray-400)">/mês</div>
               </div>
             </div>
           </div>
 
-          <!-- Extra domain .com.br -->
-          <label class="addon-row" id="adExtraDom">
-            <div style="display:flex;align-items:center;gap:10px;flex:1">
-              <span style="font-size:1.2rem">🌐</span>
-              <div>
-                <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Domínio .com.br extra</div>
-                <div style="font-size:.75rem;color:var(--gray-500)">Registrar um domínio .com.br adicional — cobrança separada via Pix</div>
+          <!-- Backup 90d -->
+          <div class="addon-row" id="adBackup90">
+            <span style="font-size:1.2rem;flex-shrink:0">🗄️</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Backup 90 dias</div>
+              <div style="font-size:.75rem;color:var(--gray-500)">Retenção e restauração de e-mails por 90 dias</div>
+              <div style="font-size:.72rem;color:var(--brand-600);font-weight:600;margin-top:2px">R$ 6,00/conta/mês</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+              <div class="mini-qty-ctrl" id="qcBackup90">
+                <button class="mini-qty-btn" onclick="addonChange('backup90',-1)">−</button>
+                <input class="mini-qty-val" id="aqBackup90" type="number" value="0" min="0" onchange="addonInput('backup90',this.value)" />
+                <button class="mini-qty-btn" onclick="addonChange('backup90',1)">+</button>
+              </div>
+              <div style="min-width:80px;text-align:right">
+                <div style="font-family:var(--font-title);font-weight:800;font-size:.88rem;color:var(--brand-700)" id="asBackup90">R$ 0,00</div>
+                <div style="font-size:.68rem;color:var(--gray-400)">/mês</div>
               </div>
             </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="text-align:right">
-                <div style="font-weight:700;font-size:.88rem;color:var(--brand-700)">R$ 79,00</div>
-                <div style="font-size:.7rem;color:var(--gray-500)">/ano</div>
-              </div>
-              <input type="checkbox" id="chkExtraDom" class="addon-chk" onchange="toggleExtraDomPix()" style="width:18px;height:18px;cursor:pointer;accent-color:var(--brand-600)" />
-            </div>
-          </label>
+          </div>
 
-          <!-- Extra domain PIX panel -->
-          <div id="extraDomPixPanel" style="display:none;background:var(--brand-50);border:1px solid var(--brand-100);border-radius:var(--radius-md);padding:16px;text-align:center">
-            <div style="font-family:var(--font-title);font-weight:700;font-size:.85rem;color:var(--brand-900);margin-bottom:10px">
-              <i class="fa-brands fa-pix" style="color:#32bcad;margin-right:6px"></i>Pix para domínio extra — R$ 79,00/ano
+          <!-- Backup 365d -->
+          <div class="addon-row" id="adBackup365">
+            <span style="font-size:1.2rem;flex-shrink:0">🔒</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Backup 365 dias</div>
+              <div style="font-size:.75rem;color:var(--gray-500)">Retenção e restauração de e-mails por 1 ano</div>
+              <div style="font-size:.72rem;color:var(--brand-600);font-weight:600;margin-top:2px">R$ 19,00/conta/mês</div>
             </div>
-            <div style="display:flex;gap:10px;margin-bottom:10px">
-              <div class="field" style="flex:1;text-align:left">
-                <label style="font-size:.75rem;font-weight:600;color:var(--gray-700)">Nome do domínio extra</label>
-                <input type="text" id="fExtraDomName" placeholder="outraempresa.com.br" style="height:40px;padding:0 12px;border:1.5px solid var(--gray-300);border-radius:var(--radius-sm);font-size:.85rem;width:100%;outline:none" />
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+              <div class="mini-qty-ctrl" id="qcBackup365">
+                <button class="mini-qty-btn" onclick="addonChange('backup365',-1)">−</button>
+                <input class="mini-qty-val" id="aqBackup365" type="number" value="0" min="0" onchange="addonInput('backup365',this.value)" />
+                <button class="mini-qty-btn" onclick="addonChange('backup365',1)">+</button>
+              </div>
+              <div style="min-width:80px;text-align:right">
+                <div style="font-family:var(--font-title);font-weight:800;font-size:.88rem;color:var(--brand-700)" id="asBackup365">R$ 0,00</div>
+                <div style="font-size:.68rem;color:var(--gray-400)">/mês</div>
               </div>
             </div>
-            <div class="pix-qr" style="width:120px;height:120px;margin:0 auto 12px">
-              <span class="pix-qr-placeholder">📱</span>
+          </div>
+
+          <!-- Grupo de email -->
+          <div class="addon-row" id="adGrupo">
+            <span style="font-size:1.2rem;flex-shrink:0">👥</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Grupo de E-mail</div>
+              <div style="font-size:.75rem;color:var(--gray-500)">Listas de distribuição para equipes e departamentos</div>
+              <div style="font-size:.72rem;color:var(--brand-600);font-weight:600;margin-top:2px">R$ 2,00/conta/mês</div>
             </div>
-            <div class="pix-code-box" style="max-width:320px;margin:0 auto 8px">
-              <div class="pix-code" id="extraDomPixCode">aguardando geração…</div>
-              <button class="pix-copy" onclick="copyExtraDomPix()"><i class="fa-solid fa-copy"></i> Copiar</button>
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+              <div class="mini-qty-ctrl" id="qcGrupo">
+                <button class="mini-qty-btn" onclick="addonChange('grupoEmail',-1)">−</button>
+                <input class="mini-qty-val" id="aqGrupo" type="number" value="0" min="0" onchange="addonInput('grupoEmail',this.value)" />
+                <button class="mini-qty-btn" onclick="addonChange('grupoEmail',1)">+</button>
+              </div>
+              <div style="min-width:80px;text-align:right">
+                <div style="font-family:var(--font-title);font-weight:800;font-size:.88rem;color:var(--brand-700)" id="asGrupo">R$ 0,00</div>
+                <div style="font-size:.68rem;color:var(--gray-400)">/mês</div>
+              </div>
             </div>
-            <p style="font-size:.72rem;color:var(--gray-400)">Continue para a próxima etapa enquanto o Pix é processado.</p>
+          </div>
+
+          <!-- Skybox -->
+          <div class="addon-row" id="adSkybox" style="flex-direction:column;align-items:stretch;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:1.2rem;flex-shrink:0">☁️</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Skybox — Armazenamento em Nuvem</div>
+                <div style="font-size:.75rem;color:var(--gray-500)">Guarde arquivos com segurança na nuvem CITMail</div>
+              </div>
+              <div style="min-width:80px;text-align:right;flex-shrink:0">
+                <div style="font-family:var(--font-title);font-weight:800;font-size:.88rem;color:var(--brand-700)" id="asSkybox">R$ 0,00</div>
+                <div style="font-size:.68rem;color:var(--gray-400)">/mês</div>
+              </div>
+            </div>
+            <!-- Plan selector -->
+            <div style="padding-left:32px;display:flex;flex-direction:column;gap:6px" id="skyboxOpts">
+              <div style="font-size:.75rem;font-weight:600;color:var(--gray-600);margin-bottom:2px">Selecione o plano e a quantidade de licenças:</div>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);transition:border-color .2s" id="skyOpt50" onclick="selectSkybox('50gb')">
+                <input type="radio" name="skybox" value="50gb" style="accent-color:var(--brand-600)" />
+                <div style="flex:1;font-size:.82rem;font-weight:600">50 GB / conta</div>
+                <div style="font-weight:700;font-size:.82rem;color:var(--brand-700)">R$ 17,70/conta/mês</div>
+              </label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);transition:border-color .2s" id="skyOpt100" onclick="selectSkybox('100gb')">
+                <input type="radio" name="skybox" value="100gb" style="accent-color:var(--brand-600)" />
+                <div style="flex:1;font-size:.82rem;font-weight:600">100 GB / conta</div>
+                <div style="font-weight:700;font-size:.82rem;color:var(--brand-700)">R$ 28,70/conta/mês</div>
+              </label>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);transition:border-color .2s" id="skyOpt1tb" onclick="selectSkybox('1tb')">
+                <input type="radio" name="skybox" value="1tb" style="accent-color:var(--brand-600)" />
+                <div style="flex:1;font-size:.82rem;font-weight:600">1 TB / conta</div>
+                <div style="font-weight:700;font-size:.82rem;color:var(--brand-700)">R$ 319,00/conta/mês</div>
+              </label>
+              <!-- Skybox qty -->
+              <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+                <span style="font-size:.78rem;font-weight:600;color:var(--gray-600)">Quantidade de licenças:</span>
+                <div class="mini-qty-ctrl" id="qcSkybox">
+                  <button class="mini-qty-btn" onclick="addonChange('skybox',-1)">−</button>
+                  <input class="mini-qty-val" id="aqSkybox" type="number" value="0" min="0" onchange="addonInput('skybox',this.value)" />
+                  <button class="mini-qty-btn" onclick="addonChange('skybox',1)">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Domínio extra -->
+          <div class="addon-row" id="adExtraDom" style="flex-direction:column;align-items:stretch;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:1.2rem;flex-shrink:0">🌐</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Domínio .com.br extra</div>
+                <div style="font-size:.75rem;color:var(--gray-500)">Domínios adicionais — cobrança anual via Pix separado</div>
+                <div style="font-size:.72rem;color:var(--brand-600);font-weight:600;margin-top:2px">R$ 79,00/domínio/ano</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+                <div class="mini-qty-ctrl" id="qcExtraDom">
+                  <button class="mini-qty-btn" onclick="addonChange('extraDom',-1)">−</button>
+                  <input class="mini-qty-val" id="aqExtraDom" type="number" value="0" min="0" onchange="addonInput('extraDom',this.value)" />
+                  <button class="mini-qty-btn" onclick="addonChange('extraDom',1)">+</button>
+                </div>
+                <div style="min-width:80px;text-align:right">
+                  <div style="font-family:var(--font-title);font-weight:800;font-size:.88rem;color:var(--brand-700)" id="asExtraDom">R$ 0,00</div>
+                  <div style="font-size:.68rem;color:var(--gray-400)">/ano</div>
+                </div>
+              </div>
+            </div>
+            <!-- Extra domain PIX panel -->
+            <div id="extraDomPixPanel" style="display:none;background:var(--brand-50);border:1px solid var(--brand-100);border-radius:var(--radius-md);padding:16px;text-align:center">
+              <div style="font-family:var(--font-title);font-weight:700;font-size:.85rem;color:var(--brand-900);margin-bottom:10px">
+                <i class="fa-brands fa-pix" style="color:#32bcad;margin-right:6px"></i>Pix para domínios extras — <span id="extraDomPixTotal">R$ 0,00</span>/ano
+              </div>
+              <div class="pix-qr" style="width:120px;height:120px;margin:0 auto 12px">
+                <span class="pix-qr-placeholder">📱</span>
+              </div>
+              <div class="pix-code-box" style="max-width:320px;margin:0 auto 8px">
+                <div class="pix-code" id="extraDomPixCode">aguardando geração…</div>
+                <button class="pix-copy" onclick="copyExtraDomPix()"><i class="fa-solid fa-copy"></i> Copiar</button>
+              </div>
+              <p style="font-size:.72rem;color:var(--gray-400)">Continue para a próxima etapa enquanto o Pix é processado.</p>
+            </div>
           </div>
 
         </div>
 
         <!-- Add-ons subtotal -->
-        <div id="addonsSubtotal" style="display:none;background:var(--gray-100);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:4px;font-size:.85rem">
-          <div style="display:flex;justify-content:space-between;font-family:var(--font-title);font-weight:700">
+        <div id="addonsSubtotal" style="display:none;background:var(--brand-50);border:1px solid var(--brand-100);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:4px">
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-title);font-weight:700;font-size:.9rem;margin-bottom:8px">
             <span>Add-ons selecionados</span>
-            <span id="addonsSubtotalVal" style="color:var(--brand-700)">+ R$ 0,00/mês</span>
+            <span style="color:var(--brand-700)" id="addonsSubtotalVal">+ R$ 0,00/mês</span>
           </div>
-          <div id="addonsSubtotalLines" style="margin-top:6px;display:flex;flex-direction:column;gap:3px"></div>
+          <div id="addonsSubtotalLines" style="display:flex;flex-direction:column;gap:4px"></div>
         </div>
 
         <div class="btn-row">
@@ -1463,7 +1489,8 @@
     let domainChoice  = null;   // 'new-br' | 'new-com' | 'existing'
     let domPixSec     = 1800;
     let domPixIntvl   = null;
-    const addons      = { talk: false, backup90: false, backup365: false, grupoEmail: false, skybox: null, extraDomain: false };
+    const addonQtys   = { talk: 0, backup90: 0, backup365: 0, grupoEmail: 0, skybox: 0, extraDom: 0 };
+    let   skyboxPlan  = null; // '50gb' | '100gb' | '1tb'
 
     /* ---- DOMAIN STEP ---- */
     function selectDomainOpt(choice) {
@@ -1537,29 +1564,84 @@
     }
 
     /* ---- ADD-ONS STEP ---- */
-    function refreshAddons() {
-      addons.talk      = document.getElementById('chkTalk').checked;
-      addons.backup90  = document.getElementById('chkBackup90').checked;
-      addons.backup365 = document.getElementById('chkBackup365').checked;
-      addons.grupoEmail= document.getElementById('chkGrupo').checked;
-      addons.extraDomain = document.getElementById('chkExtraDom').checked;
+    const ADDON_PRICES = { talk: 4.70, backup90: 6.00, backup365: 19.00, grupoEmail: 2.00 };
+    const SKYBOX_PRICES = { '50gb': 17.70, '100gb': 28.70, '1tb': 319.00 };
 
-      ['adTalk','adBackup90','adBackup365','adGrupo'].forEach(id => {
-        const row = document.getElementById(id);
-        if (!row) return;
-        const chk = row.querySelector('input[type=checkbox]');
-        row.classList.toggle('active', chk && chk.checked);
+    function addonChange(key, delta) {
+      let q = (addonQtys[key] || 0) + delta;
+      if (q < 0) q = 0;
+      addonQtys[key] = q;
+      const inputMap = { talk:'aqTalk', backup90:'aqBackup90', backup365:'aqBackup365', grupoEmail:'aqGrupo', skybox:'aqSkybox', extraDom:'aqExtraDom' };
+      const inp = document.getElementById(inputMap[key]);
+      if (inp) inp.value = q;
+      refreshAddons();
+    }
+
+    function addonInput(key, raw) {
+      const q = Math.max(0, parseInt(raw) || 0);
+      addonQtys[key] = q;
+      refreshAddons();
+    }
+
+    function selectSkybox(plan) {
+      skyboxPlan = plan;
+      ['50gb','100gb','1tb'].forEach(p => {
+        const map = {'50gb':'skyOpt50','100gb':'skyOpt100','1tb':'skyOpt1tb'};
+        const el = document.getElementById(map[p]);
+        if (el) el.style.borderColor = p === plan ? 'var(--brand-500)' : 'var(--gray-200)';
+        const radio = el && el.querySelector('input[type=radio]');
+        if (radio) radio.checked = p === plan;
+      });
+      refreshAddons();
+    }
+
+    function refreshAddons() {
+      // Update per-row subtotals and active state
+      const rowMap = {
+        talk:       { rowId:'adTalk',      subId:'asTalk',      price: ADDON_PRICES.talk,    perUnit:true  },
+        backup90:   { rowId:'adBackup90',  subId:'asBackup90',  price: ADDON_PRICES.backup90, perUnit:true },
+        backup365:  { rowId:'adBackup365', subId:'asBackup365', price: ADDON_PRICES.backup365,perUnit:true },
+        grupoEmail: { rowId:'adGrupo',     subId:'asGrupo',     price: ADDON_PRICES.grupoEmail,perUnit:true},
+      };
+      Object.entries(rowMap).forEach(([key, cfg]) => {
+        const q   = addonQtys[key] || 0;
+        const val = q * cfg.price;
+        const subEl = document.getElementById(cfg.subId);
+        if (subEl) subEl.textContent = `R$ ${fmtR(val)}`;
+        const rowEl = document.getElementById(cfg.rowId);
+        if (rowEl) rowEl.classList.toggle('active', q > 0);
       });
 
-      const totalQ = totalAccounts();
-      const lines  = [];
-      if (addons.talk)       lines.push({ label: 'Talk', v: 4.70  * totalQ });
-      if (addons.backup90)   lines.push({ label: 'Backup 90d', v: 6.00  * totalQ });
-      if (addons.backup365)  lines.push({ label: 'Backup 365d', v: 19.00 * totalQ });
-      if (addons.grupoEmail) lines.push({ label: 'Grupo E-mail', v: 2.00  * totalQ });
-      if (addons.skybox === '50gb')  lines.push({ label: 'Skybox 50GB', v: 17.70 * totalQ });
-      if (addons.skybox === '100gb') lines.push({ label: 'Skybox 100GB', v: 28.70 * totalQ });
-      if (addons.skybox === '1tb')   lines.push({ label: 'Skybox 1TB', v: 319.00 * totalQ });
+      // Skybox
+      const skyQ = addonQtys.skybox || 0;
+      const skyPrice = skyboxPlan ? (SKYBOX_PRICES[skyboxPlan] || 0) : 0;
+      const skyVal = skyQ * skyPrice;
+      const skySub = document.getElementById('asSkybox');
+      if (skySub) skySub.textContent = `R$ ${fmtR(skyVal)}`;
+      document.getElementById('adSkybox').classList.toggle('active', skyQ > 0 && !!skyboxPlan);
+
+      // Extra domain
+      const domQ  = addonQtys.extraDom || 0;
+      const domVal = domQ * 79;
+      const domSub = document.getElementById('asExtraDom');
+      if (domSub) domSub.textContent = `R$ ${fmtR(domVal)}`;
+      document.getElementById('adExtraDom').classList.toggle('active', domQ > 0);
+      const pixPanel = document.getElementById('extraDomPixPanel');
+      if (pixPanel) {
+        pixPanel.style.display = domQ > 0 ? 'block' : 'none';
+        if (domQ > 0) {
+          document.getElementById('extraDomPixTotal').textContent = `R$ ${fmtR(domVal)}`;
+          document.getElementById('extraDomPixCode').textContent  = genFakePix(domVal);
+        }
+      }
+
+      // Subtotal summary panel
+      const lines = [];
+      Object.entries(rowMap).forEach(([key, cfg]) => {
+        const q = addonQtys[key] || 0;
+        if (q > 0) lines.push({ label: cfg.rowId === 'adGrupo' ? 'Grupo E-mail' : key === 'talk' ? 'Talk' : key === 'backup90' ? 'Backup 90d' : 'Backup 365d', v: q * cfg.price });
+      });
+      if (skyQ > 0 && skyboxPlan) lines.push({ label: `Skybox ${skyboxPlan.toUpperCase()}`, v: skyVal });
 
       const box = document.getElementById('addonsSubtotal');
       if (lines.length) {
@@ -1576,35 +1658,6 @@
 
       updateSummary();
       updateInstallments();
-    }
-
-    function toggleSkyboxOpts() {
-      const on = document.getElementById('chkSkybox').checked;
-      const opts = document.getElementById('skyboxOpts');
-      opts.style.display = on ? 'block' : 'none';
-      document.getElementById('adSkybox').classList.toggle('active', on);
-      if (!on) { addons.skybox = null; refreshAddons(); }
-    }
-
-    function selectSkybox(plan) {
-      addons.skybox = plan;
-      ['50gb','100gb','1tb'].forEach(p => {
-        const map = {'50gb':'skyOpt50','100gb':'skyOpt100','1tb':'skyOpt1tb'};
-        const el = document.getElementById(map[p]);
-        if (el) el.style.borderColor = p === plan ? 'var(--brand-500)' : 'var(--gray-200)';
-        const radio = el && el.querySelector('input[type=radio]');
-        if (radio) radio.checked = p === plan;
-      });
-      refreshAddons();
-    }
-
-    function toggleExtraDomPix() {
-      const on = document.getElementById('chkExtraDom').checked;
-      const panel = document.getElementById('extraDomPixPanel');
-      panel.style.display = on ? 'block' : 'none';
-      document.getElementById('adExtraDom').classList.toggle('active', on);
-      if (on) document.getElementById('extraDomPixCode').textContent = genFakePix(79);
-      refreshAddons();
     }
 
     function copyExtraDomPix() {
@@ -1632,16 +1685,13 @@
     function calcDiscount(qty)   { return (!annualBilling && qty >= 5) ? 5 : 0; }
     function fmtR(v)             { return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
     function unitPrice(type)     { const d = ACCOUNT_DEFS[type]; const b = annualBilling ? d.base*0.80 : d.base; const disc = calcDiscount(ckQtys[type]); return b*(1-disc/100); }
-    function addonsMonthly()     {
-      const totalQty = totalAccounts();
+    function addonsMonthly() {
       let t = 0;
-      if (addons.talk)      t += 4.70  * totalQty;
-      if (addons.backup90)  t += 6.00  * totalQty;
-      if (addons.backup365) t += 19.00 * totalQty;
-      if (addons.grupoEmail)t += 2.00  * totalQty;
-      if (addons.skybox === '50gb')  t += 17.70 * totalQty;
-      if (addons.skybox === '100gb') t += 28.70 * totalQty;
-      if (addons.skybox === '1tb')   t += 319.00 * totalQty;
+      t += (addonQtys.talk       || 0) * 4.70;
+      t += (addonQtys.backup90   || 0) * 6.00;
+      t += (addonQtys.backup365  || 0) * 19.00;
+      t += (addonQtys.grupoEmail || 0) * 2.00;
+      t += (addonQtys.skybox     || 0) * (skyboxPlan ? (SKYBOX_PRICES[skyboxPlan] || 0) : 0);
       return t;
     }
     function grandTotal()        { return Object.keys(ACCOUNT_DEFS).reduce((s,t) => s + ckQtys[t]*unitPrice(t), 0) + addonsMonthly(); }
@@ -1778,19 +1828,19 @@
         { key:'grupoEmail', label:'Grupo E-mail',  v: 2.00  },
       ];
       addonMap.forEach(a => {
-        if (!addons[a.key]) return;
+        const q = addonQtys[a.key] || 0;
+        if (!q) return;
         hasAny = true;
         html += `<div style="display:flex;justify-content:space-between;align-items:baseline">
-          <span style="color:var(--gray-600)">${a.label}</span>
-          <span style="font-weight:600">R$ ${fmtR(a.v * totalQ)}</span>
+          <span style="color:var(--gray-600)">${a.label} ×${q}</span>
+          <span style="font-weight:600">R$ ${fmtR(a.v * q)}</span>
         </div>`;
       });
-      const skyboxPrices = {'50gb':17.70,'100gb':28.70,'1tb':319.00};
-      if (addons.skybox && skyboxPrices[addons.skybox]) {
+      if (addonQtys.skybox && skyboxPlan && SKYBOX_PRICES[skyboxPlan]) {
         hasAny = true;
-        const sv = skyboxPrices[addons.skybox] * totalQ;
+        const sv = SKYBOX_PRICES[skyboxPlan] * addonQtys.skybox;
         html += `<div style="display:flex;justify-content:space-between;align-items:baseline">
-          <span style="color:var(--gray-600)">Skybox ${addons.skybox.toUpperCase()}</span>
+          <span style="color:var(--gray-600)">Skybox ${skyboxPlan.toUpperCase()} ×${addonQtys.skybox}</span>
           <span style="font-weight:600">R$ ${fmtR(sv)}</span>
         </div>`;
       }
