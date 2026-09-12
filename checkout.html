@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contratar Plano — CITMail</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/apple-touch-icon.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -74,25 +76,13 @@
       background: var(--brand-900);
       padding: 0 clamp(16px, 4vw, 48px);
       height: 60px;
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
       position: sticky; top: 0; z-index: 100;
     }
     .checkout-header .logo {
       display: flex; align-items: center; gap: 10px;
       text-decoration: none;
     }
-    .logo-icon {
-      width: 34px; height: 34px;
-      background: linear-gradient(135deg, var(--brand-500), #00C6C0);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .logo-icon svg { width: 18px; height: 18px; fill: white; }
-    .logo-text {
-      font-family: var(--font-title); font-weight: 800;
-      font-size: 1.2rem; color: white;
-    }
-    .logo-text span { color: var(--brand-400); }
     .header-secure {
       display: flex; align-items: center; gap: 6px;
       font-size: .78rem; color: rgba(255,255,255,.55);
@@ -666,6 +656,7 @@
     /* Responsive tweaks */
     @media (max-width: 480px) {
       .pix-qr { width: 130px; height: 130px; }
+      .header-secure-extra { display: none; }
     }
   </style>
 </head>
@@ -681,10 +672,10 @@
   <!-- HEADER -->
   <header class="checkout-header">
     <a href="index.html" class="logo">
-      <img src="assets/logo.svg" alt="CITMail" style="height:36px;width:auto;filter:brightness(0) invert(1)">
+      <img src="assets/brand/citmail-horizontal-escuro.png" alt="CITMail" width="160" height="36">
     </a>
     <div class="header-secure">
-      <i class="fa-solid fa-lock"></i> Ambiente seguro — SSL/TLS
+      <i class="fa-solid fa-lock"></i> Ambiente seguro<span class="header-secure-extra"> — SSL/TLS</span>
     </div>
   </header>
 
@@ -1016,7 +1007,7 @@
               <span style="font-size:1.2rem;flex-shrink:0">☁️</span>
               <div style="flex:1;min-width:0">
                 <div style="font-family:var(--font-title);font-weight:700;font-size:.88rem">Skybox — Armazenamento em Nuvem</div>
-                <div style="font-size:.75rem;color:var(--gray-500)">Guarde arquivos com segurança na nuvem CITMail</div>
+                <div style="font-size:.75rem;color:var(--gray-500)">Guarde arquivos com segurança na nuvem CITCloud</div>
               </div>
               <div style="min-width:80px;text-align:right;flex-shrink:0">
                 <div style="font-family:var(--font-title);font-weight:800;font-size:.88rem;color:var(--brand-700)" id="asSkybox">R$ 0,00</div>

@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel do Cliente — CITMail</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -89,7 +91,7 @@
       border-bottom: 1px solid rgba(255,255,255,.08);
       flex-shrink: 0;
     }
-    .sidebar-logo img { height: 32px; width: auto; filter: brightness(0) invert(1); }
+    .sidebar-logo img { display: block; height: 30px; width: auto; }
 
     .sidebar-nav {
       flex: 1; overflow-y: auto;
@@ -178,6 +180,7 @@
       position: sticky; top: 0; z-index: 100;
       box-shadow: var(--shadow-sm);
     }
+    .topbar-logo { display: none; height: 30px; width: auto; flex-shrink: 0; }
     .topbar-title {
       font-family: var(--font-title);
       font-weight: 700; font-size: 1.05rem;
@@ -649,6 +652,7 @@
       .main-wrap { margin-left: 0; }
       .sidebar-toggle { display: flex; }
       .topbar-search { display: none; }
+      .topbar-logo { display: block; }
       .stats-grid { grid-template-columns: repeat(2,1fr); }
     }
     @media(max-width:480px) {
@@ -698,7 +702,7 @@
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <img src="assets/logo.svg" alt="CITMail">
+    <img src="assets/brand/citmail-horizontal-escuro.png" alt="CITMail" width="133" height="30">
   </div>
 
   <nav class="sidebar-nav">
@@ -756,6 +760,7 @@
     <button class="sidebar-toggle" onclick="toggleSidebar()">
       <i class="fa-solid fa-bars"></i>
     </button>
+    <img class="topbar-logo" src="assets/brand/citmail-horizontal-claro.png" alt="CITMail" width="133" height="30">
     <div class="topbar-title" id="topbarTitle">Dashboard</div>
     <div class="topbar-search">
       <i class="fa-solid fa-magnifying-glass"></i>
@@ -1912,7 +1917,7 @@
           <div style="font-size:.875rem;color:var(--gray-700)">Configurei o IMAP no iPhone mas não consigo receber mensagens. Já tentei com as configurações padrão do guia mas não funciona. O servidor é mail.empresa.com.br?</div>
         </div>
         <div style="background:var(--gray-100);border-radius:var(--radius-md);padding:14px">
-          <div style="font-size:.72rem;color:var(--gray-500);font-weight:700;margin-bottom:6px">SUPORTE CITMAIL — 30/jun, 14:08</div>
+          <div style="font-size:.72rem;color:var(--gray-500);font-weight:700;margin-bottom:6px">Suporte CITMail — 30/jun, 14:08</div>
           <div style="font-size:.875rem;color:var(--gray-700)">Olá João! Identifiquei que as configurações IMAP devem ser:<br><br>
             <strong>Servidor:</strong> imap.citmail.com.br<br>
             <strong>Porta:</strong> 993 (SSL)<br>
