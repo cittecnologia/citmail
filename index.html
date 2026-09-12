@@ -6,10 +6,11 @@
   <meta name="description" content="CITMail — E-mail corporativo profissional com domínio próprio. Planos a partir de R$ 19,90/mês. Configuração em minutos, sem burocracia." />
   <title>CITMail — E-mail Corporativo Profissional</title>
 
-  <!-- Google Fonts: Montserrat + Inter -->
+  <!-- Google Fonts: Montserrat + Poppins (Brandbook CIT) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/tokens.css" />
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -20,37 +21,45 @@
     ========================================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --brand-900: #0F2057;
-      --brand-800: #172B6E;
-      --brand-700: #1E3A8A;
-      --brand-600: #2563EB;
-      --brand-500: #3B82F6;
-      --brand-400: #60A5FA;
-      --brand-100: #DBEAFE;
-      --brand-50:  #EFF6FF;
-      --accent:    #0EA5E9;
-      --green:     #10B981;
-      --green-light: #D1FAE5;
-      --yellow:    #F59E0B;
-      --red:       #EF4444;
-      --gray-900: #111827;
-      --gray-700: #374151;
-      --gray-500: #6B7280;
-      --gray-300: #D1D5DB;
-      --gray-100: #F3F4F6;
-      --white:    #FFFFFF;
-
-      --font-title: 'Montserrat', sans-serif;
-      --font-body:  'Inter', system-ui, sans-serif;
-
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 20px;
-      --radius-xl: 28px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,.10);
-      --shadow-lg: 0 10px 40px rgba(0,0,0,.14);
-      --transition: .25s ease;
+      /* Aliases legados -> tokens do Brandbook CIT (assets/tokens.css). */
+      --brand-900: var(--cit-navy-500);
+      --brand-800: var(--cit-navy-600);
+      --brand-700: var(--cit-blue-700);
+      --brand-600: var(--cit-blue-500);
+      --brand-500: var(--cit-blue-400);
+      --brand-400: var(--cit-blue-300);
+      --brand-300: var(--cit-blue-200);
+      --brand-200: var(--cit-blue-100);
+      --brand-100: var(--cit-blue-100);
+      --brand-50:  var(--cit-blue-50);
+      --accent:    var(--cit-turquoise-500);
+      --green:       var(--cit-success);
+      --green-bg:    var(--cit-success-subtle);
+      --green-light: var(--cit-success-subtle);
+      --green-dark:  var(--cit-success-strong);
+      --yellow:    var(--cit-warning);
+      --yellow-bg: var(--cit-warning-subtle);
+      --red:       var(--cit-error);
+      --red-bg:    var(--cit-error-subtle);
+      --gray-900:  var(--cit-text-primary);
+      --gray-700:  var(--cit-neutral-700);
+      --gray-600:  var(--cit-neutral-600);
+      --gray-500:  var(--cit-neutral-500);
+      --gray-400:  var(--cit-neutral-400);
+      --gray-300:  var(--cit-neutral-300);
+      --gray-200:  var(--cit-neutral-200);
+      --gray-100:  var(--cit-neutral-100);
+      --white:     #FFFFFF;
+      --font-title: var(--cit-font-display);
+      --font-body:  var(--cit-font-body);
+      --radius-sm: var(--cit-radius-sm);
+      --radius-md: var(--cit-radius-md);
+      --radius-lg: var(--cit-radius-lg);
+      --radius-xl: var(--cit-radius-xl);
+      --shadow-sm: var(--cit-shadow-sm);
+      --shadow-md: var(--cit-shadow-md);
+      --shadow-lg: var(--cit-shadow-lg);
+      --transition: var(--cit-duration-hover) var(--cit-ease);
     }
 
     html { scroll-behavior: smooth; }
@@ -113,11 +122,11 @@
     }
     .btn-primary {
       background: var(--brand-600); color: var(--white);
-      box-shadow: 0 4px 14px rgba(37,99,235,.35);
+      box-shadow: 0 4px 14px rgba(0,108,176,.35);
     }
     .btn-primary:hover {
       background: var(--brand-700);
-      box-shadow: 0 6px 20px rgba(37,99,235,.45);
+      box-shadow: 0 6px 20px rgba(0,108,176,.45);
       transform: translateY(-1px);
     }
     .btn-outline {
@@ -142,7 +151,7 @@
     ========================================================= */
     #header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(15,32,87,.97);
+      background: rgba(35,52,78,.97);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,.08);
       transition: box-shadow var(--transition);
@@ -241,8 +250,8 @@
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 80% 20%, rgba(59,130,246,.18) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(14,165,233,.12) 0%, transparent 55%);
+        radial-gradient(ellipse 80% 60% at 80% 20%, rgba(0,108,176,.18) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,198,192,.12) 0%, transparent 55%);
     }
     .hero-grid {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -252,8 +261,8 @@
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(59,130,246,.2); color: var(--brand-400);
-      border: 1px solid rgba(59,130,246,.35);
+      background: rgba(0,108,176,.2); color: var(--brand-400);
+      border: 1px solid rgba(0,108,176,.35);
       font-size: .78rem; font-weight: 700; font-family: var(--font-title);
       text-transform: uppercase; letter-spacing: .08em;
       padding: 5px 14px; border-radius: 100px; margin-bottom: 20px;
@@ -305,7 +314,7 @@
       backdrop-filter: blur(20px);
       width: 100%;
       max-width: 420px;
-      box-shadow: var(--shadow-lg), 0 0 80px rgba(59,130,246,.15);
+      box-shadow: var(--shadow-lg), 0 0 80px rgba(0,108,176,.15);
     }
     .mockup-bar {
       display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
@@ -327,7 +336,7 @@
       cursor: default;
     }
     .mockup-email-row:hover { background: rgba(255,255,255,.06); }
-    .mockup-email-row.unread { background: rgba(59,130,246,.12); }
+    .mockup-email-row.unread { background: rgba(0,108,176,.12); }
     .avatar {
       width: 36px; height: 36px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
@@ -471,13 +480,13 @@
     .domain-result { margin-top: 16px; min-height: 32px; }
     .domain-available {
       display: inline-flex; align-items: center; gap: 8px;
-      background: var(--green-light); color: #065f46;
+      background: var(--green-light); color: #146137;
       padding: 8px 16px; border-radius: 8px;
       font-weight: 600; font-size: .9rem;
     }
     .domain-taken {
       display: inline-flex; align-items: center; gap: 8px;
-      background: #fee2e2; color: #991b1b;
+      background: #FCEDED; color: #8E2B20;
       padding: 8px 16px; border-radius: 8px;
       font-weight: 600; font-size: .9rem;
     }
@@ -569,10 +578,10 @@
       margin-bottom: 12px;
       transition: border-color var(--transition), box-shadow var(--transition);
     }
-    .account-type-card:hover { border-color: var(--brand-300, #93c5fd); }
+    .account-type-card:hover { border-color: var(--brand-300, #A6CCE3); }
     .account-type-card.has-qty {
       border-color: var(--brand-500);
-      box-shadow: 0 0 0 3px rgba(59,130,246,.08);
+      box-shadow: 0 0 0 3px rgba(0,108,176,.08);
     }
 
     .atc-top {
@@ -583,8 +592,8 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 1.3rem; flex-shrink: 0;
     }
-    .atc-icon.c5   { background: #EFF6FF; }
-    .atc-icon.c25  { background: #F0FDF4; }
+    .atc-icon.c5   { background: #EBF3F9; }
+    .atc-icon.c25  { background: #EAF7EF; }
     .atc-icon.c50  { background: #FFF7ED; }
     .atc-info { flex: 1; }
     .atc-name {
@@ -605,7 +614,7 @@
     /* Volume discount badge */
     .vol-badge {
       display: inline-flex; align-items: center; gap: 5px;
-      background: var(--green-light, #D1FAE5); color: #065f46;
+      background: var(--green-light, #EAF7EF); color: #146137;
       border: 1px solid var(--green); border-radius: 100px;
       font-size: .72rem; font-weight: 700; font-family: var(--font-title);
       padding: 3px 10px; margin-bottom: 10px;
@@ -624,7 +633,7 @@
     }
     .price-saving {
       font-size: .72rem; font-weight: 700; color: var(--green);
-      background: var(--green-light, #D1FAE5);
+      background: var(--green-light, #EAF7EF);
       padding: 2px 8px; border-radius: 100px;
     }
 
@@ -705,7 +714,7 @@
     }
     .cs-period { font-size: .72rem; color: var(--gray-400); text-align: right; margin-top: -4px; }
     .cs-annual-note {
-      background: var(--green-light, #D1FAE5); color: #065f46;
+      background: var(--green-light, #EAF7EF); color: #146137;
       border-radius: var(--radius-sm); padding: 8px 12px;
       font-size: .78rem; font-weight: 600; margin-bottom: 16px;
       display: none; align-items: center; gap: 6px;
@@ -774,7 +783,7 @@
     #testimonials .section-header h2,
     #testimonials .section-header p { color: white; }
     #testimonials .section-header p { color: rgba(255,255,255,.6); }
-    #testimonials .tag { background: rgba(59,130,246,.2); color: var(--brand-400); border-color: rgba(59,130,246,.3); }
+    #testimonials .tag { background: rgba(0,108,176,.2); color: var(--brand-400); border-color: rgba(0,108,176,.3); }
 
     .testimonials-grid {
       display: grid;
@@ -950,8 +959,8 @@
       font-family: var(--font-title);
     }
     .badge-blue { background: var(--brand-50); color: var(--brand-700); }
-    .badge-green { background: var(--green-light); color: #065f46; }
-    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-green { background: var(--green-light); color: #146137; }
+    .badge-yellow { background: #FDF4E3; color: #8A5A12; }
     .badge-purple { background: #ede9fe; color: #5b21b6; }
     .marketplace-icon { font-size: 2rem; }
     .marketplace-card h3 { font-size: 1rem; }
@@ -1013,7 +1022,7 @@
       cursor: default; margin-bottom: 2px;
       transition: background var(--transition);
     }
-    .sidebar-item.active { background: rgba(37,99,235,.25); color: var(--brand-400); }
+    .sidebar-item.active { background: rgba(0,108,176,.25); color: var(--brand-400); }
     .sidebar-item i { width: 16px; text-align: center; }
     .painel-content { padding: 18px; }
     .painel-stat-row { display: flex; gap: 10px; margin-bottom: 14px; }
@@ -1139,7 +1148,7 @@
               <div class="mockup-time">09:42</div>
             </div>
             <div class="mockup-email-row">
-              <div class="avatar" style="background:linear-gradient(135deg,#0ea5e9,#3b82f6)">MK</div>
+              <div class="avatar" style="background:linear-gradient(135deg,#00C6C0,#4091C4)">MK</div>
               <div class="mockup-email-info">
                 <div class="mockup-sender">Marketing Interno</div>
                 <div class="mockup-subject">Campanha de junho pronta</div>
@@ -1147,7 +1156,7 @@
               <div class="mockup-time">08:15</div>
             </div>
             <div class="mockup-email-row">
-              <div class="avatar" style="background:linear-gradient(135deg,#10b981,#059669)">FN</div>
+              <div class="avatar" style="background:linear-gradient(135deg,#1E8E4E,#059669)">FN</div>
               <div class="mockup-email-info">
                 <div class="mockup-sender">Financeiro</div>
                 <div class="mockup-subject">NF-e referente ao contrato</div>
@@ -1155,7 +1164,7 @@
               <div class="mockup-time">Ontem</div>
             </div>
             <div class="mockup-email-row">
-              <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">DI</div>
+              <div class="avatar" style="background:linear-gradient(135deg,#B8791A,#d97706)">DI</div>
               <div class="mockup-email-info">
                 <div class="mockup-sender">Diretoria</div>
                 <div class="mockup-subject">Reunião semanal — pauta</div>
@@ -1247,7 +1256,7 @@
   <section id="domain-search" class="section">
     <div class="container">
       <div class="domain-search-inner fade-in">
-        <div class="tag" style="background:rgba(59,130,246,.2);color:var(--brand-400);border-color:rgba(59,130,246,.3)">
+        <div class="tag" style="background:rgba(0,108,176,.2);color:var(--brand-400);border-color:rgba(0,108,176,.3)">
           <i class="fa-solid fa-magnifying-glass"></i> Buscar Domínio
         </div>
         <h2 style="margin-top:14px">Verifique se o seu domínio<br/>está disponível</h2>
@@ -1381,7 +1390,7 @@
             <div class="atc-top">
               <div class="atc-icon c50">📮</div>
               <div class="atc-info">
-                <div class="atc-name">Conta E-mail 50 GB <span style="font-size:.7rem;background:linear-gradient(90deg,#7c3aed,#2563eb);color:white;padding:2px 8px;border-radius:100px;font-weight:700;margin-left:6px;vertical-align:middle">✨ IA inclusa</span></div>
+                <div class="atc-name">Conta E-mail 50 GB <span style="font-size:.7rem;background:linear-gradient(90deg,#7c3aed,#006CB0);color:white;padding:2px 8px;border-radius:100px;font-weight:700;margin-left:6px;vertical-align:middle">✨ IA inclusa</span></div>
                 <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
               </div>
               <div class="atc-unit-price">

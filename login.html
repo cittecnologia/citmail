@@ -6,41 +6,51 @@
   <title>Entrar — CITMail</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/tokens.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --brand-900: #0F2057;
-      --brand-800: #172B6E;
-      --brand-700: #1E3A8A;
-      --brand-600: #2563EB;
-      --brand-500: #3B82F6;
-      --brand-400: #60A5FA;
-      --brand-100: #DBEAFE;
-      --brand-50:  #EFF6FF;
-      --accent:    #0EA5E9;
-      --green:     #10B981;
-      --green-bg:  #D1FAE5;
-      --green-dark:#065f46;
-      --red:       #EF4444;
-      --red-bg:    #FEE2E2;
-      --gray-900:  #111827;
-      --gray-700:  #374151;
-      --gray-500:  #6B7280;
-      --gray-300:  #D1D5DB;
-      --gray-200:  #E5E7EB;
-      --gray-100:  #F3F4F6;
+      /* Aliases legados -> tokens do Brandbook CIT (assets/tokens.css). */
+      --brand-900: var(--cit-navy-500);
+      --brand-800: var(--cit-navy-600);
+      --brand-700: var(--cit-blue-700);
+      --brand-600: var(--cit-blue-500);
+      --brand-500: var(--cit-blue-400);
+      --brand-400: var(--cit-blue-300);
+      --brand-300: var(--cit-blue-200);
+      --brand-200: var(--cit-blue-100);
+      --brand-100: var(--cit-blue-100);
+      --brand-50:  var(--cit-blue-50);
+      --accent:    var(--cit-turquoise-500);
+      --green:       var(--cit-success);
+      --green-bg:    var(--cit-success-subtle);
+      --green-light: var(--cit-success-subtle);
+      --green-dark:  var(--cit-success-strong);
+      --yellow:    var(--cit-warning);
+      --yellow-bg: var(--cit-warning-subtle);
+      --red:       var(--cit-error);
+      --red-bg:    var(--cit-error-subtle);
+      --gray-900:  var(--cit-text-primary);
+      --gray-700:  var(--cit-neutral-700);
+      --gray-600:  var(--cit-neutral-600);
+      --gray-500:  var(--cit-neutral-500);
+      --gray-400:  var(--cit-neutral-400);
+      --gray-300:  var(--cit-neutral-300);
+      --gray-200:  var(--cit-neutral-200);
+      --gray-100:  var(--cit-neutral-100);
       --white:     #FFFFFF;
-      --font-title: 'Montserrat', sans-serif;
-      --font-body:  'Inter', system-ui, sans-serif;
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
-      --shadow-md: 0 4px 16px rgba(0,0,0,.10);
-      --shadow-lg: 0 10px 40px rgba(0,0,0,.18);
-      --transition: .2s ease;
+      --font-title: var(--cit-font-display);
+      --font-body:  var(--cit-font-body);
+      --radius-sm: var(--cit-radius-sm);
+      --radius-md: var(--cit-radius-md);
+      --radius-lg: var(--cit-radius-lg);
+      --radius-xl: var(--cit-radius-xl);
+      --shadow-sm: var(--cit-shadow-sm);
+      --shadow-md: var(--cit-shadow-md);
+      --shadow-lg: var(--cit-shadow-lg);
+      --transition: var(--cit-duration-hover) var(--cit-ease);
     }
 
     html { height: 100%; }
@@ -66,8 +76,8 @@
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(circle at 20% 80%, rgba(37,99,235,.22) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(14,165,233,.15) 0%, transparent 50%);
+        radial-gradient(circle at 20% 80%, rgba(0,108,176,.22) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0,198,192,.15) 0%, transparent 50%);
       pointer-events: none;
     }
     .left-logo {
@@ -187,7 +197,7 @@
     }
     .input-wrap input:focus {
       border-color: var(--brand-500);
-      box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+      box-shadow: 0 0 0 3px rgba(0,108,176,.12);
     }
     .input-wrap input.error { border-color: var(--red); }
     .input-wrap .toggle-pass {
@@ -220,10 +230,10 @@
       font-family: var(--font-title); font-weight: 700;
       font-size: .95rem; border: none; border-radius: var(--radius-md);
       cursor: pointer; margin-top: 6px;
-      box-shadow: 0 4px 14px rgba(37,99,235,.3);
+      box-shadow: 0 4px 14px rgba(0,108,176,.3);
       transition: all var(--transition);
     }
-    .btn-login:hover { background: var(--brand-700); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,.4); }
+    .btn-login:hover { background: var(--brand-700); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,108,176,.4); }
     .btn-login:disabled { background: var(--gray-300); color: var(--gray-500); box-shadow: none; transform: none; cursor: not-allowed; }
     .btn-login .spinner {
       width: 18px; height: 18px; border-radius: 50%;
@@ -250,7 +260,7 @@
       border-radius: var(--radius-md); cursor: pointer; text-decoration: none;
       transition: all var(--transition);
     }
-    .btn-secondary:hover { border-color: var(--brand-300, #93c5fd); background: var(--brand-50); color: var(--brand-700); }
+    .btn-secondary:hover { border-color: var(--brand-300, #A6CCE3); background: var(--brand-50); color: var(--brand-700); }
 
     .signup-cta {
       text-align: center; margin-top: 24px;
@@ -270,8 +280,8 @@
     /* error alert */
     .alert-error {
       display: none;
-      background: var(--red-bg); color: #991b1b;
-      border: 1px solid #fca5a5;
+      background: var(--red-bg); color: #8E2B20;
+      border: 1px solid #E8A39B;
       border-radius: var(--radius-sm);
       padding: 10px 14px;
       font-size: .82rem;
@@ -409,7 +419,7 @@
   </div>
 
   <!-- forgot password modal -->
-  <div id="forgotOverlay" style="display:none;position:fixed;inset:0;background:rgba(15,32,87,.6);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;padding:20px">
+  <div id="forgotOverlay" style="display:none;position:fixed;inset:0;background:rgba(35,52,78,.6);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;padding:20px">
     <div style="background:white;border-radius:16px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .25s ease">
       <div style="padding:20px 24px 16px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between">
         <h3 style="font-family:var(--font-title);font-size:1rem;color:var(--brand-900)">Recuperar senha</h3>
@@ -427,7 +437,7 @@
       </div>
       <div style="padding:0 24px 20px;display:flex;gap:10px;justify-content:flex-end">
         <button onclick="closeForgot()" style="padding:9px 18px;border-radius:8px;border:none;background:var(--gray-100);cursor:pointer;font-family:var(--font-title);font-weight:700;font-size:.82rem;color:var(--gray-600)">Cancelar</button>
-        <button onclick="sendForgot()" style="padding:9px 18px;border-radius:8px;border:none;background:var(--brand-600);color:white;cursor:pointer;font-family:var(--font-title);font-weight:700;font-size:.82rem;box-shadow:0 2px 8px rgba(37,99,235,.3)">
+        <button onclick="sendForgot()" style="padding:9px 18px;border-radius:8px;border:none;background:var(--brand-600);color:white;cursor:pointer;font-family:var(--font-title);font-weight:700;font-size:.82rem;box-shadow:0 2px 8px rgba(0,108,176,.3)">
           <i class="fa-solid fa-paper-plane"></i> Enviar link
         </button>
       </div>
@@ -537,7 +547,7 @@
       closeForgot();
       // show toast-like feedback
       const note = document.createElement('div');
-      note.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#111827;color:white;padding:12px 18px;border-radius:12px;font-size:.875rem;display:flex;align-items:center;gap:10px;box-shadow:0 10px 40px rgba(0,0,0,.2);z-index:9999;animation:slideUp .25s ease';
+      note.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#23344E;color:white;padding:12px 18px;border-radius:12px;font-size:.875rem;display:flex;align-items:center;gap:10px;box-shadow:0 10px 40px rgba(0,0,0,.2);z-index:9999;animation:slideUp .25s ease';
       note.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--green)"></i> Link enviado para <strong>${email}</strong>`;
       document.body.appendChild(note);
       setTimeout(() => { note.style.opacity='0'; note.style.transition='opacity .3s'; setTimeout(()=>note.remove(),300); }, 4000);

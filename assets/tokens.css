@@ -1,0 +1,184 @@
+/* CITMail — tokens de design.
+   Copiado do Brandbook CIT Tecnologia v1.0 (github.com/cittecnologia/brandbook-cit).
+   Não edite valores aqui sem atualizar o brandbook primeiro.
+   Fontes: carregue Montserrat 600/700/800 e Poppins 400/500/600 do Google Fonts. */
+
+/* CIT Tecnologia — escalas de cor.
+   Núcleo institucional: --cit-blue-500 (#006CB0), --cit-turquoise-500 (#00C6C0), #FFFFFF.
+   --cit-navy-500 (#23344E) é a tinta do logotipo oficial, extraída dos arquivos entregues:
+   é cor de TEXTO e de FUNDO ESCURO da marca, não um terceiro azul institucional. */
+:root{
+  --cit-blue-50:#EBF3F9;--cit-blue-100:#CCE2EF;--cit-blue-200:#A6CCE3;--cit-blue-300:#73AED4;--cit-blue-400:#4091C4;
+  --cit-blue-500:#006CB0;--cit-blue-600:#005F9B;--cit-blue-700:#005184;--cit-blue-800:#00436D;--cit-blue-900:#003454;
+
+  --cit-turquoise-50:#EBFAFA;--cit-turquoise-100:#CCF4F2;--cit-turquoise-200:#A6EBE9;--cit-turquoise-300:#73E0DC;--cit-turquoise-400:#40D4D0;
+  --cit-turquoise-500:#00C6C0;--cit-turquoise-600:#00AEA9;--cit-turquoise-700:#009490;--cit-turquoise-800:#007B77;--cit-turquoise-900:#005F5C;
+
+  --cit-neutral-0:#FFFFFF;
+  --cit-neutral-50:#F8FAFB;--cit-neutral-100:#F0F5F7;--cit-neutral-200:#DEE8ED;--cit-neutral-300:#C5D4DC;--cit-neutral-400:#92A8B4;
+  --cit-neutral-500:#617985;--cit-neutral-600:#48616E;--cit-neutral-700:#334B57;--cit-neutral-800:#203842;--cit-neutral-900:#122A34;
+
+  /* Tinta do logotipo (marca) */
+  --cit-navy-500:#23344E;--cit-navy-600:#1C2A40;--cit-navy-700:#162232;
+
+  /* Gradiente do símbolo, exatamente como consta nos arquivos oficiais.
+     Uso restrito: reprodução do logotipo. Não aplicar em superfícies de UI. */
+  --cit-logo-gradient-from:#0094FC;
+  --cit-logo-gradient-to:#006CB3;
+
+  /* Cores funcionais — deliberadamente fora das escalas de marca, para que
+     estado nunca seja confundido com identidade. Turquesa NÃO é "sucesso". */
+  --cit-green-50:#EAF7EF;--cit-green-500:#1E8E4E;--cit-green-700:#146137;
+  --cit-amber-50:#FDF4E3;--cit-amber-500:#B8791A;--cit-amber-700:#8A5A12;
+  --cit-red-50:#FCEDED;--cit-red-500:#C0392B;--cit-red-700:#8E2B20;
+}
+
+/* CIT Tecnologia — tipografia. Montserrat = display/títulos. Poppins = corpo/UI. */
+:root{
+  --cit-font-display:"Montserrat",system-ui,sans-serif;
+  --cit-font-body:"Poppins",system-ui,sans-serif;
+  --cit-font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+
+  --cit-weight-regular:400;--cit-weight-medium:500;--cit-weight-semibold:600;--cit-weight-bold:700;
+
+  --cit-text-display:72px;--cit-text-hero:56px;--cit-text-h1:44px;--cit-text-h2:36px;--cit-text-h3:28px;
+  --cit-text-h4:22px;--cit-text-lead:18px;--cit-text-body:16px;--cit-text-small:14px;--cit-text-caption:12px;--cit-text-micro:10px;
+
+  --cit-leading-tight:1.08;   /* display, hero */
+  --cit-leading-snug:1.2;     /* h1–h3 */
+  --cit-leading-normal:1.45;  /* h4, lead */
+  --cit-leading-relaxed:1.6;  /* corpo */
+
+  --cit-tracking-display:-0.02em;
+  --cit-tracking-heading:-0.01em;
+  --cit-tracking-body:0;
+  --cit-tracking-label:0.02em;
+  --cit-tracking-eyebrow:0.14em; /* rótulos em caixa alta */
+}
+
+/* CIT Tecnologia — espaçamento (base 4px) e grid. */
+:root{
+  --cit-space-0:0;--cit-space-1:4px;--cit-space-2:8px;--cit-space-3:12px;--cit-space-4:16px;--cit-space-5:20px;
+  --cit-space-6:24px;--cit-space-8:32px;--cit-space-10:40px;--cit-space-12:48px;--cit-space-16:64px;
+  --cit-space-20:80px;--cit-space-24:96px;--cit-space-32:128px;
+
+  --cit-container-max:1240px;
+  --cit-container-narrow:760px;
+  --cit-gutter:24px;
+  --cit-grid-columns:12; /* @kind other */
+
+  --cit-section-y:96px;        /* respiro vertical entre seções, web */
+  --cit-section-y-compact:64px;
+}
+
+/* CIT Tecnologia — forma, borda e elevação.
+   Regra: hierarquia por borda, superfície e espaçamento. Sombra é exceção. */
+:root{
+  --cit-radius-xs:4px;--cit-radius-sm:8px;--cit-radius-md:10px;--cit-radius-lg:12px;--cit-radius-xl:14px;
+  --cit-radius-full:999px; /* somente pills de status e avatares */
+
+  --cit-border-width:1px;
+  --cit-border-width-strong:2px;
+  --cit-border:1px solid var(--cit-neutral-200);
+  --cit-border-strong:1px solid var(--cit-neutral-300);
+  --cit-border-dark:1px solid rgba(255,255,255,.14); /* @kind other */
+
+  --cit-shadow-none:none;
+  --cit-shadow-sm:0 1px 2px rgba(18,42,52,.06);
+  --cit-shadow-md:0 2px 8px rgba(18,42,52,.08);
+  --cit-shadow-lg:0 8px 24px rgba(18,42,52,.10); /* apenas overlays: modal, dropdown */
+
+  --cit-focus-ring:0 0 0 3px rgba(0,198,192,.45);
+  --cit-focus-ring-dark:0 0 0 3px rgba(0,198,192,.55);
+}
+
+/* CIT Tecnologia — movimento. Discreto, funcional, nunca decorativo. */
+:root{
+  --cit-ease:cubic-bezier(.22,.61,.36,1); /* @kind other */
+  --cit-ease-out:cubic-bezier(0,0,.2,1); /* @kind other */
+  --cit-duration-hover:200ms; /* @kind other */
+  --cit-duration-enter:560ms; /* @kind other */
+  --cit-lift:-2px;              /* deslocamento máximo de card em hover */
+  --cit-fadeup-from:12px;       /* translateY inicial do fadeUp */
+}
+@keyframes cit-fade-up{from{opacity:0;transform:translateY(var(--cit-fadeup-from))}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  :root{--cit-duration-hover:1ms; /* @kind other */ --cit-duration-enter:1ms; /* @kind other */ --cit-lift:0px;--cit-fadeup-from:0px}
+  @keyframes cit-fade-up{from{opacity:1}to{opacity:1}}
+}
+
+/* CIT Tecnologia — tokens semânticos. Sempre consuma estes, não as escalas cruas. */
+:root{
+  --cit-primary:var(--cit-blue-500);
+  --cit-primary-hover:var(--cit-blue-600);
+  --cit-primary-active:var(--cit-blue-700);
+  --cit-primary-subtle:var(--cit-blue-50);
+  --cit-on-primary:#FFFFFF;
+
+  --cit-secondary:var(--cit-turquoise-500);
+  --cit-secondary-hover:var(--cit-turquoise-600);
+  --cit-secondary-active:var(--cit-turquoise-700);
+  --cit-secondary-subtle:var(--cit-turquoise-50);
+  --cit-on-secondary:var(--cit-navy-700);
+
+  --cit-bg-base:#FFFFFF;
+  --cit-bg-subtle:var(--cit-neutral-50);
+  --cit-bg-muted:var(--cit-neutral-100);
+  --cit-bg-dark:var(--cit-navy-500);       /* bloco institucional escuro = tinta do logo */
+  --cit-bg-dark-deep:var(--cit-blue-900);  /* interfaces técnicas escuras */
+
+  --cit-surface:#FFFFFF;
+  --cit-surface-raised:#FFFFFF;
+  --cit-surface-sunken:var(--cit-neutral-50);
+  --cit-surface-dark:var(--cit-navy-600);
+
+  --cit-text-primary:var(--cit-navy-500);
+  --cit-text-secondary:var(--cit-neutral-600);
+  --cit-text-muted:var(--cit-neutral-500);
+  --cit-text-inverse:#FFFFFF;
+  --cit-text-inverse-secondary:rgba(255,255,255,.72);
+  --cit-text-link:var(--cit-blue-500);
+  --cit-text-link-hover:var(--cit-blue-700);
+
+  --cit-border-color:var(--cit-neutral-200);
+  --cit-border-color-strong:var(--cit-neutral-300);
+  --cit-border-color-dark:rgba(255,255,255,.14);
+  --cit-divider:var(--cit-neutral-200);
+
+  --cit-focus:var(--cit-turquoise-500);
+
+  --cit-success:var(--cit-green-500);--cit-success-subtle:var(--cit-green-50);--cit-success-strong:var(--cit-green-700);
+  --cit-warning:var(--cit-amber-500);--cit-warning-subtle:var(--cit-amber-50);--cit-warning-strong:var(--cit-amber-700);
+  --cit-error:var(--cit-red-500);--cit-error-subtle:var(--cit-red-50);--cit-error-strong:var(--cit-red-700);
+  --cit-info:var(--cit-blue-500);--cit-info-subtle:var(--cit-blue-50);--cit-info-strong:var(--cit-blue-700);
+  --cit-monitored:var(--cit-turquoise-700);--cit-monitored-subtle:var(--cit-turquoise-50);
+}
+/* Contexto escuro. Aplique em qualquer container: <div class="cit-dark"> */
+.cit-dark{
+  --cit-bg-base:var(--cit-navy-500);
+  --cit-bg-subtle:var(--cit-navy-600);
+  --cit-bg-muted:var(--cit-navy-700);
+  --cit-surface:var(--cit-navy-600);
+  --cit-surface-raised:#26395A;
+  --cit-surface-sunken:var(--cit-navy-700);
+  --cit-text-primary:#FFFFFF;
+  --cit-text-secondary:rgba(255,255,255,.72);
+  --cit-text-muted:rgba(255,255,255,.56);
+  --cit-text-inverse:var(--cit-navy-500);
+  --cit-text-link:var(--cit-turquoise-300);
+  --cit-text-link-hover:var(--cit-turquoise-200);
+  --cit-border-color:rgba(255,255,255,.14);
+  --cit-border-color-strong:rgba(255,255,255,.24);
+  --cit-divider:rgba(255,255,255,.12);
+  --cit-primary:var(--cit-blue-400);
+  --cit-primary-hover:var(--cit-blue-300);
+  --cit-primary-subtle:rgba(64,145,196,.16);
+  --cit-secondary-subtle:rgba(0,198,192,.16);
+  --cit-success-subtle:rgba(30,142,78,.18);
+  --cit-warning-subtle:rgba(184,121,26,.20);
+  --cit-error-subtle:rgba(192,57,43,.20);
+  --cit-info-subtle:rgba(0,108,176,.22);
+  --cit-monitored-subtle:rgba(0,198,192,.16);
+  color:var(--cit-text-primary);
+  background:var(--cit-bg-base);
+}
