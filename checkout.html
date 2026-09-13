@@ -568,7 +568,7 @@
     .opt-desc { font-size: .8rem; color: var(--cit-text-muted); }
     .opt-price-col { text-align: right; }
     .opt-price { font-family: var(--font-title); font-weight: 800; font-size: 1rem; color: var(--cit-primary); white-space: nowrap; }
-    .opt-price--free { color: var(--cit-green-700); }
+    .opt-price--free { color: var(--cit-green-700); font-weight: 700; }
     .opt-price-note { font-size: .72rem; color: var(--cit-text-muted); }
 
     /* ---- PASSO 3: ADD-ONS ---- */
@@ -623,7 +623,7 @@
       font-size: 2.25rem; margin: 0 auto 24px;
       animation: cit-fade-up var(--cit-duration-enter) var(--cit-ease) both;
     }
-    .success-page h2 { font-size: 1.625rem; margin-bottom: 10px; }
+    .success-page h2 { font-size: clamp(1.625rem, 2.5vw, 2.25rem); margin-bottom: 10px; }
     .success-page p { color: var(--cit-text-secondary); margin-bottom: 6px; }
     .access-card {
       margin: 28px auto; max-width: 400px;
@@ -707,6 +707,7 @@
       .domain-opt-card .opt-price-col { margin-left: 34px; text-align: left; }
       .payment-option-header { flex-wrap: wrap; }
       .boleto-actions { flex-direction: column; }
+      .boleto-actions .btn { flex: none; }
     }
     @media (max-width: 480px) {
       .pix-qr { width: 130px; height: 130px; }

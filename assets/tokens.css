@@ -183,6 +183,11 @@
   background:var(--cit-bg-base);
 }
 
+/* Base tipográfica: controles de formulário herdam a família do contexto e ênfase usa
+   SemiBold 600 (Poppins só tem 400/500/600 no sistema; o negrito padrão 700 sairia sintetizado). */
+button,input,select,textarea{font-family:inherit}
+b,strong{font-weight:600}
+
 /* CIT Tecnologia — ícones. Biblioteca base 24x24, traço 2px, uso via assets/icons.svg.
    Cor padrão: herda o texto (navy em fundo claro, branco em fundo escuro).
    Azul CIT só em ação ou estado ativo; cores funcionais só em ícone de estado. */

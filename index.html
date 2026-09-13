@@ -152,7 +152,7 @@
     }
     .btn-outline-dark:hover { background: rgba(255,255,255,.08); border-color: var(--white); }
     .btn-lg { height: 48px; padding: 0 26px; font-size: 1rem; }
-    .btn-sm { height: 32px; padding: 0 14px; font-size: .8125rem; border-radius: 6px; }
+    .btn-sm { height: 32px; padding: 0 14px; font-size: .8125rem; }
 
     /* Badge do brandbook: raio 6, borda 1px, texto + cor */
     .badge {
@@ -441,7 +441,7 @@
     }
     .domain-input {
       flex: 1; border: none; outline: none; min-width: 0;
-      padding: 16px; font-size: 1rem; font-family: var(--font-body);
+      height: 48px; padding: 0 16px; font-size: 1rem; font-family: var(--font-body);
       color: var(--cit-text-primary);
     }
     .domain-input:focus-visible { box-shadow: inset 0 0 0 2px var(--cit-focus); }
@@ -452,7 +452,7 @@
       border-left: 1px solid var(--cit-border-color);
       background: var(--cit-bg-subtle);
     }
-    .domain-form .btn-primary { border-radius: 0; height: auto; padding: 16px 28px; }
+    .domain-form .btn-primary { border-radius: 0; height: 48px; padding: 0 28px; }
 
     .domain-result { margin-top: 16px; min-height: 32px; }
     .domain-available,
@@ -482,7 +482,7 @@
     @media (max-width: 600px) {
       .domain-form { flex-direction: column; }
       .domain-prefix, .domain-suffix { display: none; }
-      .domain-input { border-bottom: 1px solid var(--cit-border-color); }
+      .domain-input { flex: none; border-bottom: 1px solid var(--cit-border-color); }
       .domain-form .btn-primary { border-radius: 0; }
     }
 
@@ -575,14 +575,14 @@
       font-family: var(--font-title); font-weight: 600;
       font-size: 1rem; color: var(--cit-text-primary);
     }
-    .atc-storage { font-size: .8rem; color: var(--cit-text-muted); }
+    .atc-storage { font-size: .8rem; color: var(--cit-text-secondary); }
     .atc-unit-price { text-align: right; }
-    .atc-unit-price .from { font-size: .7rem; color: var(--cit-text-muted); }
+    .atc-unit-price .from { font-size: .7rem; color: var(--cit-text-secondary); }
     .atc-unit-price .price {
       font-family: var(--font-title); font-weight: 800;
       font-size: 1.3rem; color: var(--cit-primary);
     }
-    .atc-unit-price .period { font-size: .72rem; color: var(--cit-text-muted); }
+    .atc-unit-price .period { font-size: .72rem; color: var(--cit-text-secondary); }
     .atc-ai-badge { margin-left: 6px; vertical-align: middle; height: 20px; font-size: .7rem; }
 
     /* Volume discount badge */
@@ -946,10 +946,10 @@
     .marketplace-card:hover { border-color: var(--cit-blue-300); transform: translateY(var(--cit-lift)); }
     .marketplace-card .badge { align-self: flex-start; }
     .marketplace-icon { font-size: 2rem; }
-    .marketplace-card h3 { font-size: 1.0625rem; }
     .marketplace-card p { font-size: .875rem; flex: 1; }
     .marketplace-card .from { font-size: .8rem; color: var(--cit-text-muted); }
     .marketplace-card .price { font-family: var(--font-title); font-weight: 800; color: var(--cit-primary); }
+    .marketplace-card .price--text { font-weight: 700; }
 
     /* =========================================================
        PAINEL PREVIEW (Client Portal teaser)
@@ -1009,7 +1009,7 @@
       border: 1px solid var(--cit-border-color-dark);
       border-radius: var(--cit-radius-md); padding: 12px;
     }
-    .painel-stat .label { font-size: .65rem; color: rgba(255,255,255,.56); text-transform: uppercase; letter-spacing: .1em; }
+    .painel-stat .label { font-size: .6875rem; color: rgba(255,255,255,.56); text-transform: uppercase; letter-spacing: var(--cit-tracking-eyebrow); }
     .painel-stat .value { font-family: var(--font-title); font-weight: 700; color: white; font-size: 1.1rem; }
     .painel-email-row {
       display: flex; align-items: center; gap: 10px;
@@ -1020,7 +1020,7 @@
     .painel-email-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cit-success); flex-shrink: 0; }
     .painel-email-name { color: rgba(255,255,255,.85); font-size: .75rem; flex: 1; }
     .painel-email-status {
-      font-size: .65rem; font-weight: 600; color: var(--cit-green-50);
+      font-size: .6875rem; font-weight: 600; color: var(--cit-green-50);
       background: rgba(30,142,78,.18); border: 1px solid rgba(30,142,78,.5);
       padding: 1px 6px; border-radius: 6px;
     }
@@ -1629,7 +1629,7 @@
           <h3>DevOps & Consultoria</h3>
           <p>Projetos de infraestrutura, CI/CD, Docker, Kubernetes e consultoria de TI.</p>
           <div class="from">Sob consulta</div>
-          <div class="price">Fale conosco →</div>
+          <div class="price price--text">Fale conosco →</div>
         </div>
       </div>
     </div>

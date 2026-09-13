@@ -193,7 +193,7 @@
       border: 1px solid var(--cit-border-color);
       border-radius: var(--cit-radius-sm);
       padding: 0 12px;
-      height: 36px;
+      height: 40px;
       max-width: 240px; flex: 1;
       transition: border-color var(--transition), box-shadow var(--transition);
     }
@@ -333,7 +333,7 @@
     .btn-ghost:hover { background: var(--cit-bg-muted); color: var(--cit-text-primary); }
     .btn-danger { background: var(--cit-red-500); color: white; }
     .btn-danger:hover { background: var(--cit-red-700); }
-    .btn-sm { height: 32px; padding: 0 12px; font-size: .8125rem; border-radius: 6px; }
+    .btn-sm { height: 32px; padding: 0 12px; font-size: .8125rem; }
     .btn-block { width: 100%; }
     .btn-push { width: 100%; margin-top: auto; }
     .btn-row { display: flex; gap: 10px; }
@@ -487,7 +487,7 @@
       font-family: var(--font-title); font-weight: 800;
       font-size: 1.2rem; color: var(--cit-primary);
     }
-    .product-card-price span { font-size: .75rem; font-weight: 500; color: var(--cit-text-secondary); }
+    .product-card-price span { font-family: var(--font-body); font-size: .75rem; font-weight: 500; color: var(--cit-text-secondary); }
     .product-card-features { display: flex; flex-direction: column; gap: 6px; }
     .product-feat {
       display: flex; align-items: center; gap: 7px;
@@ -615,7 +615,7 @@
       justify-self: start; min-width: 40px;
     }
     .rt-A, .rt-AAAA { background: var(--cit-blue-50); color: var(--cit-blue-700); border-color: var(--cit-blue-200); }
-    .rt-CNAME       { background: var(--cit-turquoise-50); color: var(--cit-turquoise-800); border-color: var(--cit-turquoise-300); }
+    .rt-CNAME       { background: var(--cit-turquoise-50); color: var(--cit-text-primary); border-color: var(--cit-turquoise-300); }
     .rt-MX, .rt-TXT, .rt-NS, .rt-SRV, .rt-CAA { background: var(--cit-bg-muted); color: var(--cit-neutral-700); border-color: var(--cit-border-color-strong); }
 
     .dns-host { font-family: var(--cit-font-mono); font-size: .8rem; color: var(--cit-text-primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
@@ -679,7 +679,7 @@
       padding: 20px 24px 16px;
       border-bottom: 1px solid var(--cit-divider);
     }
-    .modal-header h3 { font-size: 1.0625rem; }
+    .modal-header h3 { font-size: 1.25rem; }
     .modal-close {
       width: 32px; height: 32px; border-radius: var(--cit-radius-sm); flex-shrink: 0;
       border: none; background: transparent; cursor: pointer;
