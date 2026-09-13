@@ -104,11 +104,13 @@
       font-size: .75rem; letter-spacing: var(--cit-tracking-eyebrow); text-transform: uppercase;
       color: var(--cit-primary);
     }
+    .tag .icon { color: var(--cit-text-primary); } /* ícone decorativo: navy; o azul fica só no texto de ênfase */
     .tag::before {
       content: ''; width: 24px; height: 2px; flex-shrink: 0;
       background: var(--cit-turquoise-500);
     }
     .tag--dark { color: var(--cit-text-inverse-secondary); }
+    .tag--dark .icon, #testimonials .tag .icon, #cta-final .tag .icon { color: inherit; }
     .section-header { max-width: 640px; margin: 0 auto 56px; }
     .section-header p { font-size: 1.0625rem; margin-top: 12px; }
 
@@ -415,7 +417,7 @@
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 18px;
     }
-    .feature-icon .icon { font-size: 1.3rem; color: var(--cit-primary); }
+    .feature-icon .icon { font-size: 1.3rem; color: var(--cit-text-primary); }
     .feature-card h3 { margin-bottom: 8px; }
     .feature-card p { font-size: .9375rem; }
 
@@ -1060,7 +1062,7 @@
           <a href="checkout.html" class="btn btn-primary btn-sm">Começar Agora</a>
         </div>
 
-        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
       </nav>
@@ -1860,9 +1862,15 @@
     // ---- MOBILE NAV ----
     const navToggle = document.getElementById('navToggle');
     const nav = document.getElementById('nav');
-    navToggle.addEventListener('click', () => {
-      document.getElementById('header').classList.toggle('nav-mobile-open');
-    });
+    function setNavOpen(open) {
+      header.classList.toggle('nav-mobile-open', open);
+      navToggle.setAttribute('aria-expanded', open);
+      // Os botões ficam logo abaixo da lista de links, na altura real que ela ocupa.
+      if (open) header.style.setProperty('--mobile-links-height', nav.querySelector('.nav-links').offsetHeight + 'px');
+    }
+    navToggle.addEventListener('click', () => setNavOpen(!header.classList.contains('nav-mobile-open')));
+    nav.querySelectorAll('.nav-links a, .nav-ctas a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') setNavOpen(false); });
 
     // ---- BILLING TOGGLE ----
     let billing = 'monthly';

@@ -187,6 +187,8 @@
    SemiBold 600 (Poppins só tem 400/500/600 no sistema; o negrito padrão 700 sairia sintetizado). */
 button,input,select,textarea{font-family:inherit}
 b,strong{font-weight:600}
+/* Texto só para leitores de tela (ex.: título de página que a interface já mostra visualmente). */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* CIT Tecnologia — ícones. Biblioteca base 24x24, traço 2px, uso via assets/icons.svg.
    Cor padrão: herda o texto (navy em fundo claro, branco em fundo escuro).

@@ -162,7 +162,7 @@
     .login-card-logo img { height: 40px; width: auto; }
 
     .login-card h1 {
-      font-size: 1.375rem; font-weight: 600;
+      font-size: clamp(1.25rem, 1.8vw, 1.375rem); font-weight: 600;
       color: var(--cit-text-primary); text-align: center;
       margin-bottom: 6px;
     }
@@ -308,7 +308,7 @@
       padding: 20px 24px 16px; border-bottom: 1px solid var(--cit-divider);
       display: flex; align-items: center; justify-content: space-between;
     }
-    .modal-head h3 { font-size: 1.25rem; color: var(--cit-text-primary); }
+    .modal-head h3 { font-size: clamp(1.25rem, 1.8vw, 1.375rem); color: var(--cit-text-primary); }
     .modal-close {
       width: 32px; height: 32px; border-radius: var(--cit-radius-sm);
       border: none; background: transparent; cursor: pointer;
@@ -580,6 +580,9 @@
     // Close forgot on overlay click
     document.getElementById('forgotOverlay').addEventListener('click', e => {
       if (e.target === document.getElementById('forgotOverlay')) closeForgot();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && document.getElementById('forgotOverlay').style.display !== 'none') closeForgot();
     });
 
     // Auto-focus email on load

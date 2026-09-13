@@ -426,7 +426,7 @@
       display: flex; align-items: flex-start; justify-content: space-between;
       margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
     }
-    .page-hdr-left h2 { font-size: 1.375rem; color: var(--cit-text-primary); }
+    .page-hdr-left h1 { font-size: clamp(2rem, 3.4vw, 3rem); color: var(--cit-text-primary); }
     .page-hdr-left p { font-size: .875rem; color: var(--cit-text-secondary); margin-top: 3px; }
 
     /* ── ATIVIDADE ── */
@@ -531,8 +531,8 @@
     /* ── E-MAILS ── */
     .email-chip {
       display: inline-flex; align-items: center; gap: 6px;
-      background: var(--cit-blue-50); color: var(--cit-blue-700);
-      border: 1px solid var(--cit-blue-200);
+      background: var(--cit-bg-subtle); color: var(--cit-text-primary);
+      border: 1px solid var(--cit-border-color);
       border-radius: 6px; padding: 3px 10px;
       font-size: .8125rem; font-weight: 600; white-space: nowrap;
     }
@@ -679,7 +679,7 @@
       padding: 20px 24px 16px;
       border-bottom: 1px solid var(--cit-divider);
     }
-    .modal-header h3 { font-size: 1.25rem; }
+    .modal-header h3 { font-size: clamp(1.25rem, 1.8vw, 1.375rem); }
     .modal-close {
       width: 32px; height: 32px; border-radius: var(--cit-radius-sm); flex-shrink: 0;
       border: none; background: transparent; cursor: pointer;
@@ -882,7 +882,7 @@
 
   <!-- TOPBAR -->
   <header class="topbar">
-    <button class="sidebar-toggle" onclick="toggleSidebar()">
+    <button class="sidebar-toggle" aria-label="Abrir menu" onclick="toggleSidebar()">
       <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
     </button>
     <img class="topbar-logo" src="assets/brand/citmail-horizontal-claro.png" alt="CITMail" width="133" height="30">
@@ -908,6 +908,7 @@
 
     <!-- ===================== DASHBOARD ===================== -->
     <section class="section active" id="sec-dashboard">
+      <h1 class="sr-only">Dashboard</h1>
       <div class="alert alert-blue">
         <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg>
         <span>Serviço ativo e operando normalmente. <strong>DNS configurado.</strong></span>
@@ -1044,7 +1045,7 @@
         <div class="quick-actions">
           <button class="btn btn-outline" onclick="openModal('modalNovaContaEmail')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#user-plus"></use></svg> Nova conta e-mail</button>
           <button class="btn btn-outline" onclick="navigate('financeiro')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-text"></use></svg> Ver faturas</button>
-          <button class="btn btn-outline" onclick="navigate('configuracoes')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg> Configurar DNS</button>
+          <button class="btn btn-outline" onclick="navigate('dns')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg> Configurar DNS</button>
           <button class="btn btn-outline" onclick="openModal('modalNovoTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg> Abrir ticket</button>
           <button class="btn btn-outline" onclick="navigate('marketplace')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Contratar serviço</button>
         </div>
@@ -1055,7 +1056,7 @@
     <section class="section" id="sec-email">
       <div class="page-hdr">
         <div class="page-hdr-left">
-          <h2>Contas de E-mail</h2>
+          <h1>Contas de E-mail</h1>
           <p>Gerencie suas caixas postais, aliases e configurações</p>
         </div>
         <button class="btn btn-primary" onclick="openModal('modalNovaContaEmail')">
@@ -1184,7 +1185,7 @@
     <section class="section" id="sec-financeiro">
       <div class="page-hdr">
         <div class="page-hdr-left">
-          <h2>Financeiro</h2>
+          <h1>Financeiro</h1>
           <p>Assinaturas, faturas e formas de pagamento</p>
         </div>
       </div>
@@ -1321,7 +1322,7 @@
     <section class="section" id="sec-produtos">
       <div class="page-hdr">
         <div class="page-hdr-left">
-          <h2>Meus Produtos</h2>
+          <h1>Meus Produtos</h1>
           <p>Serviços ativos na sua conta CITMail</p>
         </div>
         <button class="btn btn-primary" onclick="navigate('marketplace')">
@@ -1397,7 +1398,7 @@
     <section class="section" id="sec-marketplace">
       <div class="page-hdr">
         <div class="page-hdr-left">
-          <h2>Marketplace</h2>
+          <h1>Marketplace</h1>
           <p>Serviços de TI contratados pela sua conta CITMail</p>
         </div>
       </div>
@@ -1515,7 +1516,7 @@
     <section class="section" id="sec-dns">
       <div class="page-hdr">
         <div class="page-hdr-left">
-          <h2>DNS</h2>
+          <h1>DNS</h1>
           <p>Gerencie os registros DNS dos seus domínios</p>
         </div>
         <button class="btn btn-primary" onclick="dnsOpenAddRecord()">
@@ -1590,7 +1591,7 @@
     <section class="section" id="sec-configuracoes">
       <div class="page-hdr">
         <div class="page-hdr-left">
-          <h2>Configurações</h2>
+          <h1>Configurações</h1>
           <p>Perfil, segurança e preferências</p>
         </div>
       </div>
@@ -1774,7 +1775,7 @@
     <section class="section" id="sec-suporte">
       <div class="page-hdr">
         <div class="page-hdr-left">
-          <h2>Suporte</h2>
+          <h1>Suporte</h1>
           <p>Abra tickets e acompanhe seus chamados</p>
         </div>
         <button class="btn btn-primary" onclick="openModal('modalNovoTicket')">
@@ -1881,7 +1882,7 @@
   <div class="modal modal--md">
     <div class="modal-header">
       <h3 id="modalDnsTitle"><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg>Adicionar Registro</h3>
-      <button class="modal-close" onclick="closeModal('modalDnsRecord')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
+      <button class="modal-close" aria-label="Fechar" onclick="closeModal('modalDnsRecord')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <div class="form-row">
@@ -1938,7 +1939,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#user-plus"></use></svg>Nova Conta de E-mail</h3>
-      <button class="modal-close" onclick="closeModal('modalNovaContaEmail')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
+      <button class="modal-close" aria-label="Fechar" onclick="closeModal('modalNovaContaEmail')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <div class="form-row">
@@ -1979,7 +1980,7 @@
   <div class="modal modal--md">
     <div class="modal-header">
       <h3><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg>Novo Ticket de Suporte</h3>
-      <button class="modal-close" onclick="closeModal('modalNovoTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
+      <button class="modal-close" aria-label="Fechar" onclick="closeModal('modalNovoTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <div class="form-row">
@@ -2031,7 +2032,7 @@
           <span class="badge badge-blue">Técnico</span>
         </div>
       </div>
-      <button class="modal-close" onclick="closeModal('modalVerTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
+      <button class="modal-close" aria-label="Fechar" onclick="closeModal('modalVerTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body modal-body--scroll">
       <div class="msg-list">
@@ -2068,7 +2069,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#calendar-check"></use></svg>Agendar Conversa</h3>
-      <button class="modal-close" onclick="closeModal('modalContratarConsultoria')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
+      <button class="modal-close" aria-label="Fechar" onclick="closeModal('modalContratarConsultoria')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <p>Um especialista CITMail retorna em até 1 dia útil com uma proposta para a sua necessidade.</p>
@@ -2102,7 +2103,7 @@
   <div class="modal modal--md">
     <div class="modal-header">
       <h3><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg>Planos de Servidor Cloud</h3>
-      <button class="modal-close" onclick="closeModal('modalContratarServidor')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
+      <button class="modal-close" aria-label="Fechar" onclick="closeModal('modalContratarServidor')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <div class="plan-opts">
@@ -2201,6 +2202,11 @@
     overlay.addEventListener('click', e => {
       if (e.target === overlay) closeModal(overlay.id);
     });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.modal-overlay.open').forEach(overlay => closeModal(overlay.id));
+    closeSidebar();
   });
 
   /* ── SELEÇÃO DE PLANO (modal servidor) ── */

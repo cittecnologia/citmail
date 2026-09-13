@@ -447,6 +447,8 @@
     .order-summary {
       position: sticky; top: 76px;
     }
+    /* Uma coluna: o resumo fica acima do formulário e, fixo, cobriria os campos ao rolar. */
+    @media (max-width: 900px) { .order-summary { position: static; } }
     .summary-plan {
       display: flex; align-items: flex-start; gap: 14px;
       padding-bottom: 16px; margin-bottom: 16px;
@@ -1357,7 +1359,7 @@
                   <button class="btn btn-outline btn-sm" onclick="copyBoleto()">
                     <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar código
                   </button>
-                  <button class="btn btn-outline btn-sm" id="downloadBoleto">
+                  <button class="btn btn-outline btn-sm" id="downloadBoleto" onclick="downloadBoleto()">
                     <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-down"></use></svg> Baixar PDF
                   </button>
                 </div>
@@ -2164,9 +2166,23 @@
         setTimeout(() => { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar'; }, 2000);
       });
     }
+    // Abre o boleto numa página própria e aciona a impressão, onde o cliente escolhe "Salvar como PDF".
+    function downloadBoleto() {
+      const code = document.getElementById('boletoCode').textContent.trim();
+      const total = document.getElementById('sumTotal').textContent.trim();
+      const w = window.open('', '_blank');
+      if (!w) { alert('Permita pop-ups deste site para baixar o boleto em PDF.'); return; }
+      w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Boleto CITMail</title>
+        <style>body{font-family:Poppins,system-ui,sans-serif;color:#23344E;padding:40px;line-height:1.6}h1{font-family:Montserrat,system-ui,sans-serif;font-size:22px;font-weight:600}code{font-family:ui-monospace,Consolas,monospace;font-size:16px}</style>
+        </head><body><h1>Boleto CITMail</h1><p>Valor: ${total}</p><p>Linha digitável:<br><code>${code}</code></p>
+        <p>Compensação em até 3 dias úteis após o pagamento.</p></body></html>`);
+      w.document.close();
+      w.focus();
+      w.print();
+    }
     function copyBoleto() {
       const code = document.getElementById('boletoCode').textContent.trim();
-      navigator.clipboard.writeText(code).then(() => alert('Código Pix copiado.'));
+      navigator.clipboard.writeText(code).then(() => alert('Código do boleto copiado.'));
     }
 
     /* ================================================================
