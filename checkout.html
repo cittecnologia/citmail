@@ -831,7 +831,7 @@
         <div class="cycle-toggle" id="cycleToggle" onclick="toggleCycle()">
           <div class="left">
             <span id="cycleLabel">Cobrar anualmente</span>
-            <span class="save-tag">+ 20% off</span>
+            <span class="save-tag">−20%</span>
           </div>
           <div class="toggle-mini" id="cycleMini">
             <div class="toggle-mini-knob"></div>
@@ -864,7 +864,7 @@
             <div class="domain-opt-radio"><div class="domain-opt-dot"></div></div>
             <div class="opt-info">
               <div class="opt-name">Registrar domínio .com.br</div>
-              <div class="opt-desc">Domínio brasileiro — mais confiança para seus clientes</div>
+              <div class="opt-desc">Extensão brasileira, para empresas que atendem no Brasil</div>
             </div>
             <div class="opt-price-col">
               <div class="opt-price">R$ 79,00</div>
@@ -877,7 +877,7 @@
             <div class="domain-opt-radio"><div class="domain-opt-dot"></div></div>
             <div class="opt-info">
               <div class="opt-name">Registrar domínio .com</div>
-              <div class="opt-desc">Domínio internacional — presença global</div>
+              <div class="opt-desc">Extensão internacional, para operar também fora do Brasil</div>
             </div>
             <div class="opt-price-col">
               <div class="opt-price">R$ 150,00</div>
@@ -943,7 +943,7 @@
           </div>
           <div class="alert-box alert-warn">
             <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
-            <span>Após a confirmação do pagamento, você receberá as entradas DNS (MX, SPF, DKIM) por e-mail para configurar no painel do seu registrador de domínio.</span>
+            <span>Após o pagamento, enviamos por e-mail as entradas DNS (MX, SPF, DKIM). Cadastre-as no painel do seu registrador de domínio.</span>
           </div>
         </div>
 
@@ -965,7 +965,7 @@
       <div class="step-panel card" id="step3">
         <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#puzzle"></use></svg> Add-ons e Serviços Extras</div>
         <p class="step-intro">
-          Potencialize sua conta com serviços adicionais. Use <strong>+</strong> e <strong>−</strong> para ajustar a quantidade. O total é atualizado automaticamente.
+          Serviços cobrados por conta, somados à mesma fatura. Use <strong>+</strong> e <strong>−</strong> para ajustar a quantidade. O total é atualizado automaticamente.
         </p>
 
         <!-- Add-on rows with qty controls -->
@@ -1307,7 +1307,7 @@
               </div>
               <div>
                 <div class="payment-name">Pix</div>
-                <div class="payment-desc">Aprovação instantânea</div>
+                <div class="payment-desc">Confirmação em segundos</div>
               </div>
               <span class="payment-badge badge-blue">Recomendado</span>
             </div>
@@ -1362,7 +1362,7 @@
                 </div>
                 <div class="alert-box alert-warn">
                   <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#triangle-alert"></use></svg>
-                  <span>O serviço será ativado <strong>após a compensação do boleto</strong> (1–3 dias úteis). Prefira Pix para ativação imediata.</span>
+                  <span>O serviço será ativado <strong>após a compensação do boleto</strong> (1–3 dias úteis). Pelo Pix, a ativação ocorre em até 5 minutos.</span>
                 </div>
               </div>
             </div>
@@ -1442,7 +1442,7 @@
           <div class="success-icon">
             <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg>
           </div>
-          <h2>Pagamento Confirmado!</h2>
+          <h2>Pagamento Confirmado</h2>
           <p>Seu e-mail corporativo está sendo configurado.<br/>Em até <strong>5 minutos</strong> você receberá as credenciais no e-mail cadastrado.</p>
 
           <div class="access-card">
@@ -1529,7 +1529,7 @@
         </div>
 
         <div class="secure-badges">
-          <div class="secure-badge"><svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Pagamento 100% seguro</div>
+          <div class="secure-badge"><svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Pagamento processado pelo Asaas</div>
           <div class="secure-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#rotate-ccw"></use></svg> Cancele quando quiser</div>
           <div class="secure-badge"><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix, boleto e cartão</div>
         </div>
@@ -1597,7 +1597,7 @@
     function copyDomPix() {
       navigator.clipboard.writeText(document.getElementById('domPixCode').textContent).then(() => {
         const btn = document.querySelector('#domPixBox .pix-copy');
-        if (btn) { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado!'; setTimeout(() => btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar', 2000); }
+        if (btn) { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado'; setTimeout(() => btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar', 2000); }
       });
     }
 
@@ -1719,7 +1719,7 @@
     function copyExtraDomPix() {
       navigator.clipboard.writeText(document.getElementById('extraDomPixCode').textContent).then(() => {
         const btn = document.querySelector('#extraDomPixPanel .pix-copy');
-        if (btn) { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado!'; setTimeout(() => btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar', 2000); }
+        if (btn) { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado'; setTimeout(() => btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar', 2000); }
       });
     }
 
@@ -2027,7 +2027,7 @@
       if (tel.replace(/\D/g,'').length < 10) { showErr('err-telefone','Telefone inválido.'); ok = false; }
       if (senha.length < 8) { showErr('err-senha','Mínimo 8 caracteres.'); ok = false; }
       if (cep.replace(/\D/g,'').length < 8) { showErr('err-cep','CEP inválido.'); ok = false; }
-      if (!terms) { alert('Por favor, aceite os Termos de Uso e a Política de Privacidade para continuar.'); ok = false; }
+      if (!terms) { alert('Aceite os Termos de Uso e a Política de Privacidade para continuar.'); ok = false; }
 
       if (isCPF) {
         const cpf = document.getElementById('fCPF').value.replace(/\D/g,'');
@@ -2116,7 +2116,7 @@
         const exp  = document.getElementById('fCardExp').value;
         const cvv  = document.getElementById('fCardCvv').value;
         if (num.length < 16 || !name || exp.length < 5 || cvv.length < 3) {
-          alert('Por favor, preencha todos os dados do cartão.');
+          alert('Preencha número, nome, validade e CVV do cartão.');
           return;
         }
       }
@@ -2159,13 +2159,13 @@
       const code = document.getElementById('pixCode').textContent;
       navigator.clipboard.writeText(code).then(() => {
         const btn = document.querySelector('.pix-copy');
-        btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado!';
+        btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado';
         setTimeout(() => { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar'; }, 2000);
       });
     }
     function copyBoleto() {
       const code = document.getElementById('boletoCode').textContent.trim();
-      navigator.clipboard.writeText(code).then(() => alert('Código copiado!'));
+      navigator.clipboard.writeText(code).then(() => alert('Código Pix copiado.'));
     }
 
     /* ================================================================
