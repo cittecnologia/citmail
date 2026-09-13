@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="CITMail — E-mail corporativo profissional com domínio próprio. Planos a partir de R$ 19,90/mês. Configuração em minutos, sem burocracia." />
-  <title>CITMail — E-mail Corporativo Profissional</title>
+  <meta name="description" content="CITMail — E-mail corporativo com domínio próprio. Planos a partir de R$ 19,90/mês. Ativação em até 5 minutos após o pagamento." />
+  <title>CITMail — E-mail corporativo com domínio próprio</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/apple-touch-icon.png" />
 
-  <!-- Google Fonts: Montserrat + Inter -->
+  <!-- Google Fonts: Montserrat + Poppins (Brandbook CIT) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/tokens.css" />
 
   <style>
     /* =========================================================
@@ -20,131 +20,162 @@
     ========================================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --brand-900: #0F2057;
-      --brand-800: #172B6E;
-      --brand-700: #1E3A8A;
-      --brand-600: #2563EB;
-      --brand-500: #3B82F6;
-      --brand-400: #60A5FA;
-      --brand-100: #DBEAFE;
-      --brand-50:  #EFF6FF;
-      --accent:    #0EA5E9;
-      --green:     #10B981;
-      --green-light: #D1FAE5;
-      --yellow:    #F59E0B;
-      --red:       #EF4444;
-      --gray-900: #111827;
-      --gray-700: #374151;
-      --gray-500: #6B7280;
-      --gray-300: #D1D5DB;
-      --gray-100: #F3F4F6;
-      --white:    #FFFFFF;
-
-      --font-title: 'Montserrat', sans-serif;
-      --font-body:  'Inter', system-ui, sans-serif;
-
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 20px;
-      --radius-xl: 28px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,.10);
-      --shadow-lg: 0 10px 40px rgba(0,0,0,.14);
-      --transition: .25s ease;
+      /* Aliases legados -> tokens do Brandbook CIT (assets/tokens.css). */
+      --brand-900: var(--cit-navy-500);
+      --brand-800: var(--cit-navy-600);
+      --brand-700: var(--cit-blue-700);
+      --brand-600: var(--cit-blue-500);
+      --brand-500: var(--cit-blue-400);
+      --brand-400: var(--cit-blue-300);
+      --brand-300: var(--cit-blue-200);
+      --brand-200: var(--cit-blue-100);
+      --brand-100: var(--cit-blue-100);
+      --brand-50:  var(--cit-blue-50);
+      --accent:    var(--cit-turquoise-500);
+      --green:       var(--cit-success);
+      --green-bg:    var(--cit-success-subtle);
+      --green-light: var(--cit-success-subtle);
+      --green-dark:  var(--cit-success-strong);
+      --yellow:    var(--cit-warning);
+      --yellow-bg: var(--cit-warning-subtle);
+      --red:       var(--cit-error);
+      --red-bg:    var(--cit-error-subtle);
+      --gray-900:  var(--cit-text-primary);
+      --gray-700:  var(--cit-neutral-700);
+      --gray-600:  var(--cit-neutral-600);
+      --gray-500:  var(--cit-neutral-500);
+      --gray-400:  var(--cit-neutral-400);
+      --gray-300:  var(--cit-neutral-300);
+      --gray-200:  var(--cit-neutral-200);
+      --gray-100:  var(--cit-neutral-100);
+      --white:     #FFFFFF;
+      --font-title: var(--cit-font-display);
+      --font-body:  var(--cit-font-body);
+      --radius-sm: var(--cit-radius-sm);
+      --radius-md: var(--cit-radius-md);
+      --radius-lg: var(--cit-radius-lg);
+      --radius-xl: var(--cit-radius-xl);
+      --shadow-sm: var(--cit-shadow-sm);
+      --shadow-md: var(--cit-shadow-md);
+      --shadow-lg: var(--cit-shadow-lg);
+      --transition: var(--cit-duration-hover) var(--cit-ease);
     }
 
     html { scroll-behavior: smooth; }
     body {
       font-family: var(--font-body);
-      color: var(--gray-900);
+      color: var(--cit-text-primary);
       background: var(--white);
-      line-height: 1.6;
+      line-height: var(--cit-leading-relaxed);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* =========================================================
-       TYPOGRAPHY
+       TYPOGRAPHY — escala do Brandbook CIT
     ========================================================= */
     h1, h2, h3, h4 {
       font-family: var(--font-title);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: var(--cit-tracking-display);
     }
-    h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; }
-    h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); }
-    h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
-    p   { line-height: 1.7; color: var(--gray-700); }
+    h1 { font-size: clamp(2rem, 4.2vw, 3rem); font-weight: 700; line-height: 1.1; }
+    h2 { font-size: clamp(1.625rem, 3vw, 2.25rem); }
+    h3 { font-size: clamp(1.25rem, 1.8vw, 1.375rem); line-height: 1.3; }
+    p   { line-height: var(--cit-leading-relaxed); color: var(--cit-text-secondary); }
 
     /* =========================================================
        UTILITIES
     ========================================================= */
     .container {
       width: 100%;
-      max-width: 1200px;
+      max-width: var(--cit-container-max);
       margin: 0 auto;
       padding: 0 clamp(16px, 4vw, 48px);
     }
-    .section { padding: clamp(56px, 8vw, 112px) 0; }
-    .section-sm { padding: clamp(40px, 6vw, 72px) 0; }
+    .section { padding: clamp(56px, 8vw, 96px) 0; }
     .text-center { text-align: center; }
+
+    /* Rótulo de seção (eyebrow) com filete de acento turquesa */
     .tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--brand-50); color: var(--brand-700);
-      font-family: var(--font-title); font-weight: 700;
-      font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
-      padding: 5px 14px; border-radius: 100px;
-      border: 1px solid var(--brand-100);
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-body); font-weight: 600;
+      font-size: .6875rem; letter-spacing: var(--cit-tracking-eyebrow); text-transform: uppercase;
+      color: var(--cit-primary);
     }
+    .tag .icon { color: var(--cit-text-primary); } /* ícone decorativo: navy; o azul fica só no texto de ênfase */
+    .tag::before {
+      content: ''; width: 24px; height: 2px; flex-shrink: 0;
+      background: var(--cit-turquoise-500);
+    }
+    .tag--dark { color: var(--cit-text-inverse-secondary); }
+    .tag--dark .icon, #testimonials .tag .icon, #cta-final .tag .icon { color: inherit; }
     .section-header { max-width: 640px; margin: 0 auto 56px; }
-    .section-header p { font-size: 1.05rem; margin-top: 12px; }
+    .section-header p { font-size: 1rem; margin-top: 12px; }
+
+    /* Malha institucional 88px — somente em bloco escuro ou azul */
+    .cit-mesh { position: relative; overflow: hidden; }
+    .cit-mesh::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 88px 88px;
+      -webkit-mask-image: radial-gradient(120% 90% at 80% 12%, #000, transparent 72%);
+              mask-image: radial-gradient(120% 90% at 80% 12%, #000, transparent 72%);
+    }
+    .cit-mesh > .container { position: relative; z-index: 1; }
 
     /* =========================================================
-       BUTTONS
+       BUTTONS — altura 32/40/48, raio 8
     ========================================================= */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      font-family: var(--font-title); font-weight: 700;
-      font-size: .9rem; letter-spacing: .02em;
-      padding: 14px 28px; border-radius: var(--radius-md);
-      border: none; cursor: pointer; text-decoration: none;
-      transition: all var(--transition);
+      height: 40px; padding: 0 18px;
+      font-family: var(--font-body); font-weight: 600; font-size: .875rem;
+      border-radius: var(--cit-radius-sm); border: 1px solid transparent;
+      cursor: pointer; text-decoration: none; white-space: nowrap;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+    }
+    .btn-primary { background: var(--cit-primary); color: var(--cit-on-primary); }
+    .btn-primary:hover { background: var(--cit-primary-hover); }
+    .btn-outline {
+      background: transparent; color: var(--cit-primary);
+      border-color: var(--cit-blue-300);
+    }
+    .btn-outline:hover { border-color: var(--cit-primary); background: var(--cit-blue-50); }
+    .btn-white { background: var(--white); color: var(--cit-primary); }
+    .btn-white:hover { background: var(--cit-blue-50); }
+    .btn-outline-dark {
+      background: transparent; color: var(--white);
+      border-color: rgba(255,255,255,.4);
+    }
+    .btn-outline-dark:hover { background: rgba(255,255,255,.08); border-color: var(--white); }
+    .btn-lg { height: 48px; padding: 0 26px; font-size: 1rem; }
+    .btn-sm { height: 32px; padding: 0 14px; font-size: .8125rem; }
+
+    /* Badge do brandbook: raio 6, borda 1px, texto + cor */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 24px; padding: 0 10px;
+      border: 1px solid; border-radius: 6px;
+      font-family: var(--font-body); font-size: .6875rem; font-weight: 600;
       white-space: nowrap;
     }
-    .btn-primary {
-      background: var(--brand-600); color: var(--white);
-      box-shadow: 0 4px 14px rgba(37,99,235,.35);
-    }
-    .btn-primary:hover {
-      background: var(--brand-700);
-      box-shadow: 0 6px 20px rgba(37,99,235,.45);
-      transform: translateY(-1px);
-    }
-    .btn-outline {
-      background: transparent; color: var(--brand-600);
-      border: 2px solid var(--brand-600);
-    }
-    .btn-outline:hover { background: var(--brand-50); }
-    .btn-white {
-      background: var(--white); color: var(--brand-700);
-      box-shadow: var(--shadow-sm);
-    }
-    .btn-white:hover {
-      background: var(--brand-50);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-1px);
-    }
-    .btn-lg { padding: 17px 36px; font-size: 1rem; }
-    .btn-sm { padding: 9px 18px; font-size: .82rem; }
+    .badge-blue   { background: var(--cit-blue-50);  color: var(--cit-blue-700);  border-color: var(--cit-blue-200); }
+    .badge-green  { background: var(--cit-green-50); color: var(--cit-green-700); border-color: rgba(30,142,78,.32); }
+    .badge-yellow { background: var(--cit-amber-50); color: var(--cit-amber-700); border-color: rgba(184,121,26,.32); }
+    .badge-neutral { background: var(--cit-bg-muted); color: var(--cit-text-secondary); border-color: var(--cit-border-color-strong); }
 
     /* =========================================================
        HEADER / NAV
     ========================================================= */
     #header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(15,32,87,.97);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: var(--cit-navy-500);
+      border-bottom: 1px solid var(--cit-border-color-dark);
       transition: box-shadow var(--transition);
     }
     #header.scrolled { box-shadow: var(--shadow-md); }
@@ -157,39 +188,23 @@
       display: flex; align-items: center; gap: 10px;
       text-decoration: none; flex-shrink: 0;
     }
-    .nav-logo-icon {
-      width: 38px; height: 38px;
-      background: linear-gradient(135deg, var(--brand-500), var(--accent));
-      border-radius: var(--radius-sm);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .nav-logo-icon svg { width: 20px; height: 20px; fill: white; }
-    .nav-logo-text {
-      font-family: var(--font-title); font-weight: 800;
-      font-size: 1.3rem; color: var(--white);
-      letter-spacing: -.02em;
-    }
-    .nav-logo-text span { color: var(--brand-400); }
 
     .nav-links {
       display: flex; align-items: center; gap: 4px;
       list-style: none; margin-left: auto;
     }
     .nav-links a {
-      color: rgba(255,255,255,.78);
+      color: var(--cit-text-inverse-secondary);
       font-size: .875rem; font-weight: 500;
       text-decoration: none; padding: 8px 12px;
       border-radius: var(--radius-sm);
-      transition: all var(--transition);
+      transition: color var(--transition), background var(--transition);
     }
     .nav-links a:hover { color: var(--white); background: rgba(255,255,255,.08); }
 
     .nav-ctas { display: flex; align-items: center; gap: 10px; margin-left: 16px; }
-    .nav-ctas .btn-outline {
-      color: var(--white); border-color: rgba(255,255,255,.4);
-      padding: 9px 18px; font-size: .82rem;
-    }
-    .nav-ctas .btn-outline:hover { background: rgba(255,255,255,.1); border-color: var(--white); }
+    .nav-ctas .btn-outline { color: var(--white); border-color: rgba(255,255,255,.4); }
+    .nav-ctas .btn-outline:hover { background: rgba(255,255,255,.08); border-color: var(--white); }
 
     .nav-toggle {
       display: none; flex-direction: column; gap: 5px;
@@ -199,7 +214,6 @@
     .nav-toggle span {
       display: block; width: 24px; height: 2px;
       background: var(--white); border-radius: 2px;
-      transition: all var(--transition);
     }
 
     @media (max-width: 900px) {
@@ -209,9 +223,9 @@
       .nav-mobile-open .nav-links {
         display: flex; flex-direction: column;
         position: fixed; top: 68px; left: 0; right: 0;
-        background: var(--brand-900);
+        background: var(--cit-navy-500);
         padding: 20px 24px 32px;
-        border-bottom: 1px solid rgba(255,255,255,.1);
+        border-bottom: 1px solid var(--cit-border-color-dark);
         gap: 0;
       }
       .nav-mobile-open .nav-links a {
@@ -222,75 +236,61 @@
         display: flex; flex-direction: column;
         position: fixed; top: calc(68px + var(--mobile-links-height, 320px));
         left: 0; right: 0; padding: 20px 24px;
-        background: var(--brand-900);
+        background: var(--cit-navy-500);
       }
       .nav-mobile-open .nav-ctas .btn { width: 100%; justify-content: center; }
     }
 
     /* =========================================================
-       HERO
+       HERO — navy + malha
     ========================================================= */
     #hero {
       min-height: 100vh;
-      background: linear-gradient(160deg, var(--brand-900) 0%, var(--brand-800) 45%, #1a3a6b 100%);
+      background: var(--cit-navy-500);
       display: flex; align-items: center;
       padding-top: 68px;
-      position: relative; overflow: hidden;
     }
-    #hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 80% 20%, rgba(59,130,246,.18) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(14,165,233,.12) 0%, transparent 55%);
-    }
+    #hero > .container { position: relative; z-index: 1; }
     .hero-grid {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 64px; align-items: center;
-      position: relative; z-index: 1;
       padding: clamp(56px, 8vw, 96px) 0;
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(59,130,246,.2); color: var(--brand-400);
-      border: 1px solid rgba(59,130,246,.35);
-      font-size: .78rem; font-weight: 700; font-family: var(--font-title);
-      text-transform: uppercase; letter-spacing: .08em;
-      padding: 5px 14px; border-radius: 100px; margin-bottom: 20px;
+      height: 28px; padding: 0 12px; margin-bottom: 24px;
+      background: rgba(255,255,255,.06); color: var(--cit-text-inverse-secondary);
+      border: 1px solid var(--cit-border-color-dark); border-radius: 6px;
+      font-family: var(--font-body); font-size: .6875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: var(--cit-tracking-eyebrow);
     }
     .hero-badge::before {
       content: '';
-      width: 7px; height: 7px;
-      background: var(--green); border-radius: 50%;
-      animation: pulse-green 2s infinite;
-    }
-    @keyframes pulse-green {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: .6; transform: scale(1.5); }
+      width: 6px; height: 6px;
+      background: var(--cit-success); border-radius: 50%;
     }
 
-    .hero-title { color: var(--white); margin-bottom: 20px; }
-    .hero-title .highlight {
-      background: linear-gradient(90deg, var(--brand-400), var(--accent));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .hero-title {
+      color: var(--white); margin-bottom: 20px;
+      font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.04;
     }
+    .hero-title .highlight { color: var(--cit-turquoise-400); }
     .hero-subtitle {
-      color: rgba(255,255,255,.72); font-size: clamp(.95rem, 1.5vw, 1.1rem);
+      color: var(--cit-text-inverse-secondary); font-size: 1rem;
       margin-bottom: 36px; max-width: 480px;
     }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
     .hero-stats {
-      display: flex; flex-wrap: wrap; gap: 28px;
-      padding-top: 32px; border-top: 1px solid rgba(255,255,255,.12);
+      display: flex; flex-wrap: wrap; gap: 28px 40px;
+      padding-top: 24px; border-top: 1px solid var(--cit-border-color-dark);
     }
-    .hero-stat { }
     .hero-stat .number {
       font-family: var(--font-title); font-weight: 800;
-      font-size: 1.6rem; color: var(--white);
+      font-size: 1.625rem; letter-spacing: var(--cit-tracking-display);
+      color: var(--white); font-variant-numeric: tabular-nums;
     }
     .hero-stat .label {
-      font-size: .8rem; color: rgba(255,255,255,.5);
+      font-size: .8125rem; color: rgba(255,255,255,.56);
     }
 
     /* Hero visual — email mockup */
@@ -298,26 +298,21 @@
       position: relative; display: flex; align-items: center; justify-content: center;
     }
     .hero-mockup {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: var(--radius-xl);
+      background: var(--cit-navy-600);
+      border: 1px solid var(--cit-border-color-dark);
+      border-radius: var(--cit-radius-lg);
       padding: 28px;
-      backdrop-filter: blur(20px);
       width: 100%;
       max-width: 420px;
-      box-shadow: var(--shadow-lg), 0 0 80px rgba(59,130,246,.15);
     }
     .mockup-bar {
       display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
     }
-    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .mockup-dot:nth-child(1) { background: #ff5f57; }
-    .mockup-dot:nth-child(2) { background: #febc2e; }
-    .mockup-dot:nth-child(3) { background: #28c840; }
+    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.2); }
     .mockup-url {
-      flex: 1; background: rgba(255,255,255,.08);
+      flex: 1; background: rgba(255,255,255,.06);
       border-radius: 6px; padding: 6px 12px;
-      color: rgba(255,255,255,.5); font-size: .78rem;
+      color: rgba(255,255,255,.56); font-size: .78rem;
       display: flex; align-items: center; gap: 6px;
     }
     .mockup-email-row {
@@ -327,7 +322,7 @@
       cursor: default;
     }
     .mockup-email-row:hover { background: rgba(255,255,255,.06); }
-    .mockup-email-row.unread { background: rgba(59,130,246,.12); }
+    .mockup-email-row.unread { background: rgba(0,108,176,.22); }
     .avatar {
       width: 36px; height: 36px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
@@ -336,40 +331,37 @@
     }
     .mockup-email-info { flex: 1; min-width: 0; }
     .mockup-sender { color: white; font-size: .82rem; font-weight: 600; }
-    .mockup-subject { color: rgba(255,255,255,.5); font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mockup-time { color: rgba(255,255,255,.35); font-size: .7rem; }
+    .mockup-subject { color: rgba(255,255,255,.56); font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mockup-time { color: rgba(255,255,255,.56); font-size: .7rem; }
     .mockup-footer {
       margin-top: 18px; padding-top: 16px;
-      border-top: 1px solid rgba(255,255,255,.08);
+      border-top: 1px solid var(--cit-border-color-dark);
       display: flex; align-items: center; justify-content: space-between;
     }
     .mockup-address {
-      font-family: var(--font-title); font-weight: 700;
-      font-size: .8rem; color: var(--brand-400);
+      font-family: var(--font-title); font-weight: 600;
+      font-size: .8rem; color: var(--cit-blue-300);
     }
     .mockup-pill {
-      font-size: .7rem; background: var(--green); color: white;
-      padding: 3px 10px; border-radius: 100px; font-weight: 600;
+      display: inline-flex; align-items: center; height: 22px; padding: 0 8px;
+      font-size: .7rem; font-weight: 600; border-radius: 6px;
+      background: rgba(30,142,78,.18); color: var(--cit-green-50);
+      border: 1px solid rgba(30,142,78,.5);
     }
 
-    /* Floating badges on hero */
+    /* Selos flutuantes do hero */
     .hero-float {
       position: absolute;
-      background: white;
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      box-shadow: var(--shadow-lg);
+      background: var(--white);
+      border: 1px solid var(--cit-border-color);
+      border-radius: var(--cit-radius-md);
+      padding: 10px 14px;
+      box-shadow: var(--shadow-md);
       display: flex; align-items: center; gap: 10px;
-      font-size: .8rem; font-weight: 600; color: var(--gray-900);
-      animation: float 4s ease-in-out infinite;
+      font-size: .8rem; font-weight: 600; color: var(--cit-text-primary);
     }
-    .hero-float:nth-child(2) { animation-delay: -2s; }
-    .hero-float-1 { top: -20px; right: -24px; animation-name: float; }
-    .hero-float-2 { bottom: -16px; left: -24px; animation-delay: -1.5s; }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-8px); }
-    }
+    .hero-float-1 { top: -20px; right: -24px; }
+    .hero-float-2 { bottom: -16px; left: -24px; }
     .hero-float .icon { font-size: 1.2rem; }
 
     @media (max-width: 900px) {
@@ -384,20 +376,19 @@
        TRUST BAR
     ========================================================= */
     .trust-bar {
-      background: var(--gray-100);
+      background: var(--cit-bg-subtle);
       padding: 20px 0;
-      border-top: 1px solid var(--gray-300);
-      border-bottom: 1px solid var(--gray-300);
+      border-bottom: 1px solid var(--cit-border-color);
     }
     .trust-bar-inner {
-      display: flex; align-items: center; flex-wrap: wrap; gap: 24px 40px;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 16px 40px;
       justify-content: center;
     }
     .trust-item {
       display: flex; align-items: center; gap: 8px;
-      font-size: .82rem; font-weight: 600; color: var(--gray-700);
+      font-size: .8125rem; font-weight: 500; color: var(--cit-neutral-700);
     }
-    .trust-item i { color: var(--brand-600); font-size: .9rem; }
+    .trust-item .icon { color: var(--cit-text-primary); font-size: .9rem; }
 
     /* =========================================================
        FEATURES
@@ -406,109 +397,101 @@
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
+      gap: 20px;
     }
     .feature-card {
       background: var(--white);
-      border: 1px solid var(--gray-300);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      transition: all var(--transition);
+      border: 1px solid var(--cit-border-color);
+      border-radius: var(--cit-radius-lg);
+      padding: 24px;
+      transition: border-color var(--transition), transform var(--transition);
     }
     .feature-card:hover {
-      border-color: var(--brand-400);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
+      border-color: var(--cit-blue-300);
+      transform: translateY(var(--cit-lift));
     }
     .feature-icon {
-      width: 52px; height: 52px;
-      background: var(--brand-50);
-      border-radius: var(--radius-md);
+      width: 48px; height: 48px;
+      background: var(--cit-blue-50);
+      border-radius: var(--cit-radius-md);
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 18px;
     }
-    .feature-icon i { font-size: 1.3rem; color: var(--brand-600); }
+    .feature-icon .icon { font-size: 1.3rem; color: var(--cit-text-primary); }
     .feature-card h3 { margin-bottom: 8px; }
-    .feature-card p { font-size: .9rem; }
+    .feature-card p { font-size: 1rem; }
 
     /* =========================================================
-       DOMAIN SEARCH
+       DOMAIN SEARCH — bloco navy
     ========================================================= */
-    #domain-search {
-      background: linear-gradient(135deg, var(--brand-900), var(--brand-800));
-    }
+    #domain-search { background: var(--cit-navy-500); }
     .domain-search-inner { max-width: 700px; margin: 0 auto; text-align: center; }
-    .domain-search-inner h2, .domain-search-inner p { color: white; }
-    .domain-search-inner p { color: rgba(255,255,255,.7); margin-top: 12px; margin-bottom: 36px; }
+    .domain-search-inner h2 { color: white; }
+    .domain-search-inner p { color: var(--cit-text-inverse-secondary); margin-top: 12px; margin-bottom: 36px; }
 
     .domain-form {
       display: flex; gap: 0;
-      background: white; border-radius: var(--radius-md);
-      box-shadow: var(--shadow-lg);
+      background: white; border-radius: var(--cit-radius-md);
       overflow: hidden;
     }
     .domain-prefix {
       display: flex; align-items: center;
-      background: var(--gray-100); border-right: 1px solid var(--gray-300);
+      background: var(--cit-bg-subtle); border-right: 1px solid var(--cit-border-color);
       padding: 0 16px;
-      font-weight: 600; color: var(--gray-500); font-size: .9rem;
+      font-weight: 600; color: var(--cit-text-secondary); font-size: 1rem;
       white-space: nowrap;
     }
     .domain-input {
-      flex: 1; border: none; outline: none;
-      padding: 16px; font-size: 1rem; font-family: var(--font-body);
-      color: var(--gray-900);
+      flex: 1; border: none; outline: none; min-width: 0;
+      height: 48px; padding: 0 16px; font-size: 1rem; font-family: var(--font-body);
+      color: var(--cit-text-primary);
     }
+    .domain-input:focus-visible { box-shadow: inset 0 0 0 2px var(--cit-focus); }
     .domain-suffix {
       display: flex; align-items: center;
       padding: 0 14px;
-      font-size: .85rem; font-weight: 600; color: var(--brand-600);
-      border-left: 1px solid var(--gray-300);
-      background: var(--gray-100);
+      font-size: 1rem; font-weight: 600; color: var(--cit-primary);
+      border-left: 1px solid var(--cit-border-color);
+      background: var(--cit-bg-subtle);
     }
-    .domain-form .btn-primary { border-radius: 0; padding: 16px 28px; }
+    .domain-form .btn-primary { border-radius: 0; height: 48px; padding: 0 28px; }
 
     .domain-result { margin-top: 16px; min-height: 32px; }
-    .domain-available {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--green-light); color: #065f46;
-      padding: 8px 16px; border-radius: 8px;
-      font-weight: 600; font-size: .9rem;
-    }
+    .domain-available,
     .domain-taken {
       display: inline-flex; align-items: center; gap: 8px;
-      background: #fee2e2; color: #991b1b;
-      padding: 8px 16px; border-radius: 8px;
-      font-weight: 600; font-size: .9rem;
+      padding: 8px 14px; border: 1px solid; border-radius: var(--cit-radius-sm);
+      font-weight: 600; font-size: .8125rem;
     }
-    .domain-loading {
-      color: rgba(255,255,255,.6); font-size: .9rem;
-    }
+    .domain-available { background: var(--cit-green-50); color: var(--cit-green-700); border-color: rgba(30,142,78,.32); }
+    .domain-taken     { background: var(--cit-red-50);   color: var(--cit-red-700);   border-color: rgba(192,57,43,.32); }
+    .domain-loading { color: var(--cit-text-inverse-secondary); font-size: .8125rem; }
 
     .tld-list {
       display: flex; flex-wrap: wrap; gap: 8px;
       justify-content: center; margin-top: 20px;
     }
     .tld-chip {
-      background: rgba(255,255,255,.1); color: rgba(255,255,255,.7);
-      border: 1px solid rgba(255,255,255,.2);
-      padding: 4px 12px; border-radius: 100px;
+      background: transparent; color: var(--cit-text-inverse-secondary);
+      border: 1px solid rgba(255,255,255,.24);
+      height: 28px; padding: 0 12px; border-radius: 6px;
+      display: inline-flex; align-items: center;
       font-size: .78rem; font-weight: 600; cursor: pointer;
-      transition: all var(--transition);
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
     }
-    .tld-chip:hover, .tld-chip.active { background: white; color: var(--brand-700); }
+    .tld-chip:hover, .tld-chip.active { background: white; color: var(--cit-primary); border-color: white; }
 
     @media (max-width: 600px) {
-      .domain-form { flex-direction: column; border-radius: var(--radius-md); }
+      .domain-form { flex-direction: column; }
       .domain-prefix, .domain-suffix { display: none; }
-      .domain-input { border-bottom: 1px solid var(--gray-300); }
-      .domain-form .btn-primary { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+      .domain-input { flex: none; border-bottom: 1px solid var(--cit-border-color); }
+      .domain-form .btn-primary { border-radius: 0; }
     }
 
     /* =========================================================
        PRICING — CALCULADORA
     ========================================================= */
-    #pricing { background: var(--gray-100); }
+    #pricing { background: var(--cit-bg-subtle); }
 
     /* Billing toggle */
     .billing-toggle {
@@ -516,13 +499,13 @@
       gap: 14px; margin-bottom: 40px;
     }
     .billing-toggle span {
-      font-weight: 600; font-size: .9rem; color: var(--gray-700);
+      font-weight: 600; font-size: .8125rem; color: var(--cit-text-secondary);
       cursor: pointer; transition: color var(--transition);
     }
-    .billing-toggle span.active { color: var(--brand-700); }
+    .billing-toggle span.active { color: var(--cit-primary); }
     .toggle-switch {
       width: 48px; height: 26px;
-      background: var(--brand-600); border-radius: 100px;
+      background: var(--cit-primary); border-radius: var(--cit-radius-full);
       position: relative; cursor: pointer; flex-shrink: 0;
       transition: background var(--transition);
     }
@@ -534,9 +517,10 @@
     }
     .toggle-switch.annual .toggle-knob { transform: translateX(22px); }
     .save-badge {
-      background: var(--green); color: white;
-      font-size: .7rem; font-weight: 700; font-family: var(--font-title);
-      padding: 2px 8px; border-radius: 100px;
+      display: inline-flex; align-items: center; height: 22px; padding: 0 8px;
+      background: var(--cit-green-50); color: var(--cit-green-700);
+      border: 1px solid rgba(30,142,78,.32); border-radius: 6px;
+      font-size: .6875rem; font-weight: 600;
     }
 
     /* Calculadora layout */
@@ -554,61 +538,62 @@
     /* Incluso label */
     .included-label {
       display: inline-flex; align-items: center; gap: 6px;
-      font-size: .72rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .06em; color: var(--gray-500);
-      background: var(--gray-100); border: 1px solid var(--gray-300);
-      padding: 4px 12px; border-radius: 100px; margin-bottom: 14px;
+      height: 24px; padding: 0 10px; margin-bottom: 14px;
+      font-size: .6875rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: var(--cit-tracking-eyebrow); color: var(--cit-text-secondary);
+      background: var(--cit-bg-muted); border: 1px solid var(--cit-border-color-strong);
+      border-radius: 6px;
     }
 
     /* Conta type card */
     .account-type-card {
       background: var(--white);
-      border: 2px solid var(--gray-200);
-      border-radius: var(--radius-lg);
+      border: 1px solid var(--cit-border-color);
+      border-radius: var(--cit-radius-lg);
       padding: 22px 24px;
       margin-bottom: 12px;
-      transition: border-color var(--transition), box-shadow var(--transition);
+      transition: border-color var(--transition);
     }
-    .account-type-card:hover { border-color: var(--brand-300, #93c5fd); }
+    .account-type-card:hover { border-color: var(--cit-blue-300); }
+    /* Cartão de destaque: gradiente sutil azul 50 (permitido pelo brandbook) */
     .account-type-card.has-qty {
-      border-color: var(--brand-500);
-      box-shadow: 0 0 0 3px rgba(59,130,246,.08);
+      border-color: var(--cit-blue-300);
+      background: linear-gradient(158deg, var(--cit-blue-50), #fff 62%);
     }
 
     .atc-top {
       display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
     }
     .atc-icon {
-      width: 48px; height: 48px; border-radius: var(--radius-md);
+      width: 48px; height: 48px; border-radius: var(--cit-radius-md);
       display: flex; align-items: center; justify-content: center;
       font-size: 1.3rem; flex-shrink: 0;
     }
-    .atc-icon.c5   { background: #EFF6FF; }
-    .atc-icon.c25  { background: #F0FDF4; }
-    .atc-icon.c50  { background: #FFF7ED; }
+    .atc-icon.c5   { background: var(--cit-blue-50); }
+    .atc-icon.c25  { background: var(--cit-turquoise-50); }
+    .atc-icon.c50  { background: var(--cit-bg-muted); }
     .atc-info { flex: 1; }
     .atc-name {
-      font-family: var(--font-title); font-weight: 700;
-      font-size: 1rem; color: var(--gray-900);
+      font-family: var(--font-title); font-weight: 600;
+      font-size: 1rem; color: var(--cit-text-primary);
     }
-    .atc-storage { font-size: .8rem; color: var(--gray-500); }
-    .atc-unit-price {
-      text-align: right;
-    }
-    .atc-unit-price .from { font-size: .7rem; color: var(--gray-500); }
+    .atc-storage { font-size: .8125rem; color: var(--cit-text-secondary); }
+    .atc-unit-price { text-align: right; }
+    .atc-unit-price .from { font-size: .8125rem; color: var(--cit-text-secondary); }
     .atc-unit-price .price {
       font-family: var(--font-title); font-weight: 800;
-      font-size: 1.3rem; color: var(--brand-700);
+      font-size: 1.3rem; color: var(--cit-primary);
     }
-    .atc-unit-price .period { font-size: .72rem; color: var(--gray-500); }
+    .atc-unit-price .period { font-size: .8125rem; color: var(--cit-text-secondary); }
+    .atc-ai-badge { margin-left: 6px; vertical-align: middle; height: 20px; font-size: .6875rem; }
 
     /* Volume discount badge */
     .vol-badge {
       display: inline-flex; align-items: center; gap: 5px;
-      background: var(--green-light, #D1FAE5); color: #065f46;
-      border: 1px solid var(--green); border-radius: 100px;
-      font-size: .72rem; font-weight: 700; font-family: var(--font-title);
-      padding: 3px 10px; margin-bottom: 10px;
+      height: 24px; padding: 0 10px; margin-bottom: 10px;
+      background: var(--cit-green-50); color: var(--cit-green-700);
+      border: 1px solid rgba(30,142,78,.32); border-radius: 6px;
+      font-size: .6875rem; font-weight: 600;
     }
     /* Price breakdown */
     .price-breakdown {
@@ -616,16 +601,16 @@
       margin-bottom: 10px;
     }
     .price-original {
-      font-size: .82rem; color: var(--gray-400); text-decoration: line-through;
+      font-size: .8125rem; color: var(--cit-text-muted); text-decoration: line-through;
     }
     .price-final {
       font-family: var(--font-title); font-weight: 800;
-      font-size: 1.2rem; color: var(--brand-700);
+      font-size: 1.2rem; color: var(--cit-primary);
     }
     .price-saving {
-      font-size: .72rem; font-weight: 700; color: var(--green);
-      background: var(--green-light, #D1FAE5);
-      padding: 2px 8px; border-radius: 100px;
+      font-size: .6875rem; font-weight: 600; color: var(--cit-green-700);
+      background: var(--cit-green-50); border: 1px solid rgba(30,142,78,.32);
+      padding: 1px 8px; border-radius: 6px;
     }
 
     /* Quantity control */
@@ -633,39 +618,39 @@
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
     .atc-discount-tag {
-      font-size: .78rem; font-weight: 700; min-height: 20px;
-      color: var(--green); transition: all var(--transition);
+      font-size: .8125rem; font-weight: 600; min-height: 20px;
+      color: var(--cit-green-700);
     }
     .qty-control {
       display: flex; align-items: center; gap: 0;
-      border: 2px solid var(--gray-200); border-radius: var(--radius-md);
-      overflow: hidden; flex-shrink: 0;
+      border: 1px solid var(--cit-border-color-strong); border-radius: var(--cit-radius-sm);
+      overflow: hidden; flex-shrink: 0; background: white;
     }
-    .account-type-card.has-qty .qty-control { border-color: var(--brand-400); }
+    .account-type-card.has-qty .qty-control { border-color: var(--cit-blue-300); }
     .qty-btn {
-      width: 38px; height: 38px;
-      background: var(--gray-100); border: none; cursor: pointer;
-      font-size: 1.1rem; color: var(--gray-600);
+      width: 40px; height: 40px;
+      background: var(--cit-bg-subtle); border: none; cursor: pointer;
+      font-size: 1.1rem; color: var(--cit-text-secondary);
       display: flex; align-items: center; justify-content: center;
-      transition: background var(--transition);
+      transition: background var(--transition), color var(--transition);
       flex-shrink: 0;
     }
-    .qty-btn:hover { background: var(--brand-50); color: var(--brand-700); }
-    .qty-btn:active { background: var(--brand-100); }
+    .qty-btn:hover { background: var(--cit-blue-50); color: var(--cit-primary); }
+    .qty-btn:active { background: var(--cit-blue-100); }
     .qty-input {
-      width: 52px; height: 38px; border: none; outline: none;
+      width: 52px; height: 40px; border: none; outline: none;
       text-align: center; font-family: var(--font-title); font-weight: 700;
-      font-size: .95rem; color: var(--gray-900);
-      background: white;
+      font-size: .95rem; color: var(--cit-text-primary);
+      background: white; font-variant-numeric: tabular-nums;
     }
     .qty-input::-webkit-inner-spin-button,
     .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; }
 
     .atc-subtotal {
       font-family: var(--font-title); font-weight: 700;
-      font-size: .9rem; color: var(--gray-500); min-width: 110px; text-align: right;
+      font-size: .9rem; color: var(--cit-text-muted); min-width: 110px; text-align: right;
     }
-    .atc-subtotal.has-value { color: var(--brand-700); }
+    .atc-subtotal.has-value { color: var(--cit-primary); }
 
     /* Summary panel */
     .calc-summary {
@@ -673,68 +658,81 @@
     }
     .calc-summary-card {
       background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
+      border: 1px solid var(--cit-border-color);
+      border-radius: var(--cit-radius-lg);
       padding: 24px;
-      box-shadow: var(--shadow-sm);
     }
     .cs-title {
-      font-family: var(--font-title); font-weight: 700;
-      font-size: .95rem; margin-bottom: 18px;
-      display: flex; align-items: center; gap: 8px; color: var(--gray-900);
+      font-family: var(--font-title); font-weight: 600;
+      font-size: 1rem; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px; color: var(--cit-text-primary);
     }
-    .cs-title i { color: var(--brand-600); }
+    .cs-title .icon { color: var(--cit-text-primary); }
     .cs-lines { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .cs-line {
       display: flex; justify-content: space-between; align-items: baseline;
-      font-size: .85rem;
+      font-size: .8125rem;
     }
-    .cs-line .lbl { color: var(--gray-600); }
-    .cs-line .val { font-weight: 600; color: var(--gray-900); }
-    .cs-line .val.discount { color: var(--green); }
+    .cs-line .lbl { color: var(--cit-text-secondary); }
+    .cs-line .val { font-weight: 600; color: var(--cit-text-primary); }
+    .cs-line .val.discount { color: var(--cit-green-700); }
     .cs-line.total-line {
-      border-top: 2px solid var(--gray-200); padding-top: 12px; margin-top: 4px;
+      border-top: 1px solid var(--cit-border-color); padding-top: 12px; margin-top: 4px;
     }
     .cs-line.total-line .lbl {
-      font-family: var(--font-title); font-weight: 700; font-size: 1rem;
-      color: var(--gray-900);
+      font-family: var(--font-title); font-weight: 600; font-size: 1rem;
+      color: var(--cit-text-primary);
     }
     .cs-line.total-line .val {
       font-family: var(--font-title); font-weight: 800;
-      font-size: 1.5rem; color: var(--brand-700);
+      font-size: 1.5rem; color: var(--cit-primary); font-variant-numeric: tabular-nums;
     }
-    .cs-period { font-size: .72rem; color: var(--gray-400); text-align: right; margin-top: -4px; }
+    .cs-period { font-size: .8125rem; color: var(--cit-text-muted); text-align: right; margin-top: -4px; }
     .cs-annual-note {
-      background: var(--green-light, #D1FAE5); color: #065f46;
-      border-radius: var(--radius-sm); padding: 8px 12px;
-      font-size: .78rem; font-weight: 600; margin-bottom: 16px;
+      background: var(--cit-green-50); color: var(--cit-green-700);
+      border: 1px solid rgba(30,142,78,.28);
+      border-radius: var(--cit-radius-sm); padding: 8px 12px;
+      font-size: .8125rem; font-weight: 600; margin-bottom: 16px;
       display: none; align-items: center; gap: 6px;
     }
     .cs-annual-note.visible { display: flex; }
     .cs-empty {
       text-align: center; padding: 20px 0;
-      color: var(--gray-400); font-size: .85rem;
+      color: var(--cit-text-muted); font-size: .8125rem;
     }
-    .cs-empty i { font-size: 2rem; margin-bottom: 8px; display: block; color: var(--gray-300); }
+    .cs-empty .icon { font-size: 2rem; margin: 0 auto 8px; display: block; color: var(--cit-neutral-400); }
     .cs-features {
       margin-top: 14px; padding-top: 14px;
-      border-top: 1px solid var(--gray-200);
+      border-top: 1px solid var(--cit-border-color);
       display: flex; flex-direction: column; gap: 6px;
     }
     .cs-feature {
       display: flex; align-items: center; gap: 7px;
-      font-size: .78rem; color: var(--gray-600);
+      font-size: .8125rem; color: var(--cit-text-secondary);
     }
-    .cs-feature i { color: var(--green); font-size: .72rem; }
+    .cs-feature .icon { color: var(--cit-text-primary); font-size: .8rem; }
 
-    /* Discount info note */
+    /* Discount info note — alerta informativo do brandbook */
     .discount-info {
       display: flex; align-items: flex-start; gap: 10px;
-      background: var(--brand-50); border: 1px solid var(--brand-100);
-      border-radius: var(--radius-md); padding: 14px 16px;
-      margin-bottom: 20px; font-size: .82rem; color: var(--brand-700);
+      background: var(--cit-blue-50); border: 1px solid var(--cit-blue-200);
+      border-radius: var(--cit-radius-md); padding: 14px 16px;
+      margin-bottom: 20px; font-size: .8125rem; color: var(--cit-blue-800);
     }
-    .discount-info i { color: var(--brand-500); flex-shrink: 0; margin-top: 2px; }
+    .discount-info .icon { flex-shrink: 0; margin-top: 3px; }
+
+    /* Caixa "incluso" e nota comercial da calculadora */
+    .included-box {
+      background: var(--white); border: 1px solid var(--cit-border-color);
+      border-radius: var(--cit-radius-lg); padding: 20px 24px;
+    }
+    .pricing-note {
+      text-align: center; margin-top: 32px; padding: 20px 24px;
+      background: var(--cit-blue-50); border: 1px solid var(--cit-blue-200);
+      border-radius: var(--cit-radius-lg);
+    }
+    .pricing-note p { font-size: .8125rem; color: var(--cit-blue-800); }
+    .pricing-note a { color: var(--cit-primary); font-weight: 600; }
 
     /* =========================================================
        HOW IT WORKS
@@ -744,23 +742,24 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 0; position: relative;
     }
+    /* Filete de diagrama: 1px neutro 300 */
     .steps-grid::before {
       content: '';
-      position: absolute; top: 36px; left: calc(12.5% + 36px); right: calc(12.5% + 36px);
-      height: 2px;
-      background: linear-gradient(90deg, var(--brand-200, #bfdbfe), var(--brand-600));
+      position: absolute; top: 28px; left: calc(12.5% + 28px); right: calc(12.5% + 28px);
+      height: 1px;
+      background: var(--cit-border-color-strong);
     }
     .step-card { text-align: center; padding: 0 20px 0; }
     .step-number {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: var(--brand-700); color: white;
+      width: 56px; height: 56px; border-radius: var(--cit-radius-md);
+      background: var(--white); color: var(--cit-primary);
+      border: 1px solid var(--cit-blue-300);
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-title); font-weight: 800; font-size: 1.5rem;
+      font-family: var(--cit-font-mono); font-weight: 600; font-size: 1.125rem;
       margin: 0 auto 20px; position: relative; z-index: 1;
-      box-shadow: 0 0 0 6px var(--brand-50);
     }
     .step-card h3 { margin-bottom: 8px; }
-    .step-card p { font-size: .875rem; }
+    .step-card p { font-size: 1rem; }
 
     @media (max-width: 700px) {
       .steps-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -768,13 +767,12 @@
     }
 
     /* =========================================================
-       TESTIMONIALS
+       TESTIMONIALS — bloco navy
     ========================================================= */
-    #testimonials { background: var(--brand-900); }
-    #testimonials .section-header h2,
-    #testimonials .section-header p { color: white; }
-    #testimonials .section-header p { color: rgba(255,255,255,.6); }
-    #testimonials .tag { background: rgba(59,130,246,.2); color: var(--brand-400); border-color: rgba(59,130,246,.3); }
+    #testimonials { background: var(--cit-navy-500); }
+    #testimonials .section-header h2 { color: white; }
+    #testimonials .section-header p { color: var(--cit-text-inverse-secondary); }
+    #testimonials .tag { color: var(--cit-text-inverse-secondary); }
 
     .testimonials-grid {
       display: grid;
@@ -782,119 +780,122 @@
       gap: 20px;
     }
     .testimonial-card {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      transition: background var(--transition);
+      background: var(--cit-navy-600);
+      border: 1px solid var(--cit-border-color-dark);
+      border-radius: var(--cit-radius-lg);
+      padding: 24px;
+      transition: border-color var(--transition);
     }
-    .testimonial-card:hover { background: rgba(255,255,255,.09); }
-    .stars { color: var(--yellow); margin-bottom: 14px; font-size: .9rem; }
-    .testimonial-text { color: rgba(255,255,255,.85); font-size: .9rem; line-height: 1.7; margin-bottom: 20px; }
+    .testimonial-card:hover { border-color: rgba(255,255,255,.24); }
+    .stars { color: var(--cit-turquoise-400); margin-bottom: 14px; font-size: .9rem; }
+    .testimonial-text { color: rgba(255,255,255,.85); font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
     .testimonial-author { display: flex; align-items: center; gap: 12px; }
     .testimonial-avatar {
       width: 42px; height: 42px; border-radius: 50%;
-      background: var(--brand-600);
+      background: var(--cit-primary);
       display: flex; align-items: center; justify-content: center;
       font-family: var(--font-title); font-weight: 700;
       color: white; font-size: .85rem;
     }
-    .testimonial-name { font-weight: 700; color: white; font-size: .875rem; }
-    .testimonial-role { font-size: .78rem; color: rgba(255,255,255,.4); }
+    .testimonial-name { font-weight: 600; color: white; font-size: .8125rem; }
+    .testimonial-role { font-size: .8125rem; color: rgba(255,255,255,.56); }
 
     /* =========================================================
        FAQ
     ========================================================= */
-    #faq { background: var(--gray-100); }
+    #faq { background: var(--cit-bg-subtle); }
     .faq-list { max-width: 760px; margin: 0 auto; }
     .faq-item {
-      background: white; border-radius: var(--radius-md);
-      border: 1px solid var(--gray-300);
+      background: white; border-radius: var(--cit-radius-md);
+      border: 1px solid var(--cit-border-color);
       margin-bottom: 10px; overflow: hidden;
-      transition: box-shadow var(--transition);
+      transition: border-color var(--transition);
     }
-    .faq-item:hover { box-shadow: var(--shadow-sm); }
+    .faq-item:hover, .faq-item.open { border-color: var(--cit-blue-300); }
     .faq-question {
       display: flex; align-items: center; justify-content: space-between;
       gap: 16px; padding: 20px 24px;
       cursor: pointer; background: none; border: none; width: 100%;
-      text-align: left;
+      text-align: left; font: inherit;
     }
     .faq-question span {
-      font-family: var(--font-title); font-weight: 700;
-      font-size: .95rem; color: var(--gray-900);
+      font-family: var(--font-title); font-weight: 600;
+      font-size: 1rem; color: var(--cit-text-primary);
     }
     .faq-icon {
       width: 28px; height: 28px; flex-shrink: 0;
-      background: var(--brand-50); border-radius: 50%;
+      background: var(--cit-blue-50); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      color: var(--brand-600); transition: transform var(--transition);
+      color: var(--cit-primary); transition: transform var(--transition);
     }
     .faq-item.open .faq-icon { transform: rotate(45deg); }
     .faq-answer {
       max-height: 0; overflow: hidden;
-      transition: max-height .4s ease, padding .3s ease;
+      transition: max-height .4s var(--cit-ease);
     }
     .faq-item.open .faq-answer { max-height: 400px; }
     .faq-answer p {
       padding: 0 24px 20px;
-      font-size: .9rem; color: var(--gray-700); line-height: 1.7;
+      font-size: 1rem; color: var(--cit-text-secondary); line-height: 1.6;
     }
 
     /* =========================================================
-       CTA FINAL
+       CTA FINAL — bloco azul CIT + malha
     ========================================================= */
     #cta-final {
-      background: linear-gradient(135deg, var(--brand-700), var(--brand-900));
+      background: var(--cit-primary);
       text-align: center;
     }
     #cta-final h2 { color: white; }
-    #cta-final p { color: rgba(255,255,255,.7); font-size: 1.05rem; margin: 16px auto 36px; max-width: 520px; }
+    #cta-final p { color: var(--white); font-size: 1rem; margin: 16px auto 36px; max-width: 520px; }
+    #cta-final .tag { color: var(--white); }
+    #cta-final .tag::before { background: white; } /* turquesa não contrasta sobre o azul CIT */
     .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
-    .guarantee-note {
-      margin-top: 20px; font-size: .8rem; color: rgba(255,255,255,.45);
+    #cta-final .guarantee-note {
+      margin-top: 20px; margin-bottom: 0; font-size: .8125rem; color: var(--white);
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
 
     /* =========================================================
-       FOOTER
+       FOOTER — navy
     ========================================================= */
     footer {
-      background: var(--gray-900); color: rgba(255,255,255,.6);
+      background: var(--cit-navy-500); color: var(--cit-text-inverse-secondary);
       padding: 56px 0 32px;
     }
+    footer p { color: var(--cit-text-inverse-secondary); }
     .footer-grid {
       display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
       gap: 48px; margin-bottom: 48px;
     }
-    .footer-brand p { font-size: .875rem; margin-top: 14px; max-width: 260px; }
+    .footer-brand p { font-size: .8125rem; margin-top: 24px; max-width: 260px; }
     .footer-brand .nav-logo { margin-bottom: 0; }
     .footer-col h4 {
-      font-family: var(--font-title); font-weight: 700;
+      font-family: var(--font-title); font-weight: 600;
       color: white; font-size: .875rem; margin-bottom: 16px;
     }
     .footer-col ul { list-style: none; }
     .footer-col ul li { margin-bottom: 10px; }
     .footer-col ul li a {
-      color: rgba(255,255,255,.55); text-decoration: none;
-      font-size: .875rem; transition: color var(--transition);
+      color: var(--cit-text-inverse-secondary); text-decoration: none;
+      font-size: .8125rem; transition: color var(--transition);
     }
     .footer-col ul li a:hover { color: white; }
     .footer-bottom {
-      padding-top: 28px; border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 28px; border-top: 1px solid var(--cit-border-color-dark);
       display: flex; flex-wrap: wrap; gap: 12px;
       align-items: center; justify-content: space-between;
     }
-    .footer-bottom p { font-size: .8rem; }
+    .footer-bottom p { font-size: .8125rem; color: rgba(255,255,255,.56); }
     .footer-social { display: flex; gap: 12px; }
     .footer-social a {
-      width: 34px; height: 34px; border-radius: 8px;
-      background: rgba(255,255,255,.07);
+      width: 34px; height: 34px; border-radius: var(--cit-radius-sm);
+      background: rgba(255,255,255,.06); border: 1px solid var(--cit-border-color-dark);
       display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,.5); text-decoration: none;
-      transition: all var(--transition);
+      color: var(--cit-text-inverse-secondary); text-decoration: none;
+      transition: background var(--transition), color var(--transition);
     }
-    .footer-social a:hover { background: var(--brand-600); color: white; }
+    .footer-social a:hover { background: var(--cit-primary); color: white; }
 
     @media (max-width: 900px) {
       .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -909,130 +910,122 @@
     ========================================================= */
     .scroll-top {
       position: fixed; bottom: 28px; right: 28px;
-      width: 46px; height: 46px;
-      background: var(--brand-600); color: white;
-      border: none; border-radius: 50%;
+      width: 44px; height: 44px;
+      background: var(--cit-primary); color: white;
+      border: none; border-radius: var(--cit-radius-sm);
       cursor: pointer; font-size: 1rem;
       box-shadow: var(--shadow-md);
       display: flex; align-items: center; justify-content: center;
       opacity: 0; pointer-events: none;
-      transition: all var(--transition);
+      transition: opacity var(--transition), background var(--transition);
       z-index: 999;
     }
     .scroll-top.visible { opacity: 1; pointer-events: all; }
-    .scroll-top:hover { background: var(--brand-700); transform: translateY(-2px); }
+    .scroll-top:hover { background: var(--cit-primary-hover); }
 
-    /* Fade-in animation */
+    /* Fade-in — tokens de movimento do brandbook */
     .fade-in {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity .6s ease, transform .6s ease;
+      opacity: 0; transform: translateY(var(--cit-fadeup-from));
+      transition: opacity var(--cit-duration-enter) var(--cit-ease), transform var(--cit-duration-enter) var(--cit-ease);
     }
     .fade-in.visible { opacity: 1; transform: none; }
 
     /* =========================================================
        MARKETPLACE PREVIEW
     ========================================================= */
-    #marketplace { background: white; }
+    #marketplace { background: var(--white); }
     .marketplace-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 20px;
     }
     .marketplace-card {
-      border: 1px solid var(--gray-300); border-radius: var(--radius-lg);
+      background: var(--white);
+      border: 1px solid var(--cit-border-color); border-radius: var(--cit-radius-lg);
       padding: 24px;
-      transition: all var(--transition);
+      transition: border-color var(--transition), transform var(--transition);
       display: flex; flex-direction: column; gap: 12px;
     }
-    .marketplace-card:hover { border-color: var(--brand-500); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .marketplace-card .badge {
-      font-size: .7rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .06em; padding: 3px 10px; border-radius: 100px;
-      font-family: var(--font-title);
-    }
-    .badge-blue { background: var(--brand-50); color: var(--brand-700); }
-    .badge-green { background: var(--green-light); color: #065f46; }
-    .badge-yellow { background: #fef3c7; color: #92400e; }
-    .badge-purple { background: #ede9fe; color: #5b21b6; }
+    .marketplace-card:hover { border-color: var(--cit-blue-300); transform: translateY(var(--cit-lift)); }
+    .marketplace-card .badge { align-self: flex-start; }
     .marketplace-icon { font-size: 2rem; }
-    .marketplace-card h3 { font-size: 1rem; }
-    .marketplace-card p { font-size: .85rem; flex: 1; }
-    .marketplace-card .from { font-size: .8rem; color: var(--gray-500); }
-    .marketplace-card .price { font-family: var(--font-title); font-weight: 800; color: var(--brand-700); }
+    .marketplace-card p { font-size: 1rem; flex: 1; }
+    .marketplace-card .from { font-size: .8125rem; color: var(--cit-text-muted); }
+    .marketplace-card .price { font-family: var(--font-title); font-weight: 800; color: var(--cit-primary); }
+    .marketplace-card .price--text { font-weight: 700; }
 
     /* =========================================================
        PAINEL PREVIEW (Client Portal teaser)
     ========================================================= */
-    #painel-preview {
-      background: linear-gradient(160deg, var(--gray-100) 0%, white 100%);
-    }
+    #painel-preview { background: var(--cit-bg-subtle); }
     .painel-grid {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 64px; align-items: center;
     }
-    .painel-grid .text-col {}
     .painel-grid .text-col p { margin-top: 14px; margin-bottom: 28px; }
     .painel-features-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .painel-features-list li {
       display: flex; align-items: center; gap: 10px;
-      font-size: .9rem; font-weight: 500; color: var(--gray-700);
+      font-size: 1rem; font-weight: 500; color: var(--cit-neutral-700);
     }
-    .painel-features-list li i { color: var(--brand-600); font-size: .9rem; }
+    .painel-features-list li .icon { color: var(--cit-text-primary); font-size: .9rem; }
 
+    /* Navegação em navy, conteúdo em neutro — como o portal do brandbook */
     .painel-mockup {
-      background: var(--gray-900);
-      border-radius: var(--radius-xl);
+      background: var(--cit-navy-600);
+      border: 1px solid var(--cit-navy-700);
+      border-radius: var(--cit-radius-lg);
       overflow: hidden;
-      box-shadow: var(--shadow-lg), 0 0 60px rgba(0,0,0,.2);
     }
     .painel-topbar {
-      background: var(--brand-900);
+      background: var(--cit-navy-500);
       padding: 14px 20px;
       display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--cit-border-color-dark);
     }
     .painel-topbar .dots { display: flex; gap: 6px; }
     .painel-topbar .dots span {
-      width: 10px; height: 10px; border-radius: 50%;
+      width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.2);
     }
-    .painel-topbar .dots span:nth-child(1) { background: #ff5f57; }
-    .painel-topbar .dots span:nth-child(2) { background: #febc2e; }
-    .painel-topbar .dots span:nth-child(3) { background: #28c840; }
-    .painel-topbar .title { color: rgba(255,255,255,.5); font-size: .78rem; font-weight: 600; margin-left: auto; margin-right: auto; }
+    .painel-topbar .title { color: rgba(255,255,255,.56); font-size: .78rem; font-weight: 600; margin-left: auto; margin-right: auto; }
     .painel-body {
       display: grid; grid-template-columns: 180px 1fr;
       min-height: 280px;
     }
     .painel-sidebar {
-      background: rgba(255,255,255,.04);
+      background: var(--cit-navy-500);
       padding: 16px 12px;
-      border-right: 1px solid rgba(255,255,255,.06);
+      border-right: 1px solid var(--cit-border-color-dark);
     }
     .sidebar-item {
       display: flex; align-items: center; gap: 8px;
-      padding: 9px 10px; border-radius: 8px;
-      font-size: .75rem; color: rgba(255,255,255,.45);
+      padding: 9px 10px; border-radius: var(--cit-radius-sm);
+      font-size: .75rem; color: rgba(255,255,255,.56);
       cursor: default; margin-bottom: 2px;
-      transition: background var(--transition);
     }
-    .sidebar-item.active { background: rgba(37,99,235,.25); color: var(--brand-400); }
-    .sidebar-item i { width: 16px; text-align: center; }
+    .sidebar-item.active { background: rgba(64,145,196,.16); color: white; }
+    .sidebar-item .icon { font-size: .9rem; }
     .painel-content { padding: 18px; }
     .painel-stat-row { display: flex; gap: 10px; margin-bottom: 14px; }
     .painel-stat {
       flex: 1; background: rgba(255,255,255,.06);
-      border-radius: 10px; padding: 12px;
+      border: 1px solid var(--cit-border-color-dark);
+      border-radius: var(--cit-radius-md); padding: 12px;
     }
-    .painel-stat .label { font-size: .65rem; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .06em; }
+    .painel-stat .label { font-size: .6875rem; color: rgba(255,255,255,.56); text-transform: uppercase; letter-spacing: var(--cit-tracking-eyebrow); }
     .painel-stat .value { font-family: var(--font-title); font-weight: 700; color: white; font-size: 1.1rem; }
-    .painel-emails { }
     .painel-email-row {
       display: flex; align-items: center; gap: 10px;
-      padding: 8px 10px; border-radius: 8px;
+      padding: 8px 10px; border-radius: var(--cit-radius-sm);
       background: rgba(255,255,255,.04);
       margin-bottom: 6px;
     }
-    .painel-email-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
-    .painel-email-name { color: rgba(255,255,255,.8); font-size: .75rem; flex: 1; }
-    .painel-email-status { font-size: .65rem; color: var(--green); font-weight: 600; }
+    .painel-email-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cit-success); flex-shrink: 0; }
+    .painel-email-name { color: rgba(255,255,255,.85); font-size: .75rem; flex: 1; }
+    .painel-email-status {
+      font-size: .6875rem; font-weight: 600; color: var(--cit-green-50);
+      background: rgba(30,142,78,.18); border: 1px solid rgba(30,142,78,.5);
+      padding: 1px 6px; border-radius: 6px;
+    }
 
     @media (max-width: 900px) {
       .painel-grid { grid-template-columns: 1fr; }
@@ -1053,7 +1046,7 @@
     <div class="container">
       <nav class="nav" id="nav">
         <a href="#" class="nav-logo" aria-label="CITMail">
-          <img src="assets/logo.svg" alt="CITMail" style="height:36px;width:auto">
+          <img src="assets/brand/citmail-horizontal-escuro.png" alt="CITMail" width="160" height="36">
         </a>
 
         <ul class="nav-links">
@@ -1069,7 +1062,7 @@
           <a href="checkout.html" class="btn btn-primary btn-sm">Começar Agora</a>
         </div>
 
-        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
       </nav>
@@ -1079,27 +1072,27 @@
   <!-- ============================================================
        HERO
   ============================================================ -->
-  <section id="hero">
+  <section id="hero" class="cit-mesh">
     <div class="container">
       <div class="hero-grid">
         <!-- Content -->
         <div>
-          <div class="hero-badge">E-mail corporativo profissional</div>
+          <div class="hero-badge">E-mail corporativo com domínio próprio</div>
           <h1 class="hero-title">
             Seu e-mail com<br/>
             <span class="highlight">domínio próprio</span><br/>
-            em minutos
+            em até 5 min
           </h1>
           <p class="hero-subtitle">
-            Venda, pagamento, configuração e entrega 100% automáticos.
-            Planos para empresas de todos os portes — do autônomo à equipe completa.
+            Sua equipe passa a usar o domínio da empresa assim que o pagamento é confirmado.
+            Contratação, cobrança e configuração acontecem sem intervenção manual.
           </p>
           <div class="hero-actions">
             <a href="checkout.html" class="btn btn-primary btn-lg">
-              <i class="fa-solid fa-bolt"></i> Começar Agora
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> Começar Agora
             </a>
             <a href="#domain-search" class="btn btn-white btn-lg">
-              <i class="fa-solid fa-magnifying-glass"></i> Buscar Domínio
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg> Buscar Domínio
             </a>
           </div>
           <div class="hero-stats">
@@ -1109,7 +1102,7 @@
             </div>
             <div class="hero-stat">
               <div class="number">99,5%</div>
-              <div class="label">Uptime garantido</div>
+              <div class="label">Uptime com SLA</div>
             </div>
             <div class="hero-stat">
               <div class="number">500+</div>
@@ -1126,12 +1119,12 @@
               <div class="mockup-dot"></div>
               <div class="mockup-dot"></div>
               <div class="mockup-url">
-                <i class="fa-solid fa-lock" style="font-size:.65rem"></i>
+                <svg class="icon" style="font-size:.65rem" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg>
                 webmail.suaempresa.com.br
               </div>
             </div>
             <div class="mockup-email-row unread">
-              <div class="avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">CL</div>
+              <div class="avatar" style="background:var(--cit-blue-500)">CL</div>
               <div class="mockup-email-info">
                 <div class="mockup-sender">Cliente Potencial</div>
                 <div class="mockup-subject">Solicitação de Orçamento</div>
@@ -1139,7 +1132,7 @@
               <div class="mockup-time">09:42</div>
             </div>
             <div class="mockup-email-row">
-              <div class="avatar" style="background:linear-gradient(135deg,#0ea5e9,#3b82f6)">MK</div>
+              <div class="avatar" style="background:var(--cit-turquoise-800)">MK</div>
               <div class="mockup-email-info">
                 <div class="mockup-sender">Marketing Interno</div>
                 <div class="mockup-subject">Campanha de junho pronta</div>
@@ -1147,7 +1140,7 @@
               <div class="mockup-time">08:15</div>
             </div>
             <div class="mockup-email-row">
-              <div class="avatar" style="background:linear-gradient(135deg,#10b981,#059669)">FN</div>
+              <div class="avatar" style="background:var(--cit-blue-700)">FN</div>
               <div class="mockup-email-info">
                 <div class="mockup-sender">Financeiro</div>
                 <div class="mockup-subject">NF-e referente ao contrato</div>
@@ -1155,7 +1148,7 @@
               <div class="mockup-time">Ontem</div>
             </div>
             <div class="mockup-email-row">
-              <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">DI</div>
+              <div class="avatar" style="background:var(--cit-neutral-600)">DI</div>
               <div class="mockup-email-info">
                 <div class="mockup-sender">Diretoria</div>
                 <div class="mockup-subject">Reunião semanal — pauta</div>
@@ -1170,10 +1163,10 @@
 
           <!-- Floating badges -->
           <div class="hero-float hero-float-1">
-            <span class="icon">🔒</span> <span>SSL Grátis</span>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> <span>SSL/TLS incluso</span>
           </div>
           <div class="hero-float hero-float-2">
-            <span class="icon">⚡</span> <span>Ativo em 5 min</span>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> <span>Ativo em 5 min</span>
           </div>
         </div>
       </div>
@@ -1186,12 +1179,12 @@
   <div class="trust-bar">
     <div class="container">
       <div class="trust-bar-inner">
-        <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Proteção antivírus e antispam</div>
-        <div class="trust-item"><i class="fa-solid fa-lock"></i> SSL/TLS em todas as conexões</div>
-        <div class="trust-item"><i class="fa-solid fa-rotate"></i> Pagamento recorrente automático</div>
-        <div class="trust-item"><i class="fa-brands fa-pix"></i> Pix, boleto e cartão</div>
-        <div class="trust-item"><i class="fa-solid fa-headset"></i> Suporte técnico especializado</div>
-        <div class="trust-item"><i class="fa-solid fa-leaf"></i> Conformidade LGPD</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Proteção antivírus e antispam</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> SSL/TLS em todas as conexões</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#refresh-cw"></use></svg> Pagamento recorrente automático</div>
+        <div class="trust-item"><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix, boleto e cartão</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg> Suporte com resposta média em até 2h</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#scale"></use></svg> Conformidade LGPD</div>
       </div>
     </div>
   </div>
@@ -1202,38 +1195,38 @@
   <section id="features" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-star"></i> Recursos</div>
-        <h2 style="margin-top:14px">Tudo que você precisa<br/>em um só lugar</h2>
-        <p>E-mail corporativo com domínio, webmail, app mobile e ferramentas de produtividade — sem complicações.</p>
+        <div class="tag"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg> Recursos</div>
+        <h2 style="margin-top:14px">E-mail, domínio e proteção<br/>em um só contrato</h2>
+        <p>Domínio, webmail, apps e antispam contratados juntos, com uma fatura e um painel de gestão.</p>
       </div>
       <div class="features-grid">
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg></div>
           <h3>Domínio Próprio</h3>
           <p>Registramos ou transferimos o seu domínio. Configuração de DNS, MX, SPF, DKIM e DMARC automatizados.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
-          <h3>Webmail Moderno</h3>
-          <p>Interface limpa e responsiva acessível de qualquer dispositivo. Suporte a IMAP, POP3 e SMTP para clientes de e-mail.</p>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
+          <h3>Webmail</h3>
+          <p>Acesso pelo navegador no computador, tablet ou celular. Suporte a IMAP, POP3 e SMTP para clientes de e-mail.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
-          <h3>App Mobile</h3>
-          <p>Configure no Outlook, Gmail App, Apple Mail ou qualquer outro cliente em segundos. Sincronização em tempo real.</p>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#smartphone"></use></svg></div>
+          <h3>Apps de E-mail</h3>
+          <p>Funciona no Outlook, Gmail App, Apple Mail e outros clientes IMAP. As mensagens sincronizam entre os dispositivos.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-shield-virus"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg></div>
           <h3>Antispam & Antivírus</h3>
-          <p>Filtros multicamada contra spam, phishing e vírus. Sua caixa sempre limpa e seus dados protegidos.</p>
+          <p>Filtros em camadas bloqueiam spam, phishing e vírus antes de chegarem à caixa da equipe.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud-upload"></use></svg></div>
           <h3>Backup Automático</h3>
-          <p>Seus e-mails replicados em múltiplos servidores. Recuperação de mensagens a qualquer momento.</p>
+          <p>Cópias automáticas retidas por 30 dias. Mensagens apagadas podem ser recuperadas nesse período.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-sliders"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sliders-horizontal"></use></svg></div>
           <h3>Painel de Controle</h3>
           <p>Gerencie caixas de e-mail, senhas, armazenamento e faturamento sem precisar acionar o suporte.</p>
         </div>
@@ -1247,18 +1240,18 @@
   <section id="domain-search" class="section">
     <div class="container">
       <div class="domain-search-inner fade-in">
-        <div class="tag" style="background:rgba(59,130,246,.2);color:var(--brand-400);border-color:rgba(59,130,246,.3)">
-          <i class="fa-solid fa-magnifying-glass"></i> Buscar Domínio
+        <div class="tag tag--dark">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg> Buscar Domínio
         </div>
         <h2 style="margin-top:14px">Verifique se o seu domínio<br/>está disponível</h2>
-        <p>Digite o nome da sua empresa e veja a disponibilidade em segundos.</p>
+        <p>Digite o nome da empresa e confira se o domínio está livre para registro.</p>
 
         <div class="domain-form">
-          <div class="domain-prefix"><i class="fa-solid fa-at" style="color:var(--brand-600);margin-right:6px"></i> @</div>
+          <div class="domain-prefix"><svg class="icon" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#at-sign"></use></svg> @</div>
           <input class="domain-input" id="domainInput" type="text" placeholder="suaempresa" autocomplete="off" />
           <div class="domain-suffix" id="domainSuffix">.com.br</div>
           <button class="btn btn-primary" onclick="checkDomain()">
-            <i class="fa-solid fa-search"></i> Verificar
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg> Verificar
           </button>
         </div>
 
@@ -1282,14 +1275,14 @@
   <section id="pricing" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-calculator"></i> Preços</div>
-        <h2 style="margin-top:14px">Monte seu plano,<br/>pague só pelo que usar</h2>
-        <p>Escolha a quantidade de contas de cada tipo. Quanto mais contas, maior o desconto automático.</p>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calculator"></use></svg> Preços</div>
+        <h2 style="margin-top:14px">Pague só pelas contas<br/>que sua equipe usa</h2>
+        <p>Escolha quantas contas de cada tipo contratar. A partir de 5 contas do mesmo tipo, o desconto entra automaticamente.</p>
       </div>
 
       <!-- Desconto info -->
       <div class="discount-info fade-in">
-        <i class="fa-solid fa-circle-info"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
         <span>
           <strong>Mínimo de 2 contas por plano.</strong>
           Contrate 5 ou mais contas do mesmo tipo e ganhe <strong>5% de desconto</strong> sobre todas as contas daquele tipo.
@@ -1304,7 +1297,7 @@
           <div class="toggle-knob"></div>
         </div>
         <span id="toggleAnnual" onclick="setBilling('annual')">Anual</span>
-        <span class="save-badge">20% off no anual</span>
+        <span class="save-badge">20% de desconto no anual</span>
       </div>
 
       <div class="calc-wrapper">
@@ -1315,7 +1308,7 @@
           <!-- 5 GB -->
           <div class="account-type-card" id="card5" data-base="10" data-type="5gb">
             <div class="atc-top">
-              <div class="atc-icon c5">📧</div>
+              <div class="atc-icon c5"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
               <div class="atc-info">
                 <div class="atc-name">Conta E-mail 5 GB</div>
                 <div class="atc-storage">5 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
@@ -1347,7 +1340,7 @@
           <!-- 25 GB -->
           <div class="account-type-card" id="card25" data-base="16" data-type="25gb">
             <div class="atc-top">
-              <div class="atc-icon c25">📬</div>
+              <div class="atc-icon c25"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#inbox"></use></svg></div>
               <div class="atc-info">
                 <div class="atc-name">Conta E-mail 25 GB</div>
                 <div class="atc-storage">25 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
@@ -1379,9 +1372,9 @@
           <!-- 50 GB -->
           <div class="account-type-card" id="card50" data-base="25" data-type="50gb">
             <div class="atc-top">
-              <div class="atc-icon c50">📮</div>
+              <div class="atc-icon c50"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mails"></use></svg></div>
               <div class="atc-info">
-                <div class="atc-name">Conta E-mail 50 GB <span style="font-size:.7rem;background:linear-gradient(90deg,#7c3aed,#2563eb);color:white;padding:2px 8px;border-radius:100px;font-weight:700;margin-left:6px;vertical-align:middle">✨ IA inclusa</span></div>
+                <div class="atc-name">Conta E-mail 50 GB <span class="badge badge-blue atc-ai-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sparkles"></use></svg> IA inclusa</span></div>
                 <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
               </div>
               <div class="atc-unit-price">
@@ -1409,22 +1402,22 @@
           </div>
 
           <!-- Incluso em todas as contas -->
-          <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:0">
-            <div class="included-label"><i class="fa-solid fa-circle-check" style="color:var(--green)"></i> Incluso em todas as contas</div>
+          <div class="included-box">
+            <div class="included-label"><svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Incluso em todas as contas</div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Webmail moderno responsivo</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Agenda de contatos</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Calendário</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Protocolos IMAP / POP3 / SMTP</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Antispam e antivírus premium</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Certificado SSL/TLS grátis</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> 10 apelidos (aliases) por conta</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Painel de gerenciamento</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Backup automático 30 dias</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Compatível com Outlook, Gmail App e Apple Mail</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Webmail para computador e celular</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Agenda de contatos</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Calendário</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Protocolos IMAP / POP3 / SMTP</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Antispam e antivírus</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Certificado SSL/TLS grátis</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> 10 apelidos (aliases) por conta</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Painel de gerenciamento</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Backup automático 30 dias</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Compatível com Outlook, Gmail App e Apple Mail</div>
             </div>
-            <p style="margin-top:12px;font-size:.78rem;color:var(--gray-500)">
-              <i class="fa-solid fa-circle-info" style="color:var(--brand-500)"></i>
+            <p style="margin-top:12px;font-size:.8125rem;color:var(--cit-text-secondary)">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
               Domínio não incluído — use um domínio que você já possui ou adquira durante o checkout.
             </p>
           </div>
@@ -1433,17 +1426,17 @@
         <!-- RIGHT: summary panel -->
         <aside class="calc-summary">
           <div class="calc-summary-card">
-            <div class="cs-title"><i class="fa-solid fa-receipt"></i> Resumo</div>
+            <div class="cs-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#receipt"></use></svg> Resumo</div>
 
             <!-- Annual saving note -->
             <div class="cs-annual-note" id="csAnnualNote">
-              <i class="fa-solid fa-circle-check"></i>
-              Cobrança anual — 20% off aplicado!
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg>
+              Cobrança anual: 20% de desconto aplicado
             </div>
 
             <!-- Empty state -->
             <div class="cs-empty" id="csEmpty">
-              <i class="fa-solid fa-cart-shopping"></i>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shopping-cart"></use></svg>
               Adicione contas ao lado para ver o resumo do seu plano.
             </div>
 
@@ -1458,17 +1451,17 @@
             </div>
 
             <div class="cs-features">
-              <div class="cs-feature"><i class="fa-solid fa-check"></i> Cancele quando quiser</div>
-              <div class="cs-feature"><i class="fa-solid fa-check"></i> Sem taxa de adesão</div>
-              <div class="cs-feature"><i class="fa-brands fa-pix" style="color:#32bcad;font-size:.8rem"></i> Pix, boleto e cartão</div>
+              <div class="cs-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Cancele quando quiser</div>
+              <div class="cs-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Sem taxa de adesão</div>
+              <div class="cs-feature"><svg class="icon icon-pix" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix, boleto e cartão</div>
             </div>
 
             <div style="margin-top:18px">
               <a href="#" id="calcCtaBtn" class="btn btn-primary" style="pointer-events:none;opacity:.45;justify-content:center">
-                <i class="fa-solid fa-bolt"></i> Contratar Agora
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> Contratar Agora
               </a>
-              <p style="text-align:center;font-size:.72rem;color:var(--gray-400);margin-top:8px">
-                <i class="fa-solid fa-lock" style="color:var(--green)"></i> Pagamento seguro via Asaas
+              <p style="text-align:center;font-size:.8125rem;color:var(--cit-text-muted);margin-top:8px">
+                <svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> Pagamento seguro via Asaas
               </p>
             </div>
           </div>
@@ -1477,11 +1470,11 @@
       </div><!-- /calc-wrapper -->
 
       <!-- Reseller note -->
-      <div style="text-align:center;margin-top:32px;padding:20px 24px;background:var(--brand-50);border-radius:var(--radius-lg);border:1px solid var(--brand-100)" class="fade-in">
-        <p style="font-size:.875rem;color:var(--brand-700)">
-          <strong><i class="fa-solid fa-store"></i> É revendedor ou agência?</strong>
-          Temos condições especiais para volumes acima de 50 contas.
-          <a href="mailto:comercial@citmail.com.br" style="color:var(--brand-600);font-weight:700">Fale com nossa equipe →</a>
+      <div class="pricing-note fade-in">
+        <p>
+          <strong><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> É revendedor ou agência?</strong>
+          Condições comerciais específicas para volumes acima de 50 contas.
+          <a href="mailto:comercial@citmail.com.br">Fale com nossa equipe →</a>
         </p>
       </div>
 
@@ -1491,22 +1484,22 @@
   <!-- ============================================================
        HOW IT WORKS
   ============================================================ -->
-  <section id="how-it-works" class="section" style="background:var(--brand-50)">
+  <section id="how-it-works" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-list-check"></i> Como funciona</div>
-        <h2 style="margin-top:14px">Do pagamento ao e-mail ativo<br/>em 4 passos simples</h2>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#list-checks"></use></svg> Como funciona</div>
+        <h2 style="margin-top:14px">Do pagamento ao e-mail ativo<br/>em 4 passos</h2>
       </div>
       <div class="steps-grid">
         <div class="step-card fade-in">
           <div class="step-number">1</div>
           <h3>Escolha o Plano</h3>
-          <p>Selecione o plano ideal para seu negócio e o domínio desejado.</p>
+          <p>Defina quantas contas a equipe precisa e o domínio da empresa.</p>
         </div>
         <div class="step-card fade-in">
           <div class="step-number">2</div>
-          <h3>Pague com Facilidade</h3>
-          <p>Pix, boleto ou cartão de crédito via Asaas. Cobrança recorrente automática.</p>
+          <h3>Faça o Pagamento</h3>
+          <p>Pix, boleto ou cartão de crédito via Asaas. A cobrança se renova automaticamente.</p>
         </div>
         <div class="step-card fade-in">
           <div class="step-number">3</div>
@@ -1516,7 +1509,7 @@
         <div class="step-card fade-in">
           <div class="step-number">4</div>
           <h3>Acesse e Gerencie</h3>
-          <p>Receba as credenciais por e-mail e acesse seu painel para gerenciar tudo.</p>
+          <p>As credenciais chegam por e-mail. No painel, você gerencia contas, faturas e DNS.</p>
         </div>
       </div>
     </div>
@@ -1529,16 +1522,16 @@
     <div class="container">
       <div class="painel-grid">
         <div class="text-col fade-in">
-          <div class="tag"><i class="fa-solid fa-gauge-high"></i> Painel do Cliente</div>
-          <h2 style="margin-top:14px">Controle total<br/>na sua mão</h2>
-          <p>Gerencie domínios, caixas de e-mail, faturas e muito mais — sem precisar acionar o suporte.</p>
+          <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#layout-dashboard"></use></svg> Painel do Cliente</div>
+          <h2 style="margin-top:14px">Sua equipe gerencia<br/>sem abrir chamado</h2>
+          <p>Crie caixas, troque senhas, baixe faturas e ajuste o DNS pelo painel, sem depender do suporte.</p>
           <ul class="painel-features-list">
-            <li><i class="fa-solid fa-circle-check"></i> Dashboard com visão geral do plano</li>
-            <li><i class="fa-solid fa-circle-check"></i> Criação e exclusão de caixas de e-mail</li>
-            <li><i class="fa-solid fa-circle-check"></i> Troca de senhas pelo próprio cliente</li>
-            <li><i class="fa-solid fa-circle-check"></i> Histórico de faturas com download em PDF</li>
-            <li><i class="fa-solid fa-circle-check"></i> Contratação de novos produtos no Marketplace</li>
-            <li><i class="fa-solid fa-circle-check"></i> Configuração de domínios e DNS</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Dashboard com visão geral do plano</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Criação e exclusão de caixas de e-mail</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Troca de senhas pelo próprio cliente</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Histórico de faturas com download em PDF</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Contratação de novos produtos no Marketplace</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Configuração de domínios e DNS</li>
           </ul>
           <div style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;">
             <a href="login.html" class="btn btn-primary">Acessar Painel</a>
@@ -1554,12 +1547,12 @@
             </div>
             <div class="painel-body">
               <div class="painel-sidebar">
-                <div class="sidebar-item active"><i class="fa-solid fa-gauge"></i> Dashboard</div>
-                <div class="sidebar-item"><i class="fa-solid fa-envelope"></i> E-mails</div>
-                <div class="sidebar-item"><i class="fa-solid fa-globe"></i> Domínios</div>
-                <div class="sidebar-item"><i class="fa-solid fa-file-invoice-dollar"></i> Financeiro</div>
-                <div class="sidebar-item"><i class="fa-solid fa-store"></i> Marketplace</div>
-                <div class="sidebar-item"><i class="fa-solid fa-gear"></i> Configurações</div>
+                <div class="sidebar-item active"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#layout-dashboard"></use></svg> Dashboard</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> E-mails</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg> Domínios</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-text"></use></svg> Financeiro</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Marketplace</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#settings"></use></svg> Configurações</div>
               </div>
               <div class="painel-content">
                 <div class="painel-stat-row">
@@ -1600,45 +1593,45 @@
   <!-- ============================================================
        MARKETPLACE PREVIEW
   ============================================================ -->
-  <section id="marketplace" class="section" style="background:var(--gray-100)">
+  <section id="marketplace" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-store"></i> Marketplace</div>
-        <h2 style="margin-top:14px">Expanda com um clique<br/>no seu painel</h2>
-        <p>Muito além do e-mail — contrate novos produtos e serviços diretamente pelo painel do cliente.</p>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Marketplace</div>
+        <h2 style="margin-top:14px">Contrate novos serviços<br/>pelo mesmo painel</h2>
+        <p>Backup, servidores e consultoria de TI na mesma conta e na mesma fatura do e-mail.</p>
       </div>
       <div class="marketplace-grid">
         <div class="marketplace-card fade-in">
           <div class="badge badge-blue">Incluído</div>
-          <div class="marketplace-icon">📧</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <h3>E-mail Corporativo</h3>
-          <p>Caixas de e-mail com domínio próprio, webmail, IMAP/POP3/SMTP e proteção avançada.</p>
+          <p>Caixas de e-mail com domínio próprio, webmail, IMAP/POP3/SMTP e proteção antispam.</p>
           <div class="from">A partir de</div>
           <div class="price">R$ 19,90/mês</div>
         </div>
         <div class="marketplace-card fade-in">
           <div class="badge badge-green">Disponível</div>
-          <div class="marketplace-icon">☁️</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud"></use></svg></div>
           <h3>Backup em Nuvem</h3>
-          <p>Backup automático de arquivos, bancos de dados e sistemas. Restauração em um clique.</p>
+          <p>Backup automático de arquivos, bancos de dados e sistemas. Restauração pelo painel.</p>
           <div class="from">A partir de</div>
           <div class="price">R$ 39,90/mês</div>
         </div>
         <div class="marketplace-card fade-in">
           <div class="badge badge-yellow">Em breve</div>
-          <div class="marketplace-icon">🖥️</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg></div>
           <h3>Servidores Cloud</h3>
-          <p>VPS e servidores dedicados na nuvem. Alta disponibilidade com suporte técnico 24/7.</p>
+          <p>VPS e servidores dedicados na nuvem, com suporte técnico 24/7.</p>
           <div class="from">A partir de</div>
           <div class="price">R$ 79,90/mês</div>
         </div>
         <div class="marketplace-card fade-in">
-          <div class="badge badge-purple">Especializado</div>
-          <div class="marketplace-icon">⚙️</div>
+          <div class="badge badge-neutral">Especializado</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#settings"></use></svg></div>
           <h3>DevOps & Consultoria</h3>
-          <p>Serviços especializados de infraestrutura, CI/CD, Docker, Kubernetes e consultoria de TI.</p>
+          <p>Projetos de infraestrutura, CI/CD, Docker, Kubernetes e consultoria de TI.</p>
           <div class="from">Sob consulta</div>
-          <div class="price">Fale conosco →</div>
+          <div class="price price--text">Fale conosco →</div>
         </div>
       </div>
     </div>
@@ -1650,14 +1643,14 @@
   <section id="testimonials" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-comments"></i> Depoimentos</div>
-        <h2 style="margin-top:14px">Clientes que já confiam<br/>na CITMail</h2>
-        <p>Veja o que nossos clientes dizem sobre a experiência com o e-mail corporativo.</p>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#messages-square"></use></svg> Depoimentos</div>
+        <h2 style="margin-top:14px">O que mudou para quem<br/>já usa a CITMail</h2>
+        <p>Resultados relatados por clientes após a contratação.</p>
       </div>
       <div class="testimonials-grid">
         <div class="testimonial-card fade-in">
-          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-          <p class="testimonial-text">"A ativação foi surpreendentemente rápida — em menos de 10 minutos já estava acessando meu e-mail corporativo. Processo 100% automático, sem precisar falar com ninguém."</p>
+          <div class="stars"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg></div>
+          <p class="testimonial-text">"Em menos de 10 minutos eu já acessava o e-mail corporativo. Contratei e ativei sem precisar falar com a equipe."</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">RS</div>
             <div>
@@ -1667,8 +1660,8 @@
           </div>
         </div>
         <div class="testimonial-card fade-in">
-          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-          <p class="testimonial-text">"Migrei 15 caixas de e-mail do Google Workspace e economiei mais de 60% no custo mensal. O suporte foi impecável durante toda a migração."</p>
+          <div class="stars"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg></div>
+          <p class="testimonial-text">"Migrei 15 caixas do Google Workspace e reduzi o custo mensal em mais de 60%. O suporte acompanhou toda a migração."</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">AM</div>
             <div>
@@ -1678,8 +1671,8 @@
           </div>
         </div>
         <div class="testimonial-card fade-in">
-          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-          <p class="testimonial-text">"Sou revendedor e o painel de controle facilitou muito minha vida. Consigo gerenciar todos os meus clientes em um único lugar, com faturamento automático."</p>
+          <div class="stars"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg></div>
+          <p class="testimonial-text">"Como revendedor, gerencio todos os meus clientes em um único painel, com faturamento automático."</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">FO</div>
             <div>
@@ -1698,74 +1691,74 @@
   <section id="faq" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-circle-question"></i> FAQ</div>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-help"></use></svg> FAQ</div>
         <h2 style="margin-top:14px">Perguntas frequentes</h2>
-        <p>Tire suas dúvidas mais comuns sobre o serviço.</p>
+        <p>Prazos, pagamento, suporte e cancelamento.</p>
       </div>
       <div class="faq-list fade-in">
 
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Preciso ter um domínio próprio para contratar?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Não é obrigatório ter um domínio previamente. Ao contratar qualquer plano, podemos registrar um domínio novo para você como parte da ativação do serviço. Se já tiver um domínio, também podemos transferi-lo ou apenas configurar os registros DNS para apontar para nossos servidores.</p></div>
+          <div class="faq-answer"><p>Não. Registramos um domínio novo durante a contratação. Se a empresa já tem um, transferimos o domínio ou apenas apontamos o DNS para nossos servidores.</p></div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Quanto tempo leva para o e-mail ser ativado?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Após a confirmação do pagamento, a ativação é automática e ocorre em até 5 minutos. Você receberá um e-mail com todas as credenciais de acesso. A propagação de DNS pode levar até 48h para se completar globalmente, mas na maioria dos casos ocorre em menos de 2 horas.</p></div>
+          <div class="faq-answer"><p>Até 5 minutos após a confirmação do pagamento. As credenciais de acesso chegam por e-mail. A propagação de DNS leva até 48h e costuma terminar em menos de 2 horas.</p></div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Quais formas de pagamento são aceitas?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Aceitamos Pix (crédito imediato), boleto bancário e cartão de crédito (com possibilidade de parcelamento). O pagamento é processado de forma segura pelo Asaas, e para planos mensais ou anuais, a cobrança é recorrente e automática.</p></div>
+          <div class="faq-answer"><p>Pix (confirmação em segundos), boleto bancário e cartão de crédito com parcelamento. O Asaas processa o pagamento. Planos mensais e anuais têm cobrança recorrente automática.</p></div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Posso adicionar mais caixas de e-mail depois?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Sim! Através do painel do cliente, você pode adicionar novas caixas de e-mail a qualquer momento. A fatura é atualizada automaticamente de forma proporcional ao período restante do ciclo de cobrança.</p></div>
+          <div class="faq-answer"><p>Sim, pelo painel do cliente e a qualquer momento. A fatura é ajustada proporcionalmente ao período restante do ciclo.</p></div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Como funciona o suporte técnico?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Oferecemos suporte técnico via ticket no painel do cliente, chat e e-mail. Planos Profissional e Enterprise têm atendimento prioritário. O plano Enterprise inclui suporte 24/7 com SLA garantido.</p></div>
+          <div class="faq-answer"><p>Por ticket no painel, chat e e-mail, com tempo médio de resposta de até 2 horas. Planos Profissional e Enterprise têm atendimento prioritário. O Enterprise inclui suporte 24/7 com SLA em contrato.</p></div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>O serviço é compatível com Outlook, Gmail e Apple Mail?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Sim. Nosso serviço suporta os protocolos IMAP, POP3 e SMTP, sendo compatível com qualquer cliente de e-mail, incluindo Microsoft Outlook, Apple Mail, Thunderbird, Gmail App e outros aplicativos mobile. Fornecemos as configurações detalhadas por e-mail após a ativação.</p></div>
+          <div class="faq-answer"><p>Sim. O serviço usa IMAP, POP3 e SMTP e funciona com Outlook, Apple Mail, Thunderbird, Gmail App e outros clientes. As configurações chegam por e-mail após a ativação.</p></div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Posso cancelar quando quiser?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Sim. Não há fidelidade nem multa por cancelamento. Você pode solicitar o cancelamento diretamente pelo painel do cliente a qualquer momento. Para planos anuais, o cancelamento encerra as renovações futuras, não havendo reembolso proporcional para o período já pago.</p></div>
+          <div class="faq-answer"><p>Sim. Não há fidelidade nem multa. O cancelamento é feito pelo painel do cliente, a qualquer momento. No plano anual, ele encerra as renovações futuras, sem reembolso do período já pago.</p></div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Os dados são protegidos pela LGPD?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Sim. Todos os nossos processos estão em conformidade com a Lei Geral de Proteção de Dados (LGPD). Seus dados são armazenados com criptografia, as senhas com hash seguro (bcrypt/Argon2), e você pode solicitar a exclusão de seus dados a qualquer momento através do painel do cliente.</p></div>
+          <div class="faq-answer"><p>Sim. Os processos seguem a Lei Geral de Proteção de Dados (LGPD). Os dados ficam criptografados e as senhas usam hash seguro (bcrypt/Argon2). A exclusão dos dados pode ser pedida pelo painel a qualquer momento.</p></div>
         </div>
 
       </div>
@@ -1775,24 +1768,24 @@
   <!-- ============================================================
        CTA FINAL
   ============================================================ -->
-  <section id="cta-final" class="section">
+  <section id="cta-final" class="section cit-mesh">
     <div class="container">
       <div class="fade-in">
-        <div class="tag" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.2)">
-          <i class="fa-solid fa-rocket"></i> Pronto para começar?
+        <div class="tag">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#rocket"></use></svg> Pronto para começar?
         </div>
-        <h2 style="margin-top:14px">Seu e-mail corporativo<br/>começa agora</h2>
-        <p>Configure em minutos. Sem contratos longos. Sem complicações.</p>
+        <h2 style="margin-top:14px">E-mail com o domínio da empresa<br/>em até 5 minutos</h2>
+        <p>Sem fidelidade e sem taxa de adesão. Cancele pelo painel quando quiser.</p>
         <div class="cta-actions">
           <a href="checkout.html" class="btn btn-white btn-lg">
-            <i class="fa-solid fa-bolt"></i> Começar Agora
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> Começar Agora
           </a>
-          <a href="#domain-search" class="btn btn-lg" style="background:rgba(255,255,255,.15);color:white;border:2px solid rgba(255,255,255,.4)">
-            <i class="fa-solid fa-magnifying-glass"></i> Buscar meu Domínio
+          <a href="#domain-search" class="btn btn-outline-dark btn-lg">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg> Buscar meu Domínio
           </a>
         </div>
         <p class="guarantee-note">
-          <i class="fa-solid fa-shield-halved"></i>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg>
           Pagamento seguro via Asaas · SSL em todas as páginas · Sem fidelidade
         </p>
       </div>
@@ -1807,9 +1800,9 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#" class="nav-logo">
-            <img src="assets/logo.svg" alt="CITMail" style="height:34px;width:auto;filter:brightness(0) invert(1)">
+            <img src="assets/brand/citmail-horizontal-escuro.png" alt="CITMail" width="160" height="36">
           </a>
-          <p>E-mail corporativo profissional com domínio próprio. Ativação automática, faturamento simplificado e painel de controle completo.</p>
+          <p>Infraestrutura de TI que faz sua empresa crescer com segurança.</p>
         </div>
         <div class="footer-col">
           <h4>Produto</h4>
@@ -1840,11 +1833,11 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2025 CITMail. Todos os direitos reservados. CNPJ: XX.XXX.XXX/0001-XX</p>
+        <p>© 2026 CITMail. Todos os direitos reservados. CNPJ: XX.XXX.XXX/0001-XX</p>
         <div class="footer-social">
-          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" aria-label="Instagram"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#instagram"></use></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#linkedin"></use></svg></a>
+          <a href="#" aria-label="WhatsApp"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#whatsapp"></use></svg></a>
         </div>
       </div>
     </div>
@@ -1852,7 +1845,7 @@
 
   <!-- Scroll to top -->
   <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">
-    <i class="fa-solid fa-chevron-up"></i>
+    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#chevron-up"></use></svg>
   </button>
 
   <!-- ============================================================
@@ -1869,9 +1862,15 @@
     // ---- MOBILE NAV ----
     const navToggle = document.getElementById('navToggle');
     const nav = document.getElementById('nav');
-    navToggle.addEventListener('click', () => {
-      document.getElementById('header').classList.toggle('nav-mobile-open');
-    });
+    function setNavOpen(open) {
+      header.classList.toggle('nav-mobile-open', open);
+      navToggle.setAttribute('aria-expanded', open);
+      // Os botões ficam logo abaixo da lista de links, na altura real que ela ocupa.
+      if (open) header.style.setProperty('--mobile-links-height', nav.querySelector('.nav-links').offsetHeight + 'px');
+    }
+    navToggle.addEventListener('click', () => setNavOpen(!header.classList.contains('nav-mobile-open')));
+    nav.querySelectorAll('.nav-links a, .nav-ctas a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') setNavOpen(false); });
 
     // ---- BILLING TOGGLE ----
     let billing = 'monthly';
@@ -1958,7 +1957,7 @@
       const discTagEl = document.getElementById(cfg.discTagId);
       if (qty > 0) {
         if (volDisc > 0) {
-          discTagEl.innerHTML = '<span class="vol-badge"><i class="fa-solid fa-tag"></i> −5% por volume aplicado</span>';
+          discTagEl.innerHTML = '<span class="vol-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> −5% por volume aplicado</span>';
         } else {
           const need = 5 - qty;
           discTagEl.textContent = need > 0 ? `Adicione mais ${need} conta(s) para −5% de volume` : '';
@@ -1993,7 +1992,7 @@
         grandTotal += sub; grandFull += full;
         html += `<div class="cs-line"><span class="lbl">${qty}\u00d7 ${names[type]}</span><span class="val">R$ ${fmt(full)}</span></div>`;
         if (annDisc + volDisc > 0) {
-          html += `<div class="cs-line" style="padding-left:8px"><span class="lbl" style="color:var(--green);font-size:.73rem"><i class="fa-solid fa-tag"></i> Desc. \u2212${annDisc+volDisc}%</span><span class="val discount" style="font-size:.76rem">\u2212R$ ${fmt(full-sub)}</span></div>`;
+          html += `<div class="cs-line" style="padding-left:8px"><span class="lbl" style="color:var(--cit-green-700)"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> Desc. \u2212${annDisc+volDisc}%</span><span class="val discount">\u2212R$ ${fmt(full-sub)}</span></div>`;
         }
       });
 
@@ -2033,7 +2032,7 @@
       const result = document.getElementById('domainResult');
       if (!input) { result.innerHTML = ''; return; }
 
-      result.innerHTML = '<span class="domain-loading"><i class="fa-solid fa-spinner fa-spin"></i> Verificando disponibilidade…</span>';
+      result.innerHTML = '<span class="domain-loading"><svg class="icon icon-spin" aria-hidden="true"><use href="assets/icons.svg#loader-circle"></use></svg> Verificando disponibilidade…</span>';
 
       // Simulate async check (replace with real API call)
       setTimeout(() => {
@@ -2041,9 +2040,9 @@
         // Demo: domains containing "citmail" or "test" are "taken"
         const taken = input.includes('citmail') || input === 'google' || input === 'microsoft';
         if (taken) {
-          result.innerHTML = `<span class="domain-taken"><i class="fa-solid fa-xmark"></i> <strong>${full}</strong> já está registrado.</span>`;
+          result.innerHTML = `<span class="domain-taken"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg> <strong>${full}</strong> já está registrado. Tente outro nome ou extensão.</span>`;
         } else {
-          result.innerHTML = `<span class="domain-available"><i class="fa-solid fa-check"></i> <strong>${full}</strong> está disponível! <a href="#pricing" style="color:inherit;font-weight:800;margin-left:8px">Contratar →</a></span>`;
+          result.innerHTML = `<span class="domain-available"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> <strong>${full}</strong> está disponível para registro. <a href="#pricing" style="color:inherit;font-weight:600;margin-left:8px">Contratar →</a></span>`;
         }
       }, 1200);
     }
