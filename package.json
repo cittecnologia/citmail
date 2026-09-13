@@ -3,6 +3,9 @@
   "private": true,
   "description": "CITMail — site estático; Node usado para o servidor de desenvolvimento (Vite) e testes E2E",
   "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "dev": "vite",
     "test": "playwright test",
