@@ -61,22 +61,33 @@
       min-height: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      background: var(--brand-900);
-      color: var(--gray-900);
-      line-height: 1.6;
+      background: var(--cit-navy-500);
+      color: var(--cit-text-primary);
+      line-height: var(--cit-leading-relaxed);
+      -webkit-font-smoothing: antialiased;
     }
-    h1,h2,h3 { font-family: var(--font-title); font-weight: 700; line-height: 1.2; letter-spacing: -.02em; }
+    h1,h2,h3 { font-family: var(--font-title); font-weight: 600; line-height: 1.2; letter-spacing: var(--cit-tracking-display); }
 
-    /* ── LEFT PANEL ── */
+    /* Malha institucional 88px — somente em bloco escuro ou azul */
+    .cit-mesh { position: relative; overflow: hidden; }
+    .cit-mesh::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 88px 88px;
+      -webkit-mask-image: radial-gradient(120% 90% at 80% 12%, #000, transparent 72%);
+              mask-image: radial-gradient(120% 90% at 80% 12%, #000, transparent 72%);
+    }
+
+    /* ── PAINEL ESQUERDO — navy + malha ── */
     .left-panel {
       background: var(--cit-navy-500);
       display: flex; flex-direction: column;
       padding: clamp(32px,5vw,64px);
-      position: relative; overflow: hidden;
     }
-    .left-logo {
-      position: relative; z-index: 1;
-    }
+    .left-logo { position: relative; z-index: 1; }
     .left-logo img { display: block; height: 36px; width: auto; }
 
     .left-content {
@@ -84,25 +95,27 @@
       justify-content: center; position: relative; z-index: 1;
       padding: 40px 0;
     }
+    /* Eyebrow com filete de acento turquesa */
     .left-tag {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(255,255,255,.1); color: var(--brand-400);
-      font-family: var(--font-title); font-weight: 700;
-      font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
-      padding: 5px 14px; border-radius: 100px;
-      border: 1px solid rgba(255,255,255,.12);
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-body); font-weight: 600;
+      font-size: .75rem; letter-spacing: var(--cit-tracking-eyebrow); text-transform: uppercase;
+      color: var(--cit-text-inverse-secondary);
       margin-bottom: 20px;
-      width: fit-content;
+    }
+    .left-tag::before {
+      content: ''; width: 24px; height: 2px; flex-shrink: 0;
+      background: var(--cit-turquoise-500);
     }
     .left-content h2 {
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 800; color: white;
-      margin-bottom: 14px;
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 700; line-height: 1.1; color: white;
+      margin-bottom: 16px;
     }
-    .left-content h2 span { color: var(--brand-400); }
+    .left-content h2 span { color: var(--cit-turquoise-400); }
     .left-content p {
-      font-size: .95rem; color: rgba(255,255,255,.62);
-      max-width: 380px; line-height: 1.7;
+      font-size: 1rem; color: var(--cit-text-inverse-secondary);
+      max-width: 380px;
       margin-bottom: 40px;
     }
 
@@ -111,42 +124,30 @@
     }
     .feature-item {
       display: flex; align-items: center; gap: 12px;
-      color: rgba(255,255,255,.75); font-size: .875rem;
+      color: rgba(255,255,255,.85); font-size: .875rem;
     }
     .feature-icon {
-      width: 32px; height: 32px; border-radius: var(--radius-sm);
-      background: rgba(255,255,255,.08);
+      width: 32px; height: 32px; border-radius: var(--cit-radius-sm);
+      background: rgba(255,255,255,.06); border: 1px solid var(--cit-border-color-dark);
       display: flex; align-items: center; justify-content: center;
       font-size: .8rem; color: var(--brand-400); flex-shrink: 0;
     }
 
     .left-footer {
       position: relative; z-index: 1;
-      color: rgba(255,255,255,.35); font-size: .75rem;
+      color: rgba(255,255,255,.56); font-size: .75rem;
     }
 
-    /* floating decoration */
-    .deco-dots {
-      position: absolute; bottom: 80px; right: 40px;
-      display: grid; grid-template-columns: repeat(6,10px); gap: 7px;
-      opacity: .12; z-index: 0;
-    }
-    .deco-dots span {
-      width: 4px; height: 4px; border-radius: 50%;
-      background: white;
-    }
-
-    /* ── RIGHT PANEL ── */
+    /* ── PAINEL DIREITO ── */
     .right-panel {
-      background: var(--gray-100);
+      background: var(--cit-bg-subtle);
       display: flex; align-items: center; justify-content: center;
       padding: clamp(24px,4vw,48px);
     }
     .login-card {
       background: white;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--gray-200);
+      border-radius: var(--cit-radius-lg);
+      border: 1px solid var(--cit-border-color);
       padding: clamp(28px,5vw,48px);
       width: 100%; max-width: 420px;
     }
@@ -158,77 +159,88 @@
     .login-card-logo img { height: 40px; width: auto; }
 
     .login-card h1 {
-      font-size: 1.5rem; font-weight: 800;
-      color: var(--brand-900); text-align: center;
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--cit-text-primary); text-align: center;
       margin-bottom: 6px;
     }
     .login-card .subtitle {
       text-align: center; font-size: .875rem;
-      color: var(--gray-500); margin-bottom: 30px;
+      color: var(--cit-text-secondary); margin-bottom: 28px;
     }
 
-    /* form */
+    /* ── CAMPOS — padrão .field do brandbook ── */
     .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-    .field label { font-size: .82rem; font-weight: 600; color: var(--gray-700); }
-    .field label .req { color: var(--red); margin-left: 2px; }
-    .input-wrap {
-      position: relative;
-    }
-    .input-wrap i {
+    .field label { font-size: .8125rem; font-weight: 500; color: var(--cit-text-secondary); }
+    .field label .req { color: var(--cit-error); margin-left: 2px; }
+    .field-help { font-size: .75rem; color: var(--cit-text-muted); }
+    .input-wrap { position: relative; }
+    .input-wrap > i {
       position: absolute; left: 13px; top: 50%;
       transform: translateY(-50%);
       color: var(--gray-400); font-size: .85rem;
       pointer-events: none;
     }
     .input-wrap input {
-      width: 100%; height: 46px;
+      width: 100%; height: 42px;
       padding: 0 14px 0 38px;
-      border: 1.5px solid var(--gray-300);
-      border-radius: var(--radius-sm);
-      font-family: var(--font-body); font-size: .92rem;
-      color: var(--gray-900); background: white; outline: none;
+      border: 1px solid var(--cit-border-color-strong);
+      border-radius: var(--cit-radius-sm);
+      font-family: var(--font-body); font-size: .875rem;
+      color: var(--cit-text-primary); background: white; outline: none;
       transition: border-color var(--transition), box-shadow var(--transition);
     }
+    .input-wrap input::placeholder { color: var(--cit-neutral-400); }
     .input-wrap input:focus {
-      border-color: var(--brand-500);
-      box-shadow: 0 0 0 3px rgba(0,108,176,.12);
+      border-color: var(--cit-turquoise-500);
+      box-shadow: 0 0 0 3px rgba(0,198,192,.28);
     }
-    .input-wrap input.error { border-color: var(--red); }
+    .input-wrap input.error { border-color: var(--cit-error); }
+    .input-wrap input.error:focus { box-shadow: 0 0 0 3px rgba(192,57,43,.28); }
+    .input-wrap input:disabled {
+      background: var(--cit-bg-muted); opacity: .7; cursor: not-allowed;
+    }
     .input-wrap .toggle-pass {
-      position: absolute; right: 12px; top: 50%;
+      position: absolute; right: 8px; top: 50%;
       transform: translateY(-50%);
       background: none; border: none; cursor: pointer;
-      color: var(--gray-400); font-size: .85rem; padding: 4px;
+      color: var(--cit-text-muted); font-size: .85rem; padding: 6px;
+      border-radius: 6px;
       transition: color var(--transition);
     }
-    .input-wrap .toggle-pass:hover { color: var(--gray-700); }
+    .input-wrap .toggle-pass:hover { color: var(--cit-text-primary); }
     .field-error {
-      font-size: .75rem; color: var(--red);
+      font-size: .75rem; color: var(--cit-red-700);
       display: none;
     }
     .field-error.visible { display: block; }
 
     .forgot-link {
-      text-align: right; margin-top: -10px; margin-bottom: 6px;
+      text-align: right; margin-top: -8px; margin-bottom: 8px;
     }
     .forgot-link a {
-      font-size: .78rem; color: var(--brand-600);
+      font-size: .8125rem; color: var(--cit-text-link);
       text-decoration: none; font-weight: 600;
     }
-    .forgot-link a:hover { text-decoration: underline; }
+    .forgot-link a:hover { color: var(--cit-text-link-hover); text-decoration: underline; }
 
-    .btn-login {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; height: 48px;
-      background: var(--brand-600); color: white;
-      font-family: var(--font-title); font-weight: 700;
-      font-size: .95rem; border: none; border-radius: var(--radius-md);
-      cursor: pointer; margin-top: 6px;
-      box-shadow: 0 4px 14px rgba(0,108,176,.3);
-      transition: all var(--transition);
+    /* ── BOTÕES — altura 40/48, raio 8, Poppins 600 ── */
+    .btn, .btn-login, .btn-secondary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 40px; padding: 0 18px;
+      font-family: var(--font-body); font-weight: 600; font-size: .875rem;
+      border: 1px solid transparent; border-radius: var(--cit-radius-sm);
+      cursor: pointer; text-decoration: none;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
     }
-    .btn-login:hover { background: var(--brand-700); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,108,176,.4); }
-    .btn-login:disabled { background: var(--gray-300); color: var(--gray-500); box-shadow: none; transform: none; cursor: not-allowed; }
+    .btn-primary, .btn-login { background: var(--cit-primary); color: var(--cit-on-primary); }
+    .btn-primary:hover, .btn-login:hover { background: var(--cit-primary-hover); }
+    .btn-ghost { background: transparent; color: var(--cit-text-secondary); }
+    .btn-ghost:hover { background: var(--cit-bg-muted); color: var(--cit-text-primary); }
+
+    /* Botões de largura total do formulário (tamanho grande) */
+    .btn-login, .btn-secondary { width: 100%; height: 48px; font-size: 1rem; }
+    .btn-login { margin-top: 8px; }
+    .btn-login:disabled { opacity: .45; cursor: not-allowed; }
     .btn-login .spinner {
       width: 18px; height: 18px; border-radius: 50%;
       border: 2px solid rgba(255,255,255,.3);
@@ -239,64 +251,86 @@
 
     .divider-or {
       display: flex; align-items: center; gap: 12px;
-      margin: 22px 0; color: var(--gray-400); font-size: .78rem;
+      margin: 22px 0; color: var(--cit-text-muted); font-size: .8125rem;
     }
     .divider-or::before, .divider-or::after {
-      content: ''; flex: 1; height: 1px; background: var(--gray-200);
+      content: ''; flex: 1; height: 1px; background: var(--cit-divider);
     }
 
-    .btn-secondary {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; height: 44px;
-      background: white; color: var(--gray-700);
-      font-family: var(--font-title); font-weight: 700;
-      font-size: .85rem; border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius-md); cursor: pointer; text-decoration: none;
-      transition: all var(--transition);
-    }
-    .btn-secondary:hover { border-color: var(--brand-300, #A6CCE3); background: var(--brand-50); color: var(--brand-700); }
+    /* Contorno do brandbook */
+    .btn-secondary { background: transparent; color: var(--cit-primary); border-color: var(--cit-blue-300); }
+    .btn-secondary:hover { border-color: var(--cit-primary); background: var(--cit-blue-50); }
 
     .signup-cta {
       text-align: center; margin-top: 24px;
-      font-size: .82rem; color: var(--gray-500);
+      font-size: .875rem; color: var(--cit-text-secondary);
     }
     .signup-cta a {
-      color: var(--brand-600); font-weight: 700; text-decoration: none;
+      color: var(--cit-text-link); font-weight: 600; text-decoration: none;
     }
-    .signup-cta a:hover { text-decoration: underline; }
+    .signup-cta a:hover { color: var(--cit-text-link-hover); text-decoration: underline; }
 
     .secure-note {
       display: flex; align-items: center; justify-content: center; gap: 6px;
-      margin-top: 20px; font-size: .72rem; color: var(--gray-400);
+      margin-top: 20px; font-size: .75rem; color: var(--cit-text-muted);
     }
     .secure-note i { color: var(--green); }
 
-    /* error alert */
+    /* ── ALERTA DE ERRO — .alert--err do brandbook ── */
     .alert-error {
       display: none;
-      background: var(--red-bg); color: #8E2B20;
-      border: 1px solid #E8A39B;
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: .82rem;
+      background: var(--cit-red-50); color: var(--cit-red-700);
+      border: 1px solid rgba(192,57,43,.28);
+      border-radius: var(--cit-radius-md);
+      padding: 12px 14px;
+      font-size: .84rem;
       margin-bottom: 16px;
-      align-items: center; gap: 8px;
+      align-items: center; gap: 10px;
     }
     .alert-error.visible { display: flex; }
+
+    /* ── MODAL — recuperar senha ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(35,52,78,.6);
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal {
+      background: white; width: 100%; max-width: 400px;
+      border: 1px solid var(--cit-border-color); border-radius: var(--cit-radius-lg);
+      box-shadow: var(--shadow-lg);
+      animation: cit-fade-up var(--cit-duration-enter) var(--cit-ease) both;
+    }
+    .modal-head {
+      padding: 20px 24px 16px; border-bottom: 1px solid var(--cit-divider);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-head h3 { font-size: 1.0625rem; color: var(--cit-text-primary); }
+    .modal-close {
+      width: 32px; height: 32px; border-radius: var(--cit-radius-sm);
+      border: none; background: transparent; cursor: pointer;
+      color: var(--cit-text-secondary); font-size: .9rem;
+      transition: background var(--transition), color var(--transition);
+    }
+    .modal-close:hover { background: var(--cit-bg-muted); color: var(--cit-text-primary); }
+    .modal-body { padding: 20px 24px; }
+    .modal-body > p { font-size: .875rem; color: var(--cit-text-secondary); margin-bottom: 16px; }
+    .modal-body .field { margin-bottom: 0; }
+    .modal-foot { padding: 0 24px 20px; display: flex; gap: 10px; justify-content: flex-end; }
 
     /* mobile */
     @media (max-width: 768px) {
       body { grid-template-columns: 1fr; }
       .left-panel { display: none; }
       .right-panel { background: white; padding: 24px 16px; align-items: flex-start; padding-top: 40px; }
-      .login-card { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+      .login-card { border: none; padding: 0; max-width: 100%; }
     }
   </style>
 </head>
 <body>
 
   <!-- LEFT: branding panel -->
-  <div class="left-panel">
+  <div class="left-panel cit-mesh">
     <div class="left-logo">
       <img src="assets/brand/citmail-horizontal-escuro.png" alt="CITMail" width="160" height="36" />
     </div>
@@ -331,15 +365,6 @@
     </div>
 
     <div class="left-footer">© 2026 CITMail · Todos os direitos reservados</div>
-
-    <!-- decoration -->
-    <div class="deco-dots">
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-    </div>
   </div>
 
   <!-- RIGHT: login form -->
@@ -413,34 +438,30 @@
   </div>
 
   <!-- forgot password modal -->
-  <div id="forgotOverlay" style="display:none;position:fixed;inset:0;background:rgba(35,52,78,.6);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;padding:20px">
-    <div style="background:white;border-radius:16px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .25s ease">
-      <div style="padding:20px 24px 16px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between">
-        <h3 style="font-family:var(--font-title);font-size:1rem;color:var(--brand-900)">Recuperar senha</h3>
-        <button onclick="closeForgot()" style="width:30px;height:30px;border-radius:8px;border:none;background:var(--gray-100);cursor:pointer;color:var(--gray-500);font-size:.9rem">✕</button>
+  <div id="forgotOverlay" class="modal-overlay" style="display:none">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+      <div class="modal-head">
+        <h3 id="forgotTitle">Recuperar senha</h3>
+        <button class="modal-close" onclick="closeForgot()" aria-label="Fechar">✕</button>
       </div>
-      <div style="padding:20px 24px">
-        <p style="font-size:.875rem;color:var(--gray-600);margin-bottom:16px">Digite seu e-mail cadastrado. Enviaremos um link para redefinir sua senha.</p>
-        <div class="field" style="margin-bottom:0">
-          <label>E-mail cadastrado</label>
+      <div class="modal-body">
+        <p>Digite seu e-mail cadastrado. Enviaremos um link para redefinir sua senha.</p>
+        <div class="field">
+          <label for="fForgotEmail">E-mail cadastrado</label>
           <div class="input-wrap">
             <i class="fa-solid fa-envelope"></i>
             <input type="email" id="fForgotEmail" placeholder="joao@empresa.com.br" />
           </div>
         </div>
       </div>
-      <div style="padding:0 24px 20px;display:flex;gap:10px;justify-content:flex-end">
-        <button onclick="closeForgot()" style="padding:9px 18px;border-radius:8px;border:none;background:var(--gray-100);cursor:pointer;font-family:var(--font-title);font-weight:700;font-size:.82rem;color:var(--gray-600)">Cancelar</button>
-        <button onclick="sendForgot()" style="padding:9px 18px;border-radius:8px;border:none;background:var(--brand-600);color:white;cursor:pointer;font-family:var(--font-title);font-weight:700;font-size:.82rem;box-shadow:0 2px 8px rgba(0,108,176,.3)">
+      <div class="modal-foot">
+        <button class="btn btn-ghost" onclick="closeForgot()">Cancelar</button>
+        <button class="btn btn-primary" onclick="sendForgot()">
           <i class="fa-solid fa-paper-plane"></i> Enviar link
         </button>
       </div>
     </div>
   </div>
-
-  <style>
-    @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
-  </style>
 
   <script>
     function togglePassword() {
@@ -521,6 +542,7 @@
       e.preventDefault();
       const overlay = document.getElementById('forgotOverlay');
       overlay.style.display = 'flex';
+      document.getElementById('fForgotEmail').classList.remove('error');
       const emailVal = document.getElementById('fEmail').value;
       if (emailVal) document.getElementById('fForgotEmail').value = emailVal;
       setTimeout(() => document.getElementById('fForgotEmail').focus(), 100);
@@ -531,7 +553,7 @@
     function sendForgot() {
       const email = document.getElementById('fForgotEmail').value.trim();
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        document.getElementById('fForgotEmail').style.borderColor = 'var(--red)';
+        document.getElementById('fForgotEmail').classList.add('error');
         return;
       }
       /*
@@ -541,7 +563,7 @@
       closeForgot();
       // show toast-like feedback
       const note = document.createElement('div');
-      note.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#23344E;color:white;padding:12px 18px;border-radius:12px;font-size:.875rem;display:flex;align-items:center;gap:10px;box-shadow:0 10px 40px rgba(0,0,0,.2);z-index:9999;animation:slideUp .25s ease';
+      note.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--cit-navy-500);color:white;padding:12px 18px;border-radius:var(--cit-radius-md);font-size:.875rem;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);z-index:9999;animation:cit-fade-up var(--cit-duration-enter) var(--cit-ease) both';
       note.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--green)"></i> Link enviado para <strong>${email}</strong>`;
       document.body.appendChild(note);
       setTimeout(() => { note.style.opacity='0'; note.style.transition='opacity .3s'; setTimeout(()=>note.remove(),300); }, 4000);
