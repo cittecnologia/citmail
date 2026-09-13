@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/tokens.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -89,7 +88,7 @@
       display: flex; align-items: center; gap: 6px;
       font-size: .78rem; color: var(--cit-text-inverse-secondary);
     }
-    .header-secure i { color: var(--green); }
+    .header-secure .icon { color: inherit; }
 
     /* ---- LAYOUT ---- */
     .checkout-wrapper {
@@ -157,7 +156,7 @@
       display: flex; align-items: center; gap: 10px;
     }
     .card-title--plain { border-bottom: none; padding-bottom: 0; margin-bottom: 16px; }
-    .card-title i { color: var(--brand-600); }
+    .card-title .icon { color: var(--cit-text-primary); }
     .step-intro { font-size: .875rem; color: var(--cit-text-secondary); margin-bottom: 20px; }
 
     /* ---- CAMPOS — padrão .field do brandbook ---- */
@@ -387,7 +386,7 @@
       padding: 12px 14px; border: 1px solid; border-radius: var(--cit-radius-md);
       font-size: .8125rem; line-height: 1.5;
     }
-    .alert-box > i { margin-top: 3px; flex-shrink: 0; }
+    .alert-box > .icon { margin-top: 3px; flex-shrink: 0; }
     .alert-warn { background: var(--cit-amber-50); color: var(--cit-amber-700); border-color: rgba(184,121,26,.28); }
     .alert-err { background: var(--cit-red-50); color: var(--cit-red-700); border-color: rgba(192,57,43,.28); }
     .alert-box.alert-warn { margin-top: 8px; }
@@ -403,8 +402,13 @@
       position: relative;
     }
     .card-brand-icon {
-      position: absolute; right: 12px; bottom: 9px;
-      font-size: 1.4rem; line-height: 1;
+      position: absolute; right: 12px; bottom: 11px;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 1.25rem; line-height: 1; color: var(--cit-text-secondary); pointer-events: none;
+    }
+    .card-brand-icon[data-brand]:not([data-brand=""])::before {
+      content: attr(data-brand); font-size: .6875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .06em; color: var(--cit-text-primary);
     }
 
     /* ---- BOTÕES — altura 40/48, raio 8, Poppins 600 ---- */
@@ -454,7 +458,7 @@
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .summary-plan-icon i { color: white; font-size: 1.2rem; }
+    .summary-plan-icon .icon { color: white; font-size: 1.2rem; }
     .summary-plan-name {
       font-family: var(--font-title); font-weight: 600; font-size: 1rem;
     }
@@ -487,7 +491,7 @@
       display: flex; align-items: center; gap: 8px;
       font-size: .82rem; color: var(--cit-neutral-700);
     }
-    .summary-feature i { color: var(--green); font-size: .75rem; }
+    .summary-feature .icon { color: var(--cit-text-primary); font-size: .8rem; }
 
     .secure-badges {
       margin-top: 16px; padding-top: 14px;
@@ -498,7 +502,7 @@
       display: flex; align-items: center; gap: 8px;
       font-size: .75rem; color: var(--cit-text-muted);
     }
-    .secure-badge i { font-size: .8rem; }
+    .secure-badge .icon { font-size: .8rem; }
 
     /* ---- PASSO 1: CONTAS ---- */
     .mini-calc-row {
@@ -576,7 +580,7 @@
     }
     .addon-row--stack { flex-direction: column; align-items: stretch; gap: 10px; }
     .addon-head { display: flex; align-items: center; gap: 10px; }
-    .addon-emoji { font-size: 1.2rem; flex-shrink: 0; }
+    .addon-icon { font-size: 1.2rem; flex-shrink: 0; }
     .addon-info { flex: 1; min-width: 0; }
     .addon-name { font-family: var(--font-title); font-weight: 600; font-size: .9rem; }
     .addon-desc { font-size: .78rem; color: var(--cit-text-muted); }
@@ -636,7 +640,7 @@
       border-bottom: 1px solid var(--cit-blue-200);
     }
     .access-item:last-child { border-bottom: none; }
-    .access-item i { color: var(--brand-600); width: 18px; text-align: center; }
+    .access-item .icon { color: var(--cit-primary); font-size: 1.05rem; }
     .access-label { font-weight: 600; font-size: .875rem; }
     .access-value { font-size: .8rem; color: var(--cit-text-secondary); }
     .success-actions { display: flex; flex-direction: column; gap: 12px; max-width: 360px; margin: 0 auto; }
@@ -725,7 +729,7 @@
       <img src="assets/brand/citmail-horizontal-escuro.png" alt="CITMail" width="160" height="36">
     </a>
     <div class="header-secure">
-      <i class="fa-solid fa-lock"></i> Ambiente seguro<span class="header-secure-extra"> — SSL/TLS</span>
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> Ambiente seguro<span class="header-secure-extra"> — SSL/TLS</span>
     </div>
   </header>
 
@@ -763,14 +767,14 @@
         </div>
         <div class="step-connector" id="conn5"></div>
         <div class="step-item" style="flex:0">
-          <div class="step-circle" id="sc6"><i class="fa-solid fa-check" style="font-size:.7rem"></i></div>
+          <div class="step-circle" id="sc6"><svg class="icon" style="font-size:.7rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg></div>
           <span class="step-label" id="sl6">Acesso</span>
         </div>
       </div>
 
       <!-- ========== STEP 1: PLANO ========== -->
       <div class="step-panel active card" id="step1">
-        <div class="card-title"><i class="fa-solid fa-calculator"></i> Selecione suas Contas de E-mail</div>
+        <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calculator"></use></svg> Selecione suas Contas de E-mail</div>
 
         <p class="step-intro">
           Escolha a quantidade de contas de cada tipo. Mínimo de 2 contas por tipo. Desconto de 5% a partir de 5 contas do mesmo tipo (não se aplica ao plano anual).
@@ -778,7 +782,7 @@
 
         <!-- E-mail 5 GB -->
         <div class="mini-calc-row" id="ckCard5">
-          <div class="mini-row-icon">📧</div>
+          <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 5 GB</div>
             <div class="mini-row-price">R$ <span id="ckUnit5">10,00</span>/conta/mês</div>
@@ -794,7 +798,7 @@
 
         <!-- E-mail 25 GB -->
         <div class="mini-calc-row" id="ckCard25">
-          <div class="mini-row-icon">📬</div>
+          <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#inbox"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 25 GB</div>
             <div class="mini-row-price">R$ <span id="ckUnit25">16,00</span>/conta/mês</div>
@@ -810,7 +814,7 @@
 
         <!-- E-mail 50 GB -->
         <div class="mini-calc-row" id="ckCard50">
-          <div class="mini-row-icon">📮</div>
+          <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mails"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 50 GB</div>
             <div class="mini-row-price">R$ <span id="ckUnit50">25,00</span>/conta/mês</div>
@@ -835,19 +839,19 @@
         </div>
 
         <div id="step1Error" class="alert-box alert-err step-error" style="display:none">
-          <i class="fa-solid fa-triangle-exclamation"></i> Adicione pelo menos uma conta para continuar.
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#triangle-alert"></use></svg> Adicione pelo menos uma conta para continuar.
         </div>
 
         <div class="btn-row">
           <button class="btn btn-primary" onclick="goStep1Next()">
-            Continuar <i class="fa-solid fa-arrow-right"></i>
+            Continuar <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-right"></use></svg>
           </button>
         </div>
       </div>
 
       <!-- ========== STEP 2: DOMÍNIO ========== -->
       <div class="step-panel card" id="step2">
-        <div class="card-title"><i class="fa-solid fa-globe"></i> Configuração de Domínio</div>
+        <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg> Configuração de Domínio</div>
         <p class="step-intro">
           O domínio é registrado anualmente e pago separadamente via Pix. Se já tiver um domínio, basta conectá-lo.
         </p>
@@ -899,7 +903,7 @@
           <div class="field" style="margin-bottom:16px">
             <label>Nome do domínio desejado <span class="req">*</span></label>
             <div class="domain-row">
-              <div class="domain-at"><i class="fa-solid fa-at" style="margin-right:4px;color:var(--brand-600)"></i></div>
+              <div class="domain-at"><svg class="icon" style="margin-right:4px" aria-hidden="true"><use href="assets/icons.svg#at-sign"></use></svg></div>
               <input type="text" id="fDomNew" placeholder="minhaempresa" oninput="onDomNewInput()" />
               <div class="domain-tld" id="domNewTld">.com.br</div>
             </div>
@@ -910,19 +914,19 @@
           <!-- PIX for domain -->
           <div class="pix-box" id="domPixBox">
             <div class="pix-box-title">
-              <i class="fa-brands fa-pix" style="color:#32bcad;margin-right:6px"></i>Pagamento anual do domínio via Pix
+              <svg class="icon icon-pix" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg>Pagamento anual do domínio via Pix
             </div>
             <div class="pix-box-desc" id="domPixDesc">Registrar domínio — R$ 79,00/ano</div>
             <div class="pix-qr">
-              <span class="pix-qr-placeholder">📱</span>
+              <span class="pix-qr-placeholder"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#qr-code"></use></svg></span>
             </div>
             <div class="pix-copy-label">Ou copie o código Pix:</div>
             <div class="pix-code-box">
               <div class="pix-code" id="domPixCode">aguardando geração…</div>
-              <button class="pix-copy" onclick="copyDomPix()"><i class="fa-solid fa-copy"></i> Copiar</button>
+              <button class="pix-copy" onclick="copyDomPix()"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar</button>
             </div>
             <div class="pix-timer">
-              <i class="fa-solid fa-clock"></i>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#clock"></use></svg>
               <span id="domPixCountdown">Pix válido por 30:00</span>
             </div>
             <div class="pix-status" id="domPixStatus"></div>
@@ -938,28 +942,28 @@
             <span class="field-error" id="err-dom-exist">Informe seu domínio.</span>
           </div>
           <div class="alert-box alert-warn">
-            <i class="fa-solid fa-circle-info"></i>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
             <span>Após a confirmação do pagamento, você receberá as entradas DNS (MX, SPF, DKIM) por e-mail para configurar no painel do seu registrador de domínio.</span>
           </div>
         </div>
 
         <div id="step2Error" class="alert-box alert-err step-error" style="display:none">
-          <i class="fa-solid fa-triangle-exclamation"></i> Selecione uma opção de domínio para continuar.
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#triangle-alert"></use></svg> Selecione uma opção de domínio para continuar.
         </div>
 
         <div class="btn-row">
           <button class="btn btn-primary" onclick="goStep2Next()">
-            Continuar <i class="fa-solid fa-arrow-right"></i>
+            Continuar <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-right"></use></svg>
           </button>
           <button class="btn-back-row" onclick="goStep(1)">
-            <i class="fa-solid fa-arrow-left"></i> Voltar
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-left"></use></svg> Voltar
           </button>
         </div>
       </div>
 
       <!-- ========== STEP 3: ADD-ONS ========== -->
       <div class="step-panel card" id="step3">
-        <div class="card-title"><i class="fa-solid fa-puzzle-piece"></i> Add-ons e Serviços Extras</div>
+        <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#puzzle"></use></svg> Add-ons e Serviços Extras</div>
         <p class="step-intro">
           Potencialize sua conta com serviços adicionais. Use <strong>+</strong> e <strong>−</strong> para ajustar a quantidade. O total é atualizado automaticamente.
         </p>
@@ -969,7 +973,7 @@
 
           <!-- Talk -->
           <div class="addon-row" id="adTalk">
-            <span class="addon-emoji">🎥</span>
+            <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#video"></use></svg></span>
             <div class="addon-info">
               <div class="addon-name">Talk — Videoconferência</div>
               <div class="addon-desc">Reuniões, chamadas e webinars integrados ao e-mail</div>
@@ -990,7 +994,7 @@
 
           <!-- Backup 90d -->
           <div class="addon-row" id="adBackup90">
-            <span class="addon-emoji">🗄️</span>
+            <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#database"></use></svg></span>
             <div class="addon-info">
               <div class="addon-name">Backup 90 dias</div>
               <div class="addon-desc">Retenção e restauração de e-mails por 90 dias</div>
@@ -1011,7 +1015,7 @@
 
           <!-- Backup 365d -->
           <div class="addon-row" id="adBackup365">
-            <span class="addon-emoji">🔒</span>
+            <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg></span>
             <div class="addon-info">
               <div class="addon-name">Backup 365 dias</div>
               <div class="addon-desc">Retenção e restauração de e-mails por 1 ano</div>
@@ -1032,7 +1036,7 @@
 
           <!-- Grupo de email -->
           <div class="addon-row" id="adGrupo">
-            <span class="addon-emoji">👥</span>
+            <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#users"></use></svg></span>
             <div class="addon-info">
               <div class="addon-name">Grupo de E-mail</div>
               <div class="addon-desc">Listas de distribuição para equipes e departamentos</div>
@@ -1054,7 +1058,7 @@
           <!-- Skybox -->
           <div class="addon-row addon-row--stack" id="adSkybox">
             <div class="addon-head">
-              <span class="addon-emoji">☁️</span>
+              <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud"></use></svg></span>
               <div class="addon-info">
                 <div class="addon-name">Skybox — Armazenamento em Nuvem</div>
                 <div class="addon-desc">Guarde arquivos com segurança na nuvem CITCloud</div>
@@ -1097,7 +1101,7 @@
           <!-- Domínio extra -->
           <div class="addon-row addon-row--stack" id="adExtraDom">
             <div class="addon-head">
-              <span class="addon-emoji">🌐</span>
+              <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg></span>
               <div class="addon-info">
                 <div class="addon-name">Domínio .com.br extra</div>
                 <div class="addon-desc">Domínios adicionais — cobrança anual via Pix separado</div>
@@ -1118,14 +1122,14 @@
             <!-- Extra domain PIX panel -->
             <div id="extraDomPixPanel" class="pix-box pix-box--sm" style="display:none">
               <div class="pix-box-title">
-                <i class="fa-brands fa-pix" style="color:#32bcad;margin-right:6px"></i>Pix para domínios extras — <span id="extraDomPixTotal">R$ 0,00</span>/ano
+                <svg class="icon icon-pix" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg>Pix para domínios extras — <span id="extraDomPixTotal">R$ 0,00</span>/ano
               </div>
               <div class="pix-qr pix-qr--sm">
-                <span class="pix-qr-placeholder">📱</span>
+                <span class="pix-qr-placeholder"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#qr-code"></use></svg></span>
               </div>
               <div class="pix-code-box">
                 <div class="pix-code" id="extraDomPixCode">aguardando geração…</div>
-                <button class="pix-copy" onclick="copyExtraDomPix()"><i class="fa-solid fa-copy"></i> Copiar</button>
+                <button class="pix-copy" onclick="copyExtraDomPix()"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar</button>
               </div>
               <p class="pix-note">Continue para a próxima etapa enquanto o Pix é processado.</p>
             </div>
@@ -1144,17 +1148,17 @@
 
         <div class="btn-row">
           <button class="btn btn-primary" onclick="goStep(4)">
-            Continuar para Cadastro <i class="fa-solid fa-arrow-right"></i>
+            Continuar para Cadastro <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-right"></use></svg>
           </button>
           <button class="btn-back-row" onclick="goStep(2)">
-            <i class="fa-solid fa-arrow-left"></i> Voltar
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-left"></use></svg> Voltar
           </button>
         </div>
       </div>
 
       <!-- ========== STEP 4: CADASTRO ========== -->
       <div class="step-panel card" id="step4">
-        <div class="card-title"><i class="fa-solid fa-user"></i> Dados Cadastrais</div>
+        <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#user"></use></svg> Dados Cadastrais</div>
 
         <div class="field-group-title">Informações Pessoais</div>
 
@@ -1280,17 +1284,17 @@
 
         <div class="btn-row">
           <button class="btn btn-primary" onclick="submitCadastro()">
-            Continuar para Pagamento <i class="fa-solid fa-arrow-right"></i>
+            Continuar para Pagamento <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-right"></use></svg>
           </button>
           <button class="btn-back-row" onclick="goStep(3)">
-            <i class="fa-solid fa-arrow-left"></i> Voltar
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-left"></use></svg> Voltar
           </button>
         </div>
       </div>
 
       <!-- ========== STEP 5: PAGAMENTO ========== -->
       <div class="step-panel card" id="step5">
-        <div class="card-title"><i class="fa-solid fa-credit-card"></i> Forma de Pagamento</div>
+        <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#credit-card"></use></svg> Forma de Pagamento</div>
 
         <div class="payment-methods">
 
@@ -1299,7 +1303,7 @@
             <div class="payment-option-header">
               <div class="payment-radio"><div class="payment-radio-dot"></div></div>
               <div class="payment-icon">
-                <i class="fa-brands fa-pix" style="color:#32bcad"></i>
+                <svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg>
               </div>
               <div>
                 <div class="payment-name">Pix</div>
@@ -1313,17 +1317,17 @@
                   Escaneie o QR Code ou copie o código Pix. O pagamento é confirmado em segundos.
                 </p>
                 <div class="pix-qr">
-                  <span class="pix-qr-placeholder">📱</span>
+                  <span class="pix-qr-placeholder"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#qr-code"></use></svg></span>
                 </div>
                 <div class="pix-copy-label">Ou copie o código Pix:</div>
                 <div class="pix-code-box">
                   <div class="pix-code" id="pixCode">00020126580014br.gov.bcb.pix0136…aguardando geração</div>
                   <button class="pix-copy" onclick="copyPix()">
-                    <i class="fa-solid fa-copy"></i> Copiar
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar
                   </button>
                 </div>
                 <div class="pix-timer" id="pixTimer">
-                  <i class="fa-solid fa-clock"></i> <span id="pixCountdown">QR Code válido por 30:00</span>
+                  <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#clock"></use></svg> <span id="pixCountdown">QR Code válido por 30:00</span>
                 </div>
                 <p class="pix-note">
                   Após confirmar o pagamento, seu serviço será ativado automaticamente em até 5 minutos.
@@ -1336,7 +1340,7 @@
           <div class="payment-option boleto-method" id="payBoleto" onclick="selectPayment('boleto')">
             <div class="payment-option-header">
               <div class="payment-radio"><div class="payment-radio-dot"></div></div>
-              <div class="payment-icon">🧾</div>
+              <div class="payment-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#receipt"></use></svg></div>
               <div>
                 <div class="payment-name">Boleto Bancário</div>
                 <div class="payment-desc">Compensação em até 3 dias úteis</div>
@@ -1350,14 +1354,14 @@
                 </div>
                 <div class="boleto-actions">
                   <button class="btn btn-outline btn-sm" onclick="copyBoleto()">
-                    <i class="fa-solid fa-copy"></i> Copiar código
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar código
                   </button>
                   <button class="btn btn-outline btn-sm" id="downloadBoleto">
-                    <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-down"></use></svg> Baixar PDF
                   </button>
                 </div>
                 <div class="alert-box alert-warn">
-                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#triangle-alert"></use></svg>
                   <span>O serviço será ativado <strong>após a compensação do boleto</strong> (1–3 dias úteis). Prefira Pix para ativação imediata.</span>
                 </div>
               </div>
@@ -1368,7 +1372,7 @@
           <div class="payment-option card-method" id="payCard" onclick="selectPayment('card')">
             <div class="payment-option-header">
               <div class="payment-radio"><div class="payment-radio-dot"></div></div>
-              <div class="payment-icon">💳</div>
+              <div class="payment-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#credit-card"></use></svg></div>
               <div>
                 <div class="payment-name">Cartão de Crédito</div>
                 <div class="payment-desc">Visa, Mastercard, Elo, Amex</div>
@@ -1380,7 +1384,7 @@
                 <div class="field card-number-field">
                   <label>Número do Cartão <span class="req">*</span></label>
                   <input type="text" id="fCardNum" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)" />
-                  <span class="card-brand-icon" id="cardBrandIcon">💳</span>
+                  <span class="card-brand-icon" id="cardBrandIcon" data-brand=""><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#credit-card"></use></svg></span>
                 </div>
               </div>
               <div class="form-row" style="margin-bottom:14px">
@@ -1416,19 +1420,19 @@
 
         <div class="btn-row">
           <button class="btn btn-primary" id="btnPagar" onclick="processPayment()">
-            <i class="fa-solid fa-lock"></i> <span id="btnPagarLabel">Confirmar Pagamento</span>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> <span id="btnPagarLabel">Confirmar Pagamento</span>
           </button>
         </div>
 
         <div class="asaas-notice">
-          <i class="fa-solid fa-shield-halved" style="color:var(--green)"></i>
+          <svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg>
           Pagamento processado com segurança pelo
           <strong>Asaas</strong>
           — PCI DSS Compliant
         </div>
 
         <button class="btn-back-row" onclick="goStep(4)">
-          <i class="fa-solid fa-arrow-left"></i> Voltar ao cadastro
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-left"></use></svg> Voltar ao cadastro
         </button>
       </div>
 
@@ -1436,29 +1440,29 @@
       <div class="step-panel card" id="step6">
         <div class="success-page" style="display:block">
           <div class="success-icon">
-            <i class="fa-solid fa-check"></i>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg>
           </div>
           <h2>Pagamento Confirmado!</h2>
           <p>Seu e-mail corporativo está sendo configurado.<br/>Em até <strong>5 minutos</strong> você receberá as credenciais no e-mail cadastrado.</p>
 
           <div class="access-card">
-            <h4><i class="fa-solid fa-key" style="margin-right:6px;color:var(--brand-600)"></i> Seus acessos</h4>
+            <h4><svg class="icon" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#key-round"></use></svg> Seus acessos</h4>
             <div class="access-item">
-              <i class="fa-solid fa-envelope"></i>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg>
               <div>
                 <div class="access-label">Webmail</div>
                 <div class="access-value" id="successWebmail">webmail.seudominio.com.br</div>
               </div>
             </div>
             <div class="access-item">
-              <i class="fa-solid fa-gauge"></i>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#layout-dashboard"></use></svg>
               <div>
                 <div class="access-label">Painel do Cliente</div>
                 <div class="access-value">painel.citmail.com.br</div>
               </div>
             </div>
             <div class="access-item">
-              <i class="fa-solid fa-envelope-circle-check"></i>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail-check"></use></svg>
               <div>
                 <div class="access-label">Credenciais enviadas para</div>
                 <div class="access-value" id="successEmail">seu@email.com</div>
@@ -1468,10 +1472,10 @@
 
           <div class="success-actions">
             <a href="https://painel.citmail.com.br" class="btn btn-primary">
-              <i class="fa-solid fa-gauge"></i> Acessar Painel do Cliente
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#layout-dashboard"></use></svg> Acessar Painel do Cliente
             </a>
             <a href="index.html" class="btn btn-outline">
-              <i class="fa-solid fa-house"></i> Voltar ao início
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#house"></use></svg> Voltar ao início
             </a>
           </div>
 
@@ -1487,11 +1491,11 @@
     <aside class="order-summary" id="orderSummary">
       <div class="card">
         <div class="card-title card-title--plain">
-          <i class="fa-solid fa-receipt"></i> Resumo do Pedido
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#receipt"></use></svg> Resumo do Pedido
         </div>
 
         <div class="summary-plan">
-          <div class="summary-plan-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div class="summary-plan-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <div>
             <div class="summary-plan-name">E-mail Corporativo</div>
             <div class="summary-plan-cycle" id="sumCycle">Cobrança Mensal</div>
@@ -1516,18 +1520,18 @@
         </div>
 
         <div class="summary-features" style="margin-top:14px">
-          <div class="summary-feature"><i class="fa-solid fa-check"></i> Webmail + IMAP/POP3/SMTP</div>
-          <div class="summary-feature"><i class="fa-solid fa-check"></i> Antispam e antivírus</div>
-          <div class="summary-feature"><i class="fa-solid fa-check"></i> SSL/TLS grátis</div>
-          <div class="summary-feature"><i class="fa-solid fa-check"></i> Painel do cliente</div>
-          <div class="summary-feature"><i class="fa-solid fa-check"></i> Ativação em até 5 min</div>
-          <div class="summary-feature"><i class="fa-solid fa-check"></i> Sem fidelidade</div>
+          <div class="summary-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Webmail + IMAP/POP3/SMTP</div>
+          <div class="summary-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Antispam e antivírus</div>
+          <div class="summary-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> SSL/TLS grátis</div>
+          <div class="summary-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Painel do cliente</div>
+          <div class="summary-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Ativação em até 5 min</div>
+          <div class="summary-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Sem fidelidade</div>
         </div>
 
         <div class="secure-badges">
-          <div class="secure-badge"><i class="fa-solid fa-shield-halved" style="color:var(--green)"></i> Pagamento 100% seguro</div>
-          <div class="secure-badge"><i class="fa-solid fa-rotate-left" style="color:var(--brand-600)"></i> Cancele quando quiser</div>
-          <div class="secure-badge"><i class="fa-brands fa-pix" style="color:#32bcad"></i> Pix, boleto e cartão</div>
+          <div class="secure-badge"><svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Pagamento 100% seguro</div>
+          <div class="secure-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#rotate-ccw"></use></svg> Cancele quando quiser</div>
+          <div class="secure-badge"><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix, boleto e cartão</div>
         </div>
       </div>
     </aside>
@@ -1593,7 +1597,7 @@
     function copyDomPix() {
       navigator.clipboard.writeText(document.getElementById('domPixCode').textContent).then(() => {
         const btn = document.querySelector('#domPixBox .pix-copy');
-        if (btn) { btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!'; setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar', 2000); }
+        if (btn) { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado!'; setTimeout(() => btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar', 2000); }
       });
     }
 
@@ -1715,7 +1719,7 @@
     function copyExtraDomPix() {
       navigator.clipboard.writeText(document.getElementById('extraDomPixCode').textContent).then(() => {
         const btn = document.querySelector('#extraDomPixPanel .pix-copy');
-        if (btn) { btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!'; setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar', 2000); }
+        if (btn) { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado!'; setTimeout(() => btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar', 2000); }
       });
     }
 
@@ -1826,7 +1830,7 @@
         const sl = document.getElementById('sl' + i);
         if (!sc) continue;
         sc.className = 'step-circle' + (i < n ? ' done' : i === n ? ' active' : '');
-        if (i < n || i === 6) sc.innerHTML = '<i class="fa-solid fa-check" style="font-size:.7rem"></i>';
+        if (i < n || i === 6) sc.innerHTML = '<svg class="icon" style="font-size:.7rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg>';
         else sc.textContent = i;
         if (sl) sl.className = 'step-label' + (i < n ? ' done' : i === n ? ' active' : '');
       }
@@ -1867,7 +1871,7 @@
           if (annualBilling) parts.push('−20% anual');
           if (disc > 0)      parts.push(`−${disc}% vol.`);
           html += `<div class="sum-disc">
-            <i class="fa-solid fa-tag"></i> ${parts.join(' + ')}
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> ${parts.join(' + ')}
           </div>`;
         }
       });
@@ -1980,12 +1984,11 @@
       let v = el.value.replace(/\D/g,'').slice(0,16);
       el.value = v.replace(/(.{4})/g,'$1 ').trim();
       const brands = { visa:'^4', master:'^5[1-5]', elo:'^(4011|4312|4389|4514|4576|5041|5066|5090|6277|6362|6363|6516)', amex:'^3[47]' };
-      const icons  = { visa:'💳', master:'🔴', elo:'🟡', amex:'🔵' };
       const icon   = document.getElementById('cardBrandIcon');
       for (const [brand, pattern] of Object.entries(brands)) {
-        if (new RegExp(pattern).test(v)) { icon.textContent = icons[brand]; return; }
+        if (new RegExp(pattern).test(v)) { icon.dataset.brand = brand; return; }
       }
-      icon.textContent = '💳';
+      icon.dataset.brand = '';
     }
     function formatExpiry(el) {
       let v = el.value.replace(/\D/g,'').slice(0,4);
@@ -2156,8 +2159,8 @@
       const code = document.getElementById('pixCode').textContent;
       navigator.clipboard.writeText(code).then(() => {
         const btn = document.querySelector('.pix-copy');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
-        setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar'; }, 2000);
+        btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Copiado!';
+        setTimeout(() => { btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar'; }, 2000);
       });
     }
     function copyBoleto() {

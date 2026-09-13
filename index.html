@@ -14,9 +14,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/tokens.css" />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
   <style>
     /* =========================================================
        RESET & TOKENS
@@ -389,7 +386,7 @@
       display: flex; align-items: center; gap: 8px;
       font-size: .8125rem; font-weight: 500; color: var(--cit-neutral-700);
     }
-    .trust-item i { color: var(--brand-600); font-size: .9rem; }
+    .trust-item .icon { color: var(--cit-text-primary); font-size: .9rem; }
 
     /* =========================================================
        FEATURES
@@ -418,7 +415,7 @@
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 18px;
     }
-    .feature-icon i { font-size: 1.3rem; color: var(--brand-600); }
+    .feature-icon .icon { font-size: 1.3rem; color: var(--cit-primary); }
     .feature-card h3 { margin-bottom: 8px; }
     .feature-card p { font-size: .9375rem; }
 
@@ -668,7 +665,7 @@
       font-size: 1rem; margin-bottom: 18px;
       display: flex; align-items: center; gap: 8px; color: var(--cit-text-primary);
     }
-    .cs-title i { color: var(--brand-600); }
+    .cs-title .icon { color: var(--cit-text-primary); }
     .cs-lines { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .cs-line {
       display: flex; justify-content: space-between; align-items: baseline;
@@ -701,7 +698,7 @@
       text-align: center; padding: 20px 0;
       color: var(--cit-text-muted); font-size: .85rem;
     }
-    .cs-empty i { font-size: 2rem; margin-bottom: 8px; display: block; color: var(--gray-300); }
+    .cs-empty .icon { font-size: 2rem; margin: 0 auto 8px; display: block; color: var(--cit-neutral-400); }
     .cs-features {
       margin-top: 14px; padding-top: 14px;
       border-top: 1px solid var(--cit-border-color);
@@ -711,7 +708,7 @@
       display: flex; align-items: center; gap: 7px;
       font-size: .78rem; color: var(--cit-text-secondary);
     }
-    .cs-feature i { color: var(--green); font-size: .72rem; }
+    .cs-feature .icon { color: var(--cit-text-primary); font-size: .8rem; }
 
     /* Discount info note — alerta informativo do brandbook */
     .discount-info {
@@ -720,7 +717,7 @@
       border-radius: var(--cit-radius-md); padding: 14px 16px;
       margin-bottom: 20px; font-size: .84rem; color: var(--cit-blue-800);
     }
-    .discount-info i { color: var(--brand-500); flex-shrink: 0; margin-top: 2px; }
+    .discount-info .icon { flex-shrink: 0; margin-top: 3px; }
 
     /* Caixa "incluso" e nota comercial da calculadora */
     .included-box {
@@ -788,7 +785,7 @@
       transition: border-color var(--transition);
     }
     .testimonial-card:hover { border-color: rgba(255,255,255,.24); }
-    .stars { color: var(--yellow); margin-bottom: 14px; font-size: .9rem; }
+    .stars { color: var(--cit-turquoise-400); margin-bottom: 14px; font-size: .9rem; }
     .testimonial-text { color: rgba(255,255,255,.85); font-size: .9375rem; line-height: 1.7; margin-bottom: 20px; }
     .testimonial-author { display: flex; align-items: center; gap: 12px; }
     .testimonial-avatar {
@@ -827,7 +824,7 @@
       width: 28px; height: 28px; flex-shrink: 0;
       background: var(--cit-blue-50); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      color: var(--brand-600); transition: transform var(--transition);
+      color: var(--cit-primary); transition: transform var(--transition);
     }
     .faq-item.open .faq-icon { transform: rotate(45deg); }
     .faq-answer {
@@ -968,7 +965,7 @@
       display: flex; align-items: center; gap: 10px;
       font-size: .9375rem; font-weight: 500; color: var(--cit-neutral-700);
     }
-    .painel-features-list li i { color: var(--brand-600); font-size: .9rem; }
+    .painel-features-list li .icon { color: var(--cit-text-primary); font-size: .9rem; }
 
     /* Navegação em navy, conteúdo em neutro — como o portal do brandbook */
     .painel-mockup {
@@ -1004,7 +1001,7 @@
       cursor: default; margin-bottom: 2px;
     }
     .sidebar-item.active { background: rgba(64,145,196,.16); color: white; }
-    .sidebar-item i { width: 16px; text-align: center; }
+    .sidebar-item .icon { font-size: .9rem; }
     .painel-content { padding: 18px; }
     .painel-stat-row { display: flex; gap: 10px; margin-bottom: 14px; }
     .painel-stat {
@@ -1090,10 +1087,10 @@
           </p>
           <div class="hero-actions">
             <a href="checkout.html" class="btn btn-primary btn-lg">
-              <i class="fa-solid fa-bolt"></i> Começar Agora
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> Começar Agora
             </a>
             <a href="#domain-search" class="btn btn-white btn-lg">
-              <i class="fa-solid fa-magnifying-glass"></i> Buscar Domínio
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg> Buscar Domínio
             </a>
           </div>
           <div class="hero-stats">
@@ -1120,7 +1117,7 @@
               <div class="mockup-dot"></div>
               <div class="mockup-dot"></div>
               <div class="mockup-url">
-                <i class="fa-solid fa-lock" style="font-size:.65rem"></i>
+                <svg class="icon" style="font-size:.65rem" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg>
                 webmail.suaempresa.com.br
               </div>
             </div>
@@ -1164,10 +1161,10 @@
 
           <!-- Floating badges -->
           <div class="hero-float hero-float-1">
-            <span class="icon">🔒</span> <span>SSL Grátis</span>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> <span>SSL Grátis</span>
           </div>
           <div class="hero-float hero-float-2">
-            <span class="icon">⚡</span> <span>Ativo em 5 min</span>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> <span>Ativo em 5 min</span>
           </div>
         </div>
       </div>
@@ -1180,12 +1177,12 @@
   <div class="trust-bar">
     <div class="container">
       <div class="trust-bar-inner">
-        <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Proteção antivírus e antispam</div>
-        <div class="trust-item"><i class="fa-solid fa-lock"></i> SSL/TLS em todas as conexões</div>
-        <div class="trust-item"><i class="fa-solid fa-rotate"></i> Pagamento recorrente automático</div>
-        <div class="trust-item"><i class="fa-brands fa-pix"></i> Pix, boleto e cartão</div>
-        <div class="trust-item"><i class="fa-solid fa-headset"></i> Suporte técnico especializado</div>
-        <div class="trust-item"><i class="fa-solid fa-leaf"></i> Conformidade LGPD</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Proteção antivírus e antispam</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> SSL/TLS em todas as conexões</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#refresh-cw"></use></svg> Pagamento recorrente automático</div>
+        <div class="trust-item"><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix, boleto e cartão</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg> Suporte técnico especializado</div>
+        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#scale"></use></svg> Conformidade LGPD</div>
       </div>
     </div>
   </div>
@@ -1196,38 +1193,38 @@
   <section id="features" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-star"></i> Recursos</div>
+        <div class="tag"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg> Recursos</div>
         <h2 style="margin-top:14px">Tudo que você precisa<br/>em um só lugar</h2>
         <p>E-mail corporativo com domínio, webmail, app mobile e ferramentas de produtividade — sem complicações.</p>
       </div>
       <div class="features-grid">
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg></div>
           <h3>Domínio Próprio</h3>
           <p>Registramos ou transferimos o seu domínio. Configuração de DNS, MX, SPF, DKIM e DMARC automatizados.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <h3>Webmail Moderno</h3>
           <p>Interface limpa e responsiva acessível de qualquer dispositivo. Suporte a IMAP, POP3 e SMTP para clientes de e-mail.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#smartphone"></use></svg></div>
           <h3>App Mobile</h3>
           <p>Configure no Outlook, Gmail App, Apple Mail ou qualquer outro cliente em segundos. Sincronização em tempo real.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-shield-virus"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg></div>
           <h3>Antispam & Antivírus</h3>
           <p>Filtros multicamada contra spam, phishing e vírus. Sua caixa sempre limpa e seus dados protegidos.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud-upload"></use></svg></div>
           <h3>Backup Automático</h3>
           <p>Seus e-mails replicados em múltiplos servidores. Recuperação de mensagens a qualquer momento.</p>
         </div>
         <div class="feature-card fade-in">
-          <div class="feature-icon"><i class="fa-solid fa-sliders"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sliders-horizontal"></use></svg></div>
           <h3>Painel de Controle</h3>
           <p>Gerencie caixas de e-mail, senhas, armazenamento e faturamento sem precisar acionar o suporte.</p>
         </div>
@@ -1242,17 +1239,17 @@
     <div class="container">
       <div class="domain-search-inner fade-in">
         <div class="tag tag--dark">
-          <i class="fa-solid fa-magnifying-glass"></i> Buscar Domínio
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg> Buscar Domínio
         </div>
         <h2 style="margin-top:14px">Verifique se o seu domínio<br/>está disponível</h2>
         <p>Digite o nome da sua empresa e veja a disponibilidade em segundos.</p>
 
         <div class="domain-form">
-          <div class="domain-prefix"><i class="fa-solid fa-at" style="color:var(--brand-600);margin-right:6px"></i> @</div>
+          <div class="domain-prefix"><svg class="icon" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#at-sign"></use></svg> @</div>
           <input class="domain-input" id="domainInput" type="text" placeholder="suaempresa" autocomplete="off" />
           <div class="domain-suffix" id="domainSuffix">.com.br</div>
           <button class="btn btn-primary" onclick="checkDomain()">
-            <i class="fa-solid fa-search"></i> Verificar
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg> Verificar
           </button>
         </div>
 
@@ -1276,14 +1273,14 @@
   <section id="pricing" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-calculator"></i> Preços</div>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calculator"></use></svg> Preços</div>
         <h2 style="margin-top:14px">Monte seu plano,<br/>pague só pelo que usar</h2>
         <p>Escolha a quantidade de contas de cada tipo. Quanto mais contas, maior o desconto automático.</p>
       </div>
 
       <!-- Desconto info -->
       <div class="discount-info fade-in">
-        <i class="fa-solid fa-circle-info"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
         <span>
           <strong>Mínimo de 2 contas por plano.</strong>
           Contrate 5 ou mais contas do mesmo tipo e ganhe <strong>5% de desconto</strong> sobre todas as contas daquele tipo.
@@ -1309,7 +1306,7 @@
           <!-- 5 GB -->
           <div class="account-type-card" id="card5" data-base="10" data-type="5gb">
             <div class="atc-top">
-              <div class="atc-icon c5">📧</div>
+              <div class="atc-icon c5"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
               <div class="atc-info">
                 <div class="atc-name">Conta E-mail 5 GB</div>
                 <div class="atc-storage">5 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
@@ -1341,7 +1338,7 @@
           <!-- 25 GB -->
           <div class="account-type-card" id="card25" data-base="16" data-type="25gb">
             <div class="atc-top">
-              <div class="atc-icon c25">📬</div>
+              <div class="atc-icon c25"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#inbox"></use></svg></div>
               <div class="atc-info">
                 <div class="atc-name">Conta E-mail 25 GB</div>
                 <div class="atc-storage">25 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
@@ -1373,9 +1370,9 @@
           <!-- 50 GB -->
           <div class="account-type-card" id="card50" data-base="25" data-type="50gb">
             <div class="atc-top">
-              <div class="atc-icon c50">📮</div>
+              <div class="atc-icon c50"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mails"></use></svg></div>
               <div class="atc-info">
-                <div class="atc-name">Conta E-mail 50 GB <span class="badge badge-blue atc-ai-badge">✨ IA inclusa</span></div>
+                <div class="atc-name">Conta E-mail 50 GB <span class="badge badge-blue atc-ai-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sparkles"></use></svg> IA inclusa</span></div>
                 <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
               </div>
               <div class="atc-unit-price">
@@ -1404,21 +1401,21 @@
 
           <!-- Incluso em todas as contas -->
           <div class="included-box">
-            <div class="included-label"><i class="fa-solid fa-circle-check" style="color:var(--green)"></i> Incluso em todas as contas</div>
+            <div class="included-label"><svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Incluso em todas as contas</div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Webmail moderno responsivo</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Agenda de contatos</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Calendário</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Protocolos IMAP / POP3 / SMTP</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Antispam e antivírus premium</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Certificado SSL/TLS grátis</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> 10 apelidos (aliases) por conta</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Painel de gerenciamento</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Backup automático 30 dias</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--gray-700)"><i class="fa-solid fa-check" style="color:var(--green);font-size:.75rem"></i> Compatível com Outlook, Gmail App e Apple Mail</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Webmail moderno responsivo</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Agenda de contatos</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Calendário</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Protocolos IMAP / POP3 / SMTP</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Antispam e antivírus premium</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Certificado SSL/TLS grátis</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> 10 apelidos (aliases) por conta</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Painel de gerenciamento</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Backup automático 30 dias</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--cit-neutral-700)"><svg class="icon" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Compatível com Outlook, Gmail App e Apple Mail</div>
             </div>
-            <p style="margin-top:12px;font-size:.78rem;color:var(--gray-500)">
-              <i class="fa-solid fa-circle-info" style="color:var(--brand-500)"></i>
+            <p style="margin-top:12px;font-size:.78rem;color:var(--cit-text-secondary)">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
               Domínio não incluído — use um domínio que você já possui ou adquira durante o checkout.
             </p>
           </div>
@@ -1427,17 +1424,17 @@
         <!-- RIGHT: summary panel -->
         <aside class="calc-summary">
           <div class="calc-summary-card">
-            <div class="cs-title"><i class="fa-solid fa-receipt"></i> Resumo</div>
+            <div class="cs-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#receipt"></use></svg> Resumo</div>
 
             <!-- Annual saving note -->
             <div class="cs-annual-note" id="csAnnualNote">
-              <i class="fa-solid fa-circle-check"></i>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg>
               Cobrança anual — 20% off aplicado!
             </div>
 
             <!-- Empty state -->
             <div class="cs-empty" id="csEmpty">
-              <i class="fa-solid fa-cart-shopping"></i>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shopping-cart"></use></svg>
               Adicione contas ao lado para ver o resumo do seu plano.
             </div>
 
@@ -1452,17 +1449,17 @@
             </div>
 
             <div class="cs-features">
-              <div class="cs-feature"><i class="fa-solid fa-check"></i> Cancele quando quiser</div>
-              <div class="cs-feature"><i class="fa-solid fa-check"></i> Sem taxa de adesão</div>
-              <div class="cs-feature"><i class="fa-brands fa-pix" style="color:#32bcad;font-size:.8rem"></i> Pix, boleto e cartão</div>
+              <div class="cs-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Cancele quando quiser</div>
+              <div class="cs-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Sem taxa de adesão</div>
+              <div class="cs-feature"><svg class="icon icon-pix" style="font-size:.8rem" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix, boleto e cartão</div>
             </div>
 
             <div style="margin-top:18px">
               <a href="#" id="calcCtaBtn" class="btn btn-primary" style="pointer-events:none;opacity:.45;justify-content:center">
-                <i class="fa-solid fa-bolt"></i> Contratar Agora
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> Contratar Agora
               </a>
-              <p style="text-align:center;font-size:.72rem;color:var(--gray-400);margin-top:8px">
-                <i class="fa-solid fa-lock" style="color:var(--green)"></i> Pagamento seguro via Asaas
+              <p style="text-align:center;font-size:.72rem;color:var(--cit-text-muted);margin-top:8px">
+                <svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> Pagamento seguro via Asaas
               </p>
             </div>
           </div>
@@ -1473,7 +1470,7 @@
       <!-- Reseller note -->
       <div class="pricing-note fade-in">
         <p>
-          <strong><i class="fa-solid fa-store"></i> É revendedor ou agência?</strong>
+          <strong><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> É revendedor ou agência?</strong>
           Temos condições especiais para volumes acima de 50 contas.
           <a href="mailto:comercial@citmail.com.br">Fale com nossa equipe →</a>
         </p>
@@ -1488,7 +1485,7 @@
   <section id="how-it-works" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-list-check"></i> Como funciona</div>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#list-checks"></use></svg> Como funciona</div>
         <h2 style="margin-top:14px">Do pagamento ao e-mail ativo<br/>em 4 passos simples</h2>
       </div>
       <div class="steps-grid">
@@ -1523,16 +1520,16 @@
     <div class="container">
       <div class="painel-grid">
         <div class="text-col fade-in">
-          <div class="tag"><i class="fa-solid fa-gauge-high"></i> Painel do Cliente</div>
+          <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#layout-dashboard"></use></svg> Painel do Cliente</div>
           <h2 style="margin-top:14px">Controle total<br/>na sua mão</h2>
           <p>Gerencie domínios, caixas de e-mail, faturas e muito mais — sem precisar acionar o suporte.</p>
           <ul class="painel-features-list">
-            <li><i class="fa-solid fa-circle-check"></i> Dashboard com visão geral do plano</li>
-            <li><i class="fa-solid fa-circle-check"></i> Criação e exclusão de caixas de e-mail</li>
-            <li><i class="fa-solid fa-circle-check"></i> Troca de senhas pelo próprio cliente</li>
-            <li><i class="fa-solid fa-circle-check"></i> Histórico de faturas com download em PDF</li>
-            <li><i class="fa-solid fa-circle-check"></i> Contratação de novos produtos no Marketplace</li>
-            <li><i class="fa-solid fa-circle-check"></i> Configuração de domínios e DNS</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Dashboard com visão geral do plano</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Criação e exclusão de caixas de e-mail</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Troca de senhas pelo próprio cliente</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Histórico de faturas com download em PDF</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Contratação de novos produtos no Marketplace</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Configuração de domínios e DNS</li>
           </ul>
           <div style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;">
             <a href="login.html" class="btn btn-primary">Acessar Painel</a>
@@ -1548,12 +1545,12 @@
             </div>
             <div class="painel-body">
               <div class="painel-sidebar">
-                <div class="sidebar-item active"><i class="fa-solid fa-gauge"></i> Dashboard</div>
-                <div class="sidebar-item"><i class="fa-solid fa-envelope"></i> E-mails</div>
-                <div class="sidebar-item"><i class="fa-solid fa-globe"></i> Domínios</div>
-                <div class="sidebar-item"><i class="fa-solid fa-file-invoice-dollar"></i> Financeiro</div>
-                <div class="sidebar-item"><i class="fa-solid fa-store"></i> Marketplace</div>
-                <div class="sidebar-item"><i class="fa-solid fa-gear"></i> Configurações</div>
+                <div class="sidebar-item active"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#layout-dashboard"></use></svg> Dashboard</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> E-mails</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg> Domínios</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-text"></use></svg> Financeiro</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Marketplace</div>
+                <div class="sidebar-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#settings"></use></svg> Configurações</div>
               </div>
               <div class="painel-content">
                 <div class="painel-stat-row">
@@ -1597,14 +1594,14 @@
   <section id="marketplace" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-store"></i> Marketplace</div>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Marketplace</div>
         <h2 style="margin-top:14px">Expanda com um clique<br/>no seu painel</h2>
         <p>Muito além do e-mail — contrate novos produtos e serviços diretamente pelo painel do cliente.</p>
       </div>
       <div class="marketplace-grid">
         <div class="marketplace-card fade-in">
           <div class="badge badge-blue">Incluído</div>
-          <div class="marketplace-icon">📧</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <h3>E-mail Corporativo</h3>
           <p>Caixas de e-mail com domínio próprio, webmail, IMAP/POP3/SMTP e proteção avançada.</p>
           <div class="from">A partir de</div>
@@ -1612,7 +1609,7 @@
         </div>
         <div class="marketplace-card fade-in">
           <div class="badge badge-green">Disponível</div>
-          <div class="marketplace-icon">☁️</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud"></use></svg></div>
           <h3>Backup em Nuvem</h3>
           <p>Backup automático de arquivos, bancos de dados e sistemas. Restauração em um clique.</p>
           <div class="from">A partir de</div>
@@ -1620,7 +1617,7 @@
         </div>
         <div class="marketplace-card fade-in">
           <div class="badge badge-yellow">Em breve</div>
-          <div class="marketplace-icon">🖥️</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg></div>
           <h3>Servidores Cloud</h3>
           <p>VPS e servidores dedicados na nuvem. Alta disponibilidade com suporte técnico 24/7.</p>
           <div class="from">A partir de</div>
@@ -1628,7 +1625,7 @@
         </div>
         <div class="marketplace-card fade-in">
           <div class="badge badge-neutral">Especializado</div>
-          <div class="marketplace-icon">⚙️</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#settings"></use></svg></div>
           <h3>DevOps & Consultoria</h3>
           <p>Serviços especializados de infraestrutura, CI/CD, Docker, Kubernetes e consultoria de TI.</p>
           <div class="from">Sob consulta</div>
@@ -1644,13 +1641,13 @@
   <section id="testimonials" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-comments"></i> Depoimentos</div>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#messages-square"></use></svg> Depoimentos</div>
         <h2 style="margin-top:14px">Clientes que já confiam<br/>na CITMail</h2>
         <p>Veja o que nossos clientes dizem sobre a experiência com o e-mail corporativo.</p>
       </div>
       <div class="testimonials-grid">
         <div class="testimonial-card fade-in">
-          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <div class="stars"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg></div>
           <p class="testimonial-text">"A ativação foi surpreendentemente rápida — em menos de 10 minutos já estava acessando meu e-mail corporativo. Processo 100% automático, sem precisar falar com ninguém."</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">RS</div>
@@ -1661,7 +1658,7 @@
           </div>
         </div>
         <div class="testimonial-card fade-in">
-          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <div class="stars"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg></div>
           <p class="testimonial-text">"Migrei 15 caixas de e-mail do Google Workspace e economiei mais de 60% no custo mensal. O suporte foi impecável durante toda a migração."</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">AM</div>
@@ -1672,7 +1669,7 @@
           </div>
         </div>
         <div class="testimonial-card fade-in">
-          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <div class="stars"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg></div>
           <p class="testimonial-text">"Sou revendedor e o painel de controle facilitou muito minha vida. Consigo gerenciar todos os meus clientes em um único lugar, com faturamento automático."</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">FO</div>
@@ -1692,7 +1689,7 @@
   <section id="faq" class="section">
     <div class="container">
       <div class="section-header text-center fade-in">
-        <div class="tag"><i class="fa-solid fa-circle-question"></i> FAQ</div>
+        <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-help"></use></svg> FAQ</div>
         <h2 style="margin-top:14px">Perguntas frequentes</h2>
         <p>Tire suas dúvidas mais comuns sobre o serviço.</p>
       </div>
@@ -1701,7 +1698,7 @@
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Preciso ter um domínio próprio para contratar?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
           <div class="faq-answer"><p>Não é obrigatório ter um domínio previamente. Ao contratar qualquer plano, podemos registrar um domínio novo para você como parte da ativação do serviço. Se já tiver um domínio, também podemos transferi-lo ou apenas configurar os registros DNS para apontar para nossos servidores.</p></div>
         </div>
@@ -1709,7 +1706,7 @@
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Quanto tempo leva para o e-mail ser ativado?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
           <div class="faq-answer"><p>Após a confirmação do pagamento, a ativação é automática e ocorre em até 5 minutos. Você receberá um e-mail com todas as credenciais de acesso. A propagação de DNS pode levar até 48h para se completar globalmente, mas na maioria dos casos ocorre em menos de 2 horas.</p></div>
         </div>
@@ -1717,7 +1714,7 @@
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Quais formas de pagamento são aceitas?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
           <div class="faq-answer"><p>Aceitamos Pix (crédito imediato), boleto bancário e cartão de crédito (com possibilidade de parcelamento). O pagamento é processado de forma segura pelo Asaas, e para planos mensais ou anuais, a cobrança é recorrente e automática.</p></div>
         </div>
@@ -1725,7 +1722,7 @@
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Posso adicionar mais caixas de e-mail depois?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
           <div class="faq-answer"><p>Sim! Através do painel do cliente, você pode adicionar novas caixas de e-mail a qualquer momento. A fatura é atualizada automaticamente de forma proporcional ao período restante do ciclo de cobrança.</p></div>
         </div>
@@ -1733,7 +1730,7 @@
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Como funciona o suporte técnico?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
           <div class="faq-answer"><p>Oferecemos suporte técnico via ticket no painel do cliente, chat e e-mail. Planos Profissional e Enterprise têm atendimento prioritário. O plano Enterprise inclui suporte 24/7 com SLA garantido.</p></div>
         </div>
@@ -1741,7 +1738,7 @@
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>O serviço é compatível com Outlook, Gmail e Apple Mail?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
           <div class="faq-answer"><p>Sim. Nosso serviço suporta os protocolos IMAP, POP3 e SMTP, sendo compatível com qualquer cliente de e-mail, incluindo Microsoft Outlook, Apple Mail, Thunderbird, Gmail App e outros aplicativos mobile. Fornecemos as configurações detalhadas por e-mail após a ativação.</p></div>
         </div>
@@ -1749,7 +1746,7 @@
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Posso cancelar quando quiser?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
           <div class="faq-answer"><p>Sim. Não há fidelidade nem multa por cancelamento. Você pode solicitar o cancelamento diretamente pelo painel do cliente a qualquer momento. Para planos anuais, o cancelamento encerra as renovações futuras, não havendo reembolso proporcional para o período já pago.</p></div>
         </div>
@@ -1757,7 +1754,7 @@
         <div class="faq-item">
           <button class="faq-question" onclick="toggleFaq(this)">
             <span>Os dados são protegidos pela LGPD?</span>
-            <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
           <div class="faq-answer"><p>Sim. Todos os nossos processos estão em conformidade com a Lei Geral de Proteção de Dados (LGPD). Seus dados são armazenados com criptografia, as senhas com hash seguro (bcrypt/Argon2), e você pode solicitar a exclusão de seus dados a qualquer momento através do painel do cliente.</p></div>
         </div>
@@ -1773,20 +1770,20 @@
     <div class="container">
       <div class="fade-in">
         <div class="tag">
-          <i class="fa-solid fa-rocket"></i> Pronto para começar?
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#rocket"></use></svg> Pronto para começar?
         </div>
         <h2 style="margin-top:14px">Seu e-mail corporativo<br/>começa agora</h2>
         <p>Configure em minutos. Sem contratos longos. Sem complicações.</p>
         <div class="cta-actions">
           <a href="checkout.html" class="btn btn-white btn-lg">
-            <i class="fa-solid fa-bolt"></i> Começar Agora
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> Começar Agora
           </a>
           <a href="#domain-search" class="btn btn-outline-dark btn-lg">
-            <i class="fa-solid fa-magnifying-glass"></i> Buscar meu Domínio
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg> Buscar meu Domínio
           </a>
         </div>
         <p class="guarantee-note">
-          <i class="fa-solid fa-shield-halved"></i>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg>
           Pagamento seguro via Asaas · SSL em todas as páginas · Sem fidelidade
         </p>
       </div>
@@ -1836,9 +1833,9 @@
       <div class="footer-bottom">
         <p>© 2025 CITMail. Todos os direitos reservados. CNPJ: XX.XXX.XXX/0001-XX</p>
         <div class="footer-social">
-          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" aria-label="Instagram"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#instagram"></use></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#linkedin"></use></svg></a>
+          <a href="#" aria-label="WhatsApp"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#whatsapp"></use></svg></a>
         </div>
       </div>
     </div>
@@ -1846,7 +1843,7 @@
 
   <!-- Scroll to top -->
   <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">
-    <i class="fa-solid fa-chevron-up"></i>
+    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#chevron-up"></use></svg>
   </button>
 
   <!-- ============================================================
@@ -1952,7 +1949,7 @@
       const discTagEl = document.getElementById(cfg.discTagId);
       if (qty > 0) {
         if (volDisc > 0) {
-          discTagEl.innerHTML = '<span class="vol-badge"><i class="fa-solid fa-tag"></i> −5% por volume aplicado</span>';
+          discTagEl.innerHTML = '<span class="vol-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> −5% por volume aplicado</span>';
         } else {
           const need = 5 - qty;
           discTagEl.textContent = need > 0 ? `Adicione mais ${need} conta(s) para −5% de volume` : '';
@@ -1987,7 +1984,7 @@
         grandTotal += sub; grandFull += full;
         html += `<div class="cs-line"><span class="lbl">${qty}\u00d7 ${names[type]}</span><span class="val">R$ ${fmt(full)}</span></div>`;
         if (annDisc + volDisc > 0) {
-          html += `<div class="cs-line" style="padding-left:8px"><span class="lbl" style="color:var(--green);font-size:.73rem"><i class="fa-solid fa-tag"></i> Desc. \u2212${annDisc+volDisc}%</span><span class="val discount" style="font-size:.76rem">\u2212R$ ${fmt(full-sub)}</span></div>`;
+          html += `<div class="cs-line" style="padding-left:8px"><span class="lbl" style="color:var(--cit-green-700);font-size:.73rem"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> Desc. \u2212${annDisc+volDisc}%</span><span class="val discount" style="font-size:.76rem">\u2212R$ ${fmt(full-sub)}</span></div>`;
         }
       });
 
@@ -2027,7 +2024,7 @@
       const result = document.getElementById('domainResult');
       if (!input) { result.innerHTML = ''; return; }
 
-      result.innerHTML = '<span class="domain-loading"><i class="fa-solid fa-spinner fa-spin"></i> Verificando disponibilidade…</span>';
+      result.innerHTML = '<span class="domain-loading"><svg class="icon icon-spin" aria-hidden="true"><use href="assets/icons.svg#loader-circle"></use></svg> Verificando disponibilidade…</span>';
 
       // Simulate async check (replace with real API call)
       setTimeout(() => {
@@ -2035,9 +2032,9 @@
         // Demo: domains containing "citmail" or "test" are "taken"
         const taken = input.includes('citmail') || input === 'google' || input === 'microsoft';
         if (taken) {
-          result.innerHTML = `<span class="domain-taken"><i class="fa-solid fa-xmark"></i> <strong>${full}</strong> já está registrado.</span>`;
+          result.innerHTML = `<span class="domain-taken"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg> <strong>${full}</strong> já está registrado.</span>`;
         } else {
-          result.innerHTML = `<span class="domain-available"><i class="fa-solid fa-check"></i> <strong>${full}</strong> está disponível! <a href="#pricing" style="color:inherit;font-weight:600;margin-left:8px">Contratar →</a></span>`;
+          result.innerHTML = `<span class="domain-available"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> <strong>${full}</strong> está disponível! <a href="#pricing" style="color:inherit;font-weight:600;margin-left:8px">Contratar →</a></span>`;
         }
       }, 1200);
     }

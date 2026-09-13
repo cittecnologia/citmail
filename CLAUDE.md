@@ -3,6 +3,7 @@
 Site estático (HTML/CSS/JS puro): `index.html` (landing), `login.html`, `checkout.html`, `painel.html`.
 Identidade visual segue o Brandbook CIT (https://github.com/cittecnologia/brandbook-cit); tokens em `assets/tokens.css`.
 Gestão de tarefas no Taiga, projeto CITMAIL.
+Ícones: sprite `assets/icons.svg` (biblioteca do Brandbook CIT + complementos Lucide + marcas parceiras), usado via `<svg class="icon"><use href="assets/icons.svg#nome"></use></svg>`. Por causa do sprite externo, abrir as páginas por HTTP (ex.: `python serve.py`), não por `file://`.
 
 ## Fluxo de branches: Git Flow (padrão obrigatório)
 

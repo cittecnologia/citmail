@@ -182,3 +182,15 @@
   color:var(--cit-text-primary);
   background:var(--cit-bg-base);
 }
+
+/* CIT Tecnologia — ícones. Biblioteca base 24x24, traço 2px, uso via assets/icons.svg.
+   Cor padrão: herda o texto (navy em fundo claro, branco em fundo escuro).
+   Azul CIT só em ação ou estado ativo; cores funcionais só em ícone de estado. */
+.icon{display:inline-block;width:1em;height:1em;flex-shrink:0;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.icon-fill{fill:currentColor}
+.icon-spin{animation:cit-spin .8s linear infinite}
+@keyframes cit-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.icon-spin{animation:none}}
+/* Marca parceira: o símbolo Pix mantém a cor oficial (co-branding). */
+:root{--pix-brand:#32BCAD}
+.icon-pix{color:var(--pix-brand)}

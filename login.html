@@ -10,7 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/tokens.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -130,7 +129,7 @@
       width: 32px; height: 32px; border-radius: var(--cit-radius-sm);
       background: rgba(255,255,255,.06); border: 1px solid var(--cit-border-color-dark);
       display: flex; align-items: center; justify-content: center;
-      font-size: .8rem; color: var(--brand-400); flex-shrink: 0;
+      font-size: .9rem; color: var(--white); flex-shrink: 0;
     }
 
     .left-footer {
@@ -174,10 +173,10 @@
     .field label .req { color: var(--cit-error); margin-left: 2px; }
     .field-help { font-size: .75rem; color: var(--cit-text-muted); }
     .input-wrap { position: relative; }
-    .input-wrap > i {
+    .input-wrap > .icon {
       position: absolute; left: 13px; top: 50%;
       transform: translateY(-50%);
-      color: var(--gray-400); font-size: .85rem;
+      color: var(--cit-text-muted); font-size: .9rem;
       pointer-events: none;
     }
     .input-wrap input {
@@ -274,7 +273,7 @@
       display: flex; align-items: center; justify-content: center; gap: 6px;
       margin-top: 20px; font-size: .75rem; color: var(--cit-text-muted);
     }
-    .secure-note i { color: var(--green); }
+    .secure-note .icon { color: var(--cit-success); }
 
     /* ── ALERTA DE ERRO — .alert--err do brandbook ── */
     .alert-error {
@@ -336,29 +335,29 @@
     </div>
 
     <div class="left-content">
-      <div class="left-tag"><i class="fa-solid fa-shield-halved"></i> Acesso seguro ao painel</div>
+      <div class="left-tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Acesso seguro ao painel</div>
       <h2>Gerencie seu <span>e-mail corporativo</span> de qualquer lugar</h2>
       <p>Acesse contas, faturas, suporte e configurações de DNS diretamente do seu painel CITMail.</p>
 
       <div class="feature-list">
         <div class="feature-item">
-          <div class="feature-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           Gerencie todas as suas contas de e-mail
         </div>
         <div class="feature-item">
-          <div class="feature-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-text"></use></svg></div>
           Faturas, assinaturas e formas de pagamento
         </div>
         <div class="feature-item">
-          <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg></div>
           Registros DNS configurados com um clique
         </div>
         <div class="feature-item">
-          <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg></div>
           Suporte técnico com tempo de resposta ≤ 2h
         </div>
         <div class="feature-item">
-          <div class="feature-icon"><i class="fa-solid fa-store"></i></div>
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg></div>
           Marketplace: servidores, backup e DevOps
         </div>
       </div>
@@ -379,7 +378,7 @@
       <p class="subtitle">Entre com seu e-mail e senha de acesso ao painel</p>
 
       <div class="alert-error" id="alertError">
-        <i class="fa-solid fa-circle-xmark"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-x"></use></svg>
         <span id="alertErrorMsg">E-mail ou senha incorretos. Tente novamente.</span>
       </div>
 
@@ -388,7 +387,7 @@
         <div class="field">
           <label for="fEmail">E-mail <span class="req">*</span></label>
           <div class="input-wrap">
-            <i class="fa-solid fa-envelope"></i>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg>
             <input type="email" id="fEmail" placeholder="joao@empresa.com.br"
               autocomplete="email" autocapitalize="none" />
           </div>
@@ -398,12 +397,12 @@
         <div class="field">
           <label for="fPassword">Senha <span class="req">*</span></label>
           <div class="input-wrap">
-            <i class="fa-solid fa-lock"></i>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg>
             <input type="password" id="fPassword" placeholder="Sua senha"
               autocomplete="current-password" />
             <button type="button" class="toggle-pass" id="togglePass"
               onclick="togglePassword()" tabindex="-1" title="Mostrar senha">
-              <i class="fa-regular fa-eye" id="eyeIcon"></i>
+              <svg class="icon" id="eyeIcon" aria-hidden="true"><use href="assets/icons.svg#eye"></use></svg>
             </button>
           </div>
           <span class="field-error" id="errPassword">Informe sua senha.</span>
@@ -414,7 +413,7 @@
         </div>
 
         <button type="submit" class="btn-login" id="btnLogin">
-          <i class="fa-solid fa-right-to-bracket" id="btnIcon"></i>
+          <svg class="icon" id="btnIcon" aria-hidden="true"><use href="assets/icons.svg#log-in"></use></svg>
           <span id="btnLabel">Entrar no Painel</span>
         </button>
 
@@ -423,7 +422,7 @@
       <div class="divider-or">ou</div>
 
       <a href="checkout.html" class="btn-secondary">
-        <i class="fa-solid fa-plus"></i> Criar nova conta
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg> Criar nova conta
       </a>
 
       <div class="signup-cta">
@@ -431,7 +430,7 @@
       </div>
 
       <div class="secure-note">
-        <i class="fa-solid fa-lock"></i> Conexão criptografada SSL/TLS
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> Conexão criptografada SSL/TLS
       </div>
 
     </div>
@@ -442,14 +441,14 @@
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
       <div class="modal-head">
         <h3 id="forgotTitle">Recuperar senha</h3>
-        <button class="modal-close" onclick="closeForgot()" aria-label="Fechar">✕</button>
+        <button class="modal-close" onclick="closeForgot()" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
       </div>
       <div class="modal-body">
         <p>Digite seu e-mail cadastrado. Enviaremos um link para redefinir sua senha.</p>
         <div class="field">
           <label for="fForgotEmail">E-mail cadastrado</label>
           <div class="input-wrap">
-            <i class="fa-solid fa-envelope"></i>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg>
             <input type="email" id="fForgotEmail" placeholder="joao@empresa.com.br" />
           </div>
         </div>
@@ -457,22 +456,27 @@
       <div class="modal-foot">
         <button class="btn btn-ghost" onclick="closeForgot()">Cancelar</button>
         <button class="btn btn-primary" onclick="sendForgot()">
-          <i class="fa-solid fa-paper-plane"></i> Enviar link
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#send"></use></svg> Enviar link
         </button>
       </div>
     </div>
   </div>
 
   <script>
+    function setIcon(el, name) {
+      el.style.display = '';
+      el.querySelector('use').setAttribute('href', 'assets/icons.svg#' + name);
+    }
+
     function togglePassword() {
       const input = document.getElementById('fPassword');
       const icon  = document.getElementById('eyeIcon');
       if (input.type === 'password') {
         input.type = 'text';
-        icon.className = 'fa-regular fa-eye-slash';
+        setIcon(icon, 'eye-off');
       } else {
         input.type = 'password';
-        icon.className = 'fa-regular fa-eye';
+        setIcon(icon, 'eye');
       }
     }
 
@@ -506,7 +510,7 @@
       const icon  = document.getElementById('btnIcon');
       btn.disabled = true;
       label.textContent = 'Entrando…';
-      icon.className = '';
+      icon.style.display = 'none';
       const spinner = document.createElement('div');
       spinner.className = 'spinner';
       btn.insertBefore(spinner, label);
@@ -521,13 +525,13 @@
         btn.disabled = false;
         spinner.remove();
         label.textContent = 'Entrar no Painel';
-        icon.className = 'fa-solid fa-right-to-bracket';
+        setIcon(icon, 'log-in');
 
         // Demo: credenciais de teste
         if (email === 'demo@citmail.com.br' && pass === 'demo123') {
           label.textContent = 'Abrindo painel…';
-          icon.className = 'fa-solid fa-check';
-          btn.style.background = 'var(--green)';
+          setIcon(icon, 'check');
+          btn.style.background = 'var(--cit-success)';
           setTimeout(() => { window.location.href = 'painel.html'; }, 600);
         } else {
           document.getElementById('alertErrorMsg').textContent = 'E-mail ou senha incorretos. Tente novamente.';
@@ -564,7 +568,7 @@
       // show toast-like feedback
       const note = document.createElement('div');
       note.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--cit-navy-500);color:white;padding:12px 18px;border-radius:var(--cit-radius-md);font-size:.875rem;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);z-index:9999;animation:cit-fade-up var(--cit-duration-enter) var(--cit-ease) both';
-      note.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--green)"></i> Link enviado para <strong>${email}</strong>`;
+      note.innerHTML = `<svg class="icon" style="color:var(--cit-success)" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg> Link enviado para <strong>${email}</strong>`;
       document.body.appendChild(note);
       setTimeout(() => { note.style.opacity='0'; note.style.transition='opacity .3s'; setTimeout(()=>note.remove(),300); }, 4000);
     }

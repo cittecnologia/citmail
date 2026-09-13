@@ -10,7 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/tokens.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -124,7 +123,7 @@
       content: ''; position: absolute; left: -12px; top: 8px; bottom: 8px;
       width: 2px; background: var(--cit-turquoise-500);
     }
-    .nav-item i { width: 18px; text-align: center; font-size: .9rem; }
+    .nav-item .icon { font-size: 1.05rem; }
     .nav-badge {
       margin-left: auto;
       background: var(--cit-red-500);
@@ -199,7 +198,7 @@
       transition: border-color var(--transition), box-shadow var(--transition);
     }
     .topbar-search:focus-within { border-color: var(--cit-turquoise-500); box-shadow: 0 0 0 3px rgba(0,198,192,.28); background: white; }
-    .topbar-search i { color: var(--cit-text-muted); font-size: .8rem; }
+    .topbar-search .icon { color: var(--cit-text-muted); font-size: .8rem; }
     .topbar-search input {
       border: none; background: none; outline: none;
       font-family: var(--font-body); font-size: .8125rem;
@@ -246,7 +245,7 @@
     [data-tip]:hover::after, [data-tip]:focus-visible::after { opacity: 1; visibility: visible; }
     .topbar-btn[data-tip]::after { bottom: auto; top: calc(100% + 8px); }
     .sidebar-logout[data-tip]::after { left: auto; right: 0; transform: none; }
-    .dns-btn[data-tip]::after { bottom: auto; left: auto; top: 50%; right: calc(100% + 8px); transform: translateY(-50%); }
+    .dns-btn[data-tip]::after, .table-wrap [data-tip]::after { bottom: auto; left: auto; top: 50%; right: calc(100% + 8px); transform: translateY(-50%); }
 
     /* ── CONTEÚDO ── */
     .page-content {
@@ -276,7 +275,7 @@
       display: flex; align-items: center; gap: 8px;
       color: var(--cit-text-primary);
     }
-    .card-title i { color: var(--brand-600); }
+    .card-title .icon { color: var(--cit-text-primary); }
 
     /* ── ESTATÍSTICAS ── */
     .stats-grid {
@@ -373,7 +372,7 @@
       border: 1px solid; border-radius: 6px;
       font-size: .75rem; font-weight: 600; white-space: nowrap;
     }
-    .badge .fa-circle { font-size: .4rem; }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
     .badge-green, .stat-trend.up { background: var(--cit-green-50); color: var(--cit-green-700); border-color: rgba(30,142,78,.32); }
     .badge-blue   { background: var(--cit-blue-50);  color: var(--cit-blue-700);  border-color: var(--cit-blue-200); }
     .badge-yellow, .stat-trend.warn { background: var(--cit-amber-50); color: var(--cit-amber-700); border-color: rgba(184,121,26,.32); }
@@ -494,7 +493,7 @@
       display: flex; align-items: center; gap: 7px;
       font-size: .8125rem; color: var(--cit-neutral-700);
     }
-    .product-feat i { color: var(--green); font-size: .7rem; }
+    .product-feat .icon { color: var(--cit-text-primary); font-size: .8rem; }
 
     /* ── FINANCEIRO ── */
     .plan-banner {
@@ -537,7 +536,7 @@
       border-radius: 6px; padding: 3px 10px;
       font-size: .8125rem; font-weight: 600; white-space: nowrap;
     }
-    .email-chip i { font-size: .7rem; }
+    .email-chip .icon { font-size: .7rem; }
 
     /* ── TICKETS ── */
     .ticket-row { cursor: pointer; }
@@ -657,7 +656,7 @@
       border: 1px dashed var(--cit-border-color-strong); border-radius: var(--cit-radius-lg);
       color: var(--cit-text-secondary); font-size: .875rem;
     }
-    .empty-state i { font-size: 1.75rem; color: var(--cit-neutral-400); display: block; margin-bottom: 4px; }
+    .empty-state .icon { font-size: 1.75rem; color: var(--cit-neutral-400); display: block; margin: 0 auto 8px; }
 
     /* ── MODAL ── */
     .modal-overlay {
@@ -725,9 +724,9 @@
       animation: cit-fade-up var(--cit-duration-enter) var(--cit-ease) both;
       max-width: 320px;
     }
-    .toast.success i { color: var(--cit-green-500); }
-    .toast.error   i { color: var(--cit-red-500); }
-    .toast.info    i { color: var(--cit-blue-300); }
+    .toast.success .icon { color: var(--cit-success); }
+    .toast.error   .icon { color: var(--cit-error); }
+    .toast.info    .icon { color: var(--cit-blue-300); }
 
     /* ── MOBILE ── */
     .sidebar-backdrop {
@@ -767,7 +766,7 @@
       font-size: .875rem; line-height: 1.5; margin-bottom: 20px;
     }
     .alert-blue   { background: var(--cit-blue-50); color: var(--cit-blue-800); border-color: var(--cit-blue-200); }
-    .alert i { margin-top: 3px; flex-shrink: 0; }
+    .alert .icon { margin-top: 3px; flex-shrink: 0; }
     .alert--mt { margin-top: 18px; margin-bottom: 0; }
 
     /* ── ABAS — padrão .tabs do brandbook ── */
@@ -790,7 +789,7 @@
       background: var(--cit-bg-subtle); border: 1px solid var(--cit-border-color); border-radius: var(--cit-radius-md);
     }
     .session-item--current { background: var(--cit-blue-50); border-color: var(--cit-blue-200); }
-    .session-item > i { font-size: 1.1rem; }
+    .session-item > .icon { font-size: 1.1rem; }
     .session-info { flex: 1; min-width: 0; }
     .session-name { font-size: .875rem; font-weight: 600; }
     .session-meta { font-size: .75rem; color: var(--cit-text-secondary); }
@@ -834,32 +833,32 @@
   <nav class="sidebar-nav">
     <div class="nav-section-label">Principal</div>
     <a class="nav-item active" data-section="dashboard" onclick="navigate('dashboard')">
-      <i class="fa-solid fa-gauge-high"></i> Dashboard
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#layout-dashboard"></use></svg> Dashboard
     </a>
     <a class="nav-item" data-section="email" onclick="navigate('email')">
-      <i class="fa-solid fa-envelope"></i> E-mail
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> E-mail
     </a>
 
     <div class="nav-section-label">Gestão</div>
     <a class="nav-item" data-section="financeiro" onclick="navigate('financeiro')">
-      <i class="fa-solid fa-file-invoice-dollar"></i> Financeiro
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-text"></use></svg> Financeiro
     </a>
     <a class="nav-item" data-section="produtos" onclick="navigate('produtos')">
-      <i class="fa-solid fa-box"></i> Meus Produtos
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#package"></use></svg> Meus Produtos
     </a>
     <a class="nav-item" data-section="marketplace" onclick="navigate('marketplace')">
-      <i class="fa-solid fa-store"></i> Marketplace
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Marketplace
     </a>
     <a class="nav-item" data-section="dns" onclick="navigate('dns')">
-      <i class="fa-solid fa-server"></i> DNS
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg> DNS
     </a>
 
     <div class="nav-section-label">Conta</div>
     <a class="nav-item" data-section="configuracoes" onclick="navigate('configuracoes')">
-      <i class="fa-solid fa-sliders"></i> Configurações
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sliders-horizontal"></use></svg> Configurações
     </a>
     <a class="nav-item" data-section="suporte" onclick="navigate('suporte')">
-      <i class="fa-solid fa-headset"></i> Suporte
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg> Suporte
       <span class="nav-badge" id="ticketBadge">2</span>
     </a>
   </nav>
@@ -872,7 +871,7 @@
         <div class="sidebar-user-plan">E-mail 25 GB · Mensal</div>
       </div>
       <button class="sidebar-logout" aria-label="Sair" data-tip="Sair" onclick="showToast('Sessão encerrada.','info')">
-        <i class="fa-solid fa-right-from-bracket"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#log-out"></use></svg>
       </button>
     </div>
   </div>
@@ -884,21 +883,21 @@
   <!-- TOPBAR -->
   <header class="topbar">
     <button class="sidebar-toggle" onclick="toggleSidebar()">
-      <i class="fa-solid fa-bars"></i>
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
     </button>
     <img class="topbar-logo" src="assets/brand/citmail-horizontal-claro.png" alt="CITMail" width="133" height="30">
     <div class="topbar-title" id="topbarTitle">Dashboard</div>
     <div class="topbar-search">
-      <i class="fa-solid fa-magnifying-glass"></i>
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg>
       <input type="text" placeholder="Buscar…" />
     </div>
     <div class="topbar-actions">
       <button class="topbar-btn" aria-label="Notificações" data-tip="Notificações" onclick="navigate('suporte')">
-        <i class="fa-solid fa-bell"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#bell"></use></svg>
         <span class="topbar-notif-dot"></span>
       </button>
       <button class="topbar-btn topbar-help" aria-label="Ajuda" data-tip="Ajuda">
-        <i class="fa-solid fa-circle-question"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-help"></use></svg>
       </button>
       <div class="topbar-avatar" id="topbarAvatar" onclick="navigate('configuracoes')">JS</div>
     </div>
@@ -910,7 +909,7 @@
     <!-- ===================== DASHBOARD ===================== -->
     <section class="section active" id="sec-dashboard">
       <div class="alert alert-blue">
-        <i class="fa-solid fa-circle-check"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg>
         <span>Bem-vindo ao Painel CITMail! Seu serviço está ativo e funcionando normalmente. <strong>DNS configurado com sucesso.</strong></span>
       </div>
 
@@ -918,7 +917,7 @@
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-card-top">
-            <div class="stat-icon blue"><i class="fa-solid fa-envelope"></i></div>
+            <div class="stat-icon blue"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
             <span class="stat-trend up">Ativo</span>
           </div>
           <div class="stat-value">5</div>
@@ -926,7 +925,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-card-top">
-            <div class="stat-icon turq"><i class="fa-solid fa-hard-drive"></i></div>
+            <div class="stat-icon turq"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#hard-drive"></use></svg></div>
             <span class="stat-trend up">62%</span>
           </div>
           <div class="stat-value">15,5 GB</div>
@@ -934,7 +933,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-card-top">
-            <div class="stat-icon yellow"><i class="fa-solid fa-calendar-days"></i></div>
+            <div class="stat-icon yellow"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calendar"></use></svg></div>
             <span class="stat-trend warn">Em 8 dias</span>
           </div>
           <div class="stat-value">R$ 80,00</div>
@@ -942,7 +941,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-card-top">
-            <div class="stat-icon blue"><i class="fa-solid fa-headset"></i></div>
+            <div class="stat-icon blue"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg></div>
             <span class="stat-trend warn">2 abertos</span>
           </div>
           <div class="stat-value">2</div>
@@ -954,7 +953,7 @@
         <!-- Contas de e-mail (resumo) -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title"><i class="fa-solid fa-envelope"></i> Contas de E-mail</div>
+            <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> Contas de E-mail</div>
             <button class="btn btn-primary btn-sm" onclick="navigate('email')">Gerenciar</button>
           </div>
           <div class="account-list">
@@ -989,7 +988,7 @@
               <span class="badge badge-green">Ativo</span>
             </div>
             <button class="btn btn-outline btn-block" onclick="openModal('modalNovaContaEmail')">
-              <i class="fa-solid fa-plus"></i> Nova conta de e-mail
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg> Nova conta de e-mail
             </button>
           </div>
         </div>
@@ -997,39 +996,39 @@
         <!-- Atividade recente -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Atividade Recente</div>
+            <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#history"></use></svg> Atividade Recente</div>
           </div>
           <div class="activity-list">
             <div class="activity-item">
-              <div class="activity-dot" style="background:var(--green-bg);color:var(--green)"><i class="fa-solid fa-check"></i></div>
+              <div class="activity-dot" style="background:var(--cit-green-50);color:var(--cit-green-700)"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg></div>
               <div class="activity-body">
                 <div class="activity-text">Pagamento <strong>R$ 80,00</strong> confirmado via Pix</div>
                 <div class="activity-time">Hoje, 09:14</div>
               </div>
             </div>
             <div class="activity-item">
-              <div class="activity-dot" style="background:var(--brand-50);color:var(--brand-600)"><i class="fa-solid fa-user-plus"></i></div>
+              <div class="activity-dot" style="background:var(--cit-blue-50);color:var(--cit-primary)"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#user-plus"></use></svg></div>
               <div class="activity-body">
                 <div class="activity-text">Nova conta <strong>ti@empresa.com.br</strong> criada</div>
                 <div class="activity-time">Ontem, 15:32</div>
               </div>
             </div>
             <div class="activity-item">
-              <div class="activity-dot" style="background:var(--yellow-bg);color:var(--yellow)"><i class="fa-solid fa-headset"></i></div>
+              <div class="activity-dot" style="background:var(--cit-amber-50);color:var(--cit-amber-700)"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg></div>
               <div class="activity-body">
                 <div class="activity-text">Ticket <strong>#1042</strong> respondido pelo suporte</div>
                 <div class="activity-time">28/jun, 11:07</div>
               </div>
             </div>
             <div class="activity-item">
-              <div class="activity-dot" style="background:var(--green-bg);color:var(--green)"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="activity-dot" style="background:var(--cit-green-50);color:var(--cit-green-700)"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg></div>
               <div class="activity-body">
                 <div class="activity-text">Certificado SSL renovado automaticamente</div>
                 <div class="activity-time">25/jun, 03:00</div>
               </div>
             </div>
             <div class="activity-item">
-              <div class="activity-dot" style="background:var(--brand-50);color:var(--brand-600)"><i class="fa-solid fa-globe"></i></div>
+              <div class="activity-dot" style="background:var(--cit-blue-50);color:var(--cit-primary)"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg></div>
               <div class="activity-body">
                 <div class="activity-text">DNS configurado para <strong>empresa.com.br</strong></div>
                 <div class="activity-time">20/jun, 14:18</div>
@@ -1041,13 +1040,13 @@
 
       <!-- Ações rápidas -->
       <div class="card mt-20">
-        <div class="card-title mb-16"><i class="fa-solid fa-bolt"></i> Ações Rápidas</div>
+        <div class="card-title mb-16"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> Ações Rápidas</div>
         <div class="quick-actions">
-          <button class="btn btn-outline" onclick="openModal('modalNovaContaEmail')"><i class="fa-solid fa-user-plus"></i> Nova conta e-mail</button>
-          <button class="btn btn-outline" onclick="navigate('financeiro')"><i class="fa-solid fa-file-invoice"></i> Ver faturas</button>
-          <button class="btn btn-outline" onclick="navigate('configuracoes')"><i class="fa-solid fa-globe"></i> Configurar DNS</button>
-          <button class="btn btn-outline" onclick="openModal('modalNovoTicket')"><i class="fa-solid fa-headset"></i> Abrir ticket</button>
-          <button class="btn btn-outline" onclick="navigate('marketplace')"><i class="fa-solid fa-store"></i> Contratar serviço</button>
+          <button class="btn btn-outline" onclick="openModal('modalNovaContaEmail')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#user-plus"></use></svg> Nova conta e-mail</button>
+          <button class="btn btn-outline" onclick="navigate('financeiro')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-text"></use></svg> Ver faturas</button>
+          <button class="btn btn-outline" onclick="navigate('configuracoes')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg> Configurar DNS</button>
+          <button class="btn btn-outline" onclick="openModal('modalNovoTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg> Abrir ticket</button>
+          <button class="btn btn-outline" onclick="navigate('marketplace')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Contratar serviço</button>
         </div>
       </div>
     </section>
@@ -1060,7 +1059,7 @@
           <p>Gerencie suas caixas postais, aliases e configurações</p>
         </div>
         <button class="btn btn-primary" onclick="openModal('modalNovaContaEmail')">
-          <i class="fa-solid fa-plus"></i> Nova conta
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg> Nova conta
         </button>
       </div>
 
@@ -1096,82 +1095,82 @@
             </thead>
             <tbody>
               <tr>
-                <td><div class="email-chip"><i class="fa-solid fa-envelope"></i> joao@empresa.com.br</div></td>
+                <td><div class="email-chip"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> joao@empresa.com.br</div></td>
                 <td>
                   <div class="storage-used">3,2 / 25 GB</div>
                   <div class="progress-bar progress-bar--table"><div class="progress-fill" style="width:13%"></div></div>
                 </td>
                 <td><span class="badge badge-blue">3 aliases</span></td>
                 <td class="cell-sub">Hoje, 08:41</td>
-                <td><span class="badge badge-green"><i class="fa-solid fa-circle"></i> Ativo</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot"></span> Ativo</span></td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn btn-ghost btn-sm" onclick="showToast('Abrindo configurações…','info')"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn btn-danger btn-sm" onclick="showToast('Conta removida.','error')"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn btn-ghost btn-sm" aria-label="Editar conta" data-tip="Editar" onclick="showToast('Abrindo configurações…','info')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#pencil"></use></svg></button>
+                    <button class="btn btn-danger btn-sm" aria-label="Excluir conta" data-tip="Excluir" onclick="showToast('Conta removida.','error')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#trash-2"></use></svg></button>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td><div class="email-chip"><i class="fa-solid fa-envelope"></i> contato@empresa.com.br</div></td>
+                <td><div class="email-chip"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> contato@empresa.com.br</div></td>
                 <td>
                   <div class="storage-used">8,1 / 25 GB</div>
                   <div class="progress-bar progress-bar--table"><div class="progress-fill warn" style="width:32%"></div></div>
                 </td>
                 <td><span class="badge badge-blue">1 alias</span></td>
                 <td class="cell-sub">Hoje, 10:15</td>
-                <td><span class="badge badge-green"><i class="fa-solid fa-circle"></i> Ativo</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot"></span> Ativo</span></td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn btn-ghost btn-sm" aria-label="Editar conta" data-tip="Editar"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#pencil"></use></svg></button>
+                    <button class="btn btn-danger btn-sm" aria-label="Excluir conta" data-tip="Excluir"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#trash-2"></use></svg></button>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td><div class="email-chip"><i class="fa-solid fa-envelope"></i> financeiro@empresa.com.br</div></td>
+                <td><div class="email-chip"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> financeiro@empresa.com.br</div></td>
                 <td>
                   <div class="storage-used">4,2 / 25 GB</div>
                   <div class="progress-bar progress-bar--table"><div class="progress-fill" style="width:17%"></div></div>
                 </td>
                 <td><span class="badge badge-gray">0 aliases</span></td>
                 <td class="cell-sub">29/jun, 16:02</td>
-                <td><span class="badge badge-green"><i class="fa-solid fa-circle"></i> Ativo</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot"></span> Ativo</span></td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn btn-ghost btn-sm" aria-label="Editar conta" data-tip="Editar"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#pencil"></use></svg></button>
+                    <button class="btn btn-danger btn-sm" aria-label="Excluir conta" data-tip="Excluir"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#trash-2"></use></svg></button>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td><div class="email-chip"><i class="fa-solid fa-envelope"></i> rh@empresa.com.br</div></td>
+                <td><div class="email-chip"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> rh@empresa.com.br</div></td>
                 <td>
                   <div class="storage-used">0,0 / 25 GB</div>
                   <div class="progress-bar progress-bar--table"><div class="progress-fill" style="width:0%"></div></div>
                 </td>
                 <td><span class="badge badge-gray">0 aliases</span></td>
                 <td class="cell-sub">Nunca</td>
-                <td><span class="badge badge-yellow"><i class="fa-solid fa-circle"></i> Pendente</span></td>
+                <td><span class="badge badge-yellow"><span class="badge-dot"></span> Pendente</span></td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn btn-ghost btn-sm" aria-label="Editar conta" data-tip="Editar"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#pencil"></use></svg></button>
+                    <button class="btn btn-danger btn-sm" aria-label="Excluir conta" data-tip="Excluir"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#trash-2"></use></svg></button>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td><div class="email-chip"><i class="fa-solid fa-envelope"></i> ti@empresa.com.br</div></td>
+                <td><div class="email-chip"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg> ti@empresa.com.br</div></td>
                 <td>
                   <div class="storage-used">0,0 / 25 GB</div>
                   <div class="progress-bar progress-bar--table"><div class="progress-fill" style="width:0%"></div></div>
                 </td>
                 <td><span class="badge badge-gray">0 aliases</span></td>
                 <td class="cell-sub">Nunca</td>
-                <td><span class="badge badge-green"><i class="fa-solid fa-circle"></i> Ativo</span></td>
+                <td><span class="badge badge-green"><span class="badge-dot"></span> Ativo</span></td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn btn-ghost btn-sm" aria-label="Editar conta" data-tip="Editar"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#pencil"></use></svg></button>
+                    <button class="btn btn-danger btn-sm" aria-label="Excluir conta" data-tip="Excluir"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#trash-2"></use></svg></button>
                   </div>
                 </td>
               </tr>
@@ -1193,7 +1192,7 @@
       <div class="grid-2 mb-20">
         <!-- Assinatura ativa -->
         <div class="card">
-          <div class="card-title mb-16"><i class="fa-solid fa-rotate"></i> Assinatura Ativa</div>
+          <div class="card-title mb-16"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#refresh-cw"></use></svg> Assinatura Ativa</div>
           <div class="plan-banner">
             <div class="plan-banner-label">Plano atual</div>
             <div class="plan-banner-name">E-mail Corporativo 25 GB</div>
@@ -1210,7 +1209,7 @@
             </div>
             <div class="info-row">
               <span>Método de pagamento</span>
-              <span><i class="fa-brands fa-pix" style="color:#32bcad"></i> Pix</span>
+              <span><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix</span>
             </div>
             <div class="info-row">
               <span>Status</span>
@@ -1219,14 +1218,14 @@
           </div>
           <div class="divider"></div>
           <div class="btn-row">
-            <button class="btn btn-outline" onclick="navigate('marketplace')"><i class="fa-solid fa-arrow-up"></i> Upgrade</button>
-            <button class="btn btn-ghost" onclick="showToast('Entre em contato com o suporte para cancelar.','info')"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+            <button class="btn btn-outline" onclick="navigate('marketplace')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#arrow-up"></use></svg> Upgrade</button>
+            <button class="btn btn-ghost" onclick="showToast('Entre em contato com o suporte para cancelar.','info')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg> Cancelar</button>
           </div>
         </div>
 
         <!-- Próxima fatura -->
         <div class="card">
-          <div class="card-title mb-16"><i class="fa-solid fa-file-invoice-dollar"></i> Próxima Fatura</div>
+          <div class="card-title mb-16"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#file-text"></use></svg> Próxima Fatura</div>
           <div class="invoice-lines">
             <div class="invoice-line">
               <span>5× E-mail 25 GB</span>
@@ -1248,10 +1247,10 @@
           <div class="divider"></div>
           <div class="btn-row">
             <button class="btn btn-primary" onclick="showToast('Pix gerado! Escaneie o QR Code.','success')">
-              <i class="fa-brands fa-pix"></i> Pagar agora
+              <svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pagar agora
             </button>
             <button class="btn btn-outline" style="flex:0 0 auto" aria-label="Baixar fatura" data-tip="Baixar fatura" onclick="showToast('Fatura baixada.','success')">
-              <i class="fa-solid fa-download"></i>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#download"></use></svg>
             </button>
           </div>
         </div>
@@ -1260,7 +1259,7 @@
       <!-- Histórico de faturas -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Faturas</div>
+          <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#history"></use></svg> Histórico de Faturas</div>
         </div>
         <div class="table-wrap">
           <table>
@@ -1281,36 +1280,36 @@
                 <td class="cell-sm">jun/2026</td>
                 <td class="cell-sm">08/jun/2026</td>
                 <td class="invoice-amount">R$ 133,50</td>
-                <td class="cell-sm"><i class="fa-brands fa-pix" style="color:#32bcad"></i> Pix</td>
+                <td class="cell-sm"><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix</td>
                 <td><span class="badge badge-green">Pago</span></td>
-                <td><button class="btn btn-ghost btn-sm" onclick="showToast('Baixando PDF…','info')"><i class="fa-solid fa-download"></i></button></td>
+                <td><button class="btn btn-ghost btn-sm" aria-label="Baixar PDF da fatura" data-tip="Baixar PDF" onclick="showToast('Baixando PDF…','info')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#download"></use></svg></button></td>
               </tr>
               <tr>
                 <td class="cell-sub">#0011</td>
                 <td class="cell-sm">mai/2026</td>
                 <td class="cell-sm">08/mai/2026</td>
                 <td class="invoice-amount">R$ 133,50</td>
-                <td class="cell-sm"><i class="fa-brands fa-pix" style="color:#32bcad"></i> Pix</td>
+                <td class="cell-sm"><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix</td>
                 <td><span class="badge badge-green">Pago</span></td>
-                <td><button class="btn btn-ghost btn-sm" onclick="showToast('Baixando PDF…','info')"><i class="fa-solid fa-download"></i></button></td>
+                <td><button class="btn btn-ghost btn-sm" aria-label="Baixar PDF da fatura" data-tip="Baixar PDF" onclick="showToast('Baixando PDF…','info')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#download"></use></svg></button></td>
               </tr>
               <tr>
                 <td class="cell-sub">#0010</td>
                 <td class="cell-sm">abr/2026</td>
                 <td class="cell-sm">08/abr/2026</td>
                 <td class="invoice-amount">R$ 80,00</td>
-                <td class="cell-sm">💳 Cartão</td>
+                <td class="cell-sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#credit-card"></use></svg> Cartão</td>
                 <td><span class="badge badge-green">Pago</span></td>
-                <td><button class="btn btn-ghost btn-sm" onclick="showToast('Baixando PDF…','info')"><i class="fa-solid fa-download"></i></button></td>
+                <td><button class="btn btn-ghost btn-sm" aria-label="Baixar PDF da fatura" data-tip="Baixar PDF" onclick="showToast('Baixando PDF…','info')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#download"></use></svg></button></td>
               </tr>
               <tr>
                 <td class="cell-sub">#0009</td>
                 <td class="cell-sm">mar/2026</td>
                 <td class="cell-sm">08/mar/2026</td>
                 <td class="invoice-amount">R$ 80,00</td>
-                <td class="cell-sm">💳 Cartão</td>
+                <td class="cell-sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#credit-card"></use></svg> Cartão</td>
                 <td><span class="badge badge-green">Pago</span></td>
-                <td><button class="btn btn-ghost btn-sm" onclick="showToast('Baixando PDF…','info')"><i class="fa-solid fa-download"></i></button></td>
+                <td><button class="btn btn-ghost btn-sm" aria-label="Baixar PDF da fatura" data-tip="Baixar PDF" onclick="showToast('Baixando PDF…','info')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#download"></use></svg></button></td>
               </tr>
             </tbody>
           </table>
@@ -1326,14 +1325,14 @@
           <p>Serviços ativos na sua conta CITMail</p>
         </div>
         <button class="btn btn-primary" onclick="navigate('marketplace')">
-          <i class="fa-solid fa-plus"></i> Contratar mais
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg> Contratar mais
         </button>
       </div>
 
       <div class="product-grid">
         <div class="product-card">
           <div class="product-card-top">
-            <div class="product-card-icon">📧</div>
+            <div class="product-card-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
             <span class="badge badge-green">Ativo</span>
           </div>
           <div>
@@ -1341,10 +1340,10 @@
             <div class="product-card-desc">5 contas · domínio empresa.com.br</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Webmail + IMAP/POP3/SMTP</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Antispam e antivírus</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Backup automático 30 dias</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> SSL/TLS grátis</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Webmail + IMAP/POP3/SMTP</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Antispam e antivírus</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Backup automático 30 dias</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> SSL/TLS grátis</div>
           </div>
           <div class="flex-between">
             <div class="product-card-price">R$ 80,00 <span>/mês</span></div>
@@ -1354,7 +1353,7 @@
 
         <div class="product-card">
           <div class="product-card-top">
-            <div class="product-card-icon pi-turq">🎥</div>
+            <div class="product-card-icon pi-turq"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#video"></use></svg></div>
             <span class="badge badge-green">Ativo</span>
           </div>
           <div>
@@ -1362,9 +1361,9 @@
             <div class="product-card-desc">5 licenças · integrado ao e-mail</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Reuniões ilimitadas</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Compartilhamento de tela</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Gravação na nuvem</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Reuniões ilimitadas</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Compartilhamento de tela</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Gravação na nuvem</div>
           </div>
           <div class="flex-between">
             <div class="product-card-price">R$ 23,50 <span>/mês</span></div>
@@ -1374,7 +1373,7 @@
 
         <div class="product-card">
           <div class="product-card-top">
-            <div class="product-card-icon pi-neutral">🗄️</div>
+            <div class="product-card-icon pi-neutral"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#database"></use></svg></div>
             <span class="badge badge-green">Ativo</span>
           </div>
           <div>
@@ -1382,9 +1381,9 @@
             <div class="product-card-desc">5 contas · retenção de 90 dias</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Backup diário automático</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Restauração por e-mail</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Painel de controle</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Backup diário automático</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Restauração por e-mail</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Painel de controle</div>
           </div>
           <div class="flex-between">
             <div class="product-card-price">R$ 30,00 <span>/mês</span></div>
@@ -1404,108 +1403,108 @@
       </div>
 
       <div class="alert alert-blue">
-        <i class="fa-solid fa-tag"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg>
         <span>Todos os serviços são cobrados junto com sua assinatura mensal. Ativação imediata após contratação.</span>
       </div>
 
       <div class="product-grid">
         <div class="product-card">
-          <div class="product-card-icon">☁️</div>
+          <div class="product-card-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud"></use></svg></div>
           <div>
             <div class="product-card-name">Skybox — Armazenamento Cloud</div>
             <div class="product-card-desc">Guarde e compartilhe arquivos com segurança. Integrado ao e-mail e acessível de qualquer dispositivo.</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> 50 GB · R$ 17,70/conta/mês</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> 100 GB · R$ 28,70/conta/mês</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> 1 TB · R$ 319,00/conta/mês</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> 50 GB · R$ 17,70/conta/mês</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> 100 GB · R$ 28,70/conta/mês</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> 1 TB · R$ 319,00/conta/mês</div>
           </div>
           <button class="btn btn-primary btn-push" onclick="showToast('Redirecionando para contratação…','info')">
-            <i class="fa-solid fa-cart-plus"></i> Contratar
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shopping-cart"></use></svg> Contratar
           </button>
         </div>
 
         <div class="product-card">
-          <div class="product-card-icon pi-turq">🖥️</div>
+          <div class="product-card-icon pi-turq"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg></div>
           <div>
             <div class="product-card-name">Servidores Cloud</div>
             <div class="product-card-desc">VPS e servidores dedicados de alto desempenho com SLA garantido e suporte 24/7.</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> vCPU dedicado</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> SSD NVMe</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Banda ilimitada</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Backup automático</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> vCPU dedicado</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> SSD NVMe</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Banda ilimitada</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Backup automático</div>
           </div>
           <button class="btn btn-primary btn-push" onclick="openModal('modalContratarServidor')">
-            <i class="fa-solid fa-cart-plus"></i> Ver planos
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shopping-cart"></use></svg> Ver planos
           </button>
         </div>
 
         <div class="product-card">
-          <div class="product-card-icon pi-neutral">🗄️</div>
+          <div class="product-card-icon pi-neutral"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#database"></use></svg></div>
           <div>
             <div class="product-card-name">Backup em Nuvem</div>
             <div class="product-card-desc">Proteja seus dados críticos com backups automatizados, criptografados e redundantes.</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Backup incremental</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Criptografia AES-256</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Retenção configurável</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Restauração rápida</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Backup incremental</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Criptografia AES-256</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Retenção configurável</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Restauração rápida</div>
           </div>
           <button class="btn btn-primary btn-push" onclick="showToast('Redirecionando para contratação…','info')">
-            <i class="fa-solid fa-cart-plus"></i> Contratar
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shopping-cart"></use></svg> Contratar
           </button>
         </div>
 
         <div class="product-card">
-          <div class="product-card-icon pi-neutral">⚙️</div>
+          <div class="product-card-icon pi-neutral"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#settings"></use></svg></div>
           <div>
             <div class="product-card-name">DevOps & Infraestrutura</div>
             <div class="product-card-desc">Automação, CI/CD, containers e gestão de infraestrutura com especialistas certificados.</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Pipeline CI/CD</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Docker / Kubernetes</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Monitoramento 24/7</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> IaC com Terraform</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Pipeline CI/CD</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Docker / Kubernetes</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Monitoramento 24/7</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> IaC com Terraform</div>
           </div>
           <button class="btn btn-primary btn-push" onclick="openModal('modalContratarConsultoria')">
-            <i class="fa-solid fa-calendar-check"></i> Agendar conversa
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calendar-check"></use></svg> Agendar conversa
           </button>
         </div>
 
         <div class="product-card">
-          <div class="product-card-icon">🔒</div>
+          <div class="product-card-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg></div>
           <div>
             <div class="product-card-name">Consultoria em TI</div>
             <div class="product-card-desc">Projetos personalizados de TI, segurança da informação, migração e gestão de ambientes.</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Diagnóstico gratuito</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Plano de ação detalhado</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> Profissionais certificados</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Diagnóstico gratuito</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Plano de ação detalhado</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Profissionais certificados</div>
           </div>
           <button class="btn btn-primary btn-push" onclick="openModal('modalContratarConsultoria')">
-            <i class="fa-solid fa-calendar-check"></i> Agendar conversa
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calendar-check"></use></svg> Agendar conversa
           </button>
         </div>
 
         <div class="product-card">
-          <div class="product-card-icon pi-turq">🌐</div>
+          <div class="product-card-icon pi-turq"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg></div>
           <div>
             <div class="product-card-name">Domínio extra .com.br</div>
             <div class="product-card-desc">Registre ou transfira domínios adicionais para sua conta. Gestão centralizada no painel.</div>
           </div>
           <div class="product-card-features">
-            <div class="product-feat"><i class="fa-solid fa-check"></i> .com.br — R$ 79,00/ano</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> .com — R$ 150,00/ano</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> DNS gerenciado</div>
-            <div class="product-feat"><i class="fa-solid fa-check"></i> WHOIS protegido</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> .com.br — R$ 79,00/ano</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> .com — R$ 150,00/ano</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> DNS gerenciado</div>
+            <div class="product-feat"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> WHOIS protegido</div>
           </div>
           <button class="btn btn-primary btn-push" onclick="showToast('Redirecionando…','info')">
-            <i class="fa-solid fa-cart-plus"></i> Registrar domínio
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shopping-cart"></use></svg> Registrar domínio
           </button>
         </div>
       </div>
@@ -1520,7 +1519,7 @@
           <p>Gerencie os registros DNS dos seus domínios</p>
         </div>
         <button class="btn btn-primary" onclick="dnsOpenAddRecord()">
-          <i class="fa-solid fa-plus"></i> Adicionar registro
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg> Adicionar registro
         </button>
       </div>
 
@@ -1536,7 +1535,7 @@
             <div class="dns-prop-sub" id="dnsPropSub"></div>
           </div>
           <button class="btn btn-outline btn-sm" onclick="dnsCheckProp()">
-            <i class="fa-solid fa-rotate"></i> Verificar propagação
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#refresh-cw"></use></svg> Verificar propagação
           </button>
         </div>
       </div>
@@ -1544,14 +1543,14 @@
       <!-- Records card -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-list"></i> Registros DNS — <span id="dnsActiveDomainLabel" class="dns-domain-label"></span></div>
+          <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#list"></use></svg> Registros DNS — <span id="dnsActiveDomainLabel" class="dns-domain-label"></span></div>
           <div class="dns-count" id="dnsRecordCount"></div>
         </div>
 
         <!-- Search + type filter -->
         <div class="dns-search-row">
           <div class="topbar-search dns-search">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg>
             <input type="text" id="dnsSearch" placeholder="Buscar registro…" oninput="dnsRender()" />
           </div>
           <div id="dnsTypeFilters" class="dns-filters"></div>
@@ -1572,14 +1571,14 @@
 
         <!-- Empty state -->
         <div id="dnsEmpty" class="empty-state" style="display:none">
-          <i class="fa-solid fa-magnifying-glass"></i>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#search"></use></svg>
           Nenhum registro encontrado.
         </div>
       </div>
 
       <!-- Recommended email records alert -->
       <div class="alert alert-blue alert--mt" id="dnsEmailAlert">
-        <i class="fa-solid fa-circle-info"></i>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
         <div>
           <strong>Registros recomendados para e-mail:</strong>
           MX (entrega de e-mails), SPF e DMARC (TXT) protegem contra spam e spoofing, CNAME webmail aponta para o webmail CITMail.
@@ -1606,7 +1605,7 @@
       <div class="tab-panel active" id="tab-perfil">
         <div class="grid-2">
           <div class="card">
-            <div class="card-title mb-20"><i class="fa-solid fa-user"></i> Dados Cadastrais</div>
+            <div class="card-title mb-20"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#user"></use></svg> Dados Cadastrais</div>
             <div class="form-row">
               <div class="field">
                 <label>Nome completo</label>
@@ -1632,11 +1631,11 @@
               <input type="text" value="Empresa Exemplo Ltda" />
             </div>
             <button class="btn btn-primary" onclick="showToast('Dados salvos com sucesso!','success')">
-              <i class="fa-solid fa-floppy-disk"></i> Salvar alterações
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#save"></use></svg> Salvar alterações
             </button>
           </div>
           <div class="card">
-            <div class="card-title mb-20"><i class="fa-solid fa-location-dot"></i> Endereço</div>
+            <div class="card-title mb-20"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#map-pin"></use></svg> Endereço</div>
             <div class="form-row">
               <div class="field">
                 <label>CEP</label>
@@ -1666,7 +1665,7 @@
               <input type="text" value="São Paulo" />
             </div>
             <button class="btn btn-primary" onclick="showToast('Endereço salvo!','success')">
-              <i class="fa-solid fa-floppy-disk"></i> Salvar
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#save"></use></svg> Salvar
             </button>
           </div>
         </div>
@@ -1676,7 +1675,7 @@
       <div class="tab-panel" id="tab-seguranca">
         <div class="grid-2">
           <div class="card">
-            <div class="card-title mb-20"><i class="fa-solid fa-lock"></i> Alterar Senha do Painel</div>
+            <div class="card-title mb-20"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> Alterar Senha do Painel</div>
             <div class="field">
               <label>Senha atual</label>
               <input type="password" placeholder="••••••••" />
@@ -1690,14 +1689,14 @@
               <input type="password" placeholder="Repita a nova senha" />
             </div>
             <button class="btn btn-primary" onclick="showToast('Senha alterada com sucesso!','success')">
-              <i class="fa-solid fa-lock"></i> Alterar senha
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> Alterar senha
             </button>
           </div>
           <div class="card">
-            <div class="card-title mb-20"><i class="fa-solid fa-shield-halved"></i> Sessões Ativas</div>
+            <div class="card-title mb-20"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Sessões Ativas</div>
             <div class="session-list">
               <div class="session-item session-item--current">
-                <i class="fa-solid fa-laptop" style="color:var(--brand-600);font-size:1.1rem"></i>
+                <svg class="icon" style="color:var(--cit-primary)" aria-hidden="true"><use href="assets/icons.svg#laptop"></use></svg>
                 <div class="session-info">
                   <div class="session-name">Computador — São Paulo, BR</div>
                   <div class="session-meta">Chrome 126 · Sessão atual</div>
@@ -1705,7 +1704,7 @@
                 <span class="badge badge-green">Ativa</span>
               </div>
               <div class="session-item">
-                <i class="fa-solid fa-mobile-screen" style="color:var(--gray-500);font-size:1.1rem"></i>
+                <svg class="icon" style="color:var(--cit-text-secondary)" aria-hidden="true"><use href="assets/icons.svg#smartphone"></use></svg>
                 <div class="session-info">
                   <div class="session-name">iPhone — São Paulo, BR</div>
                   <div class="session-meta">Safari · Há 2 horas</div>
@@ -1715,7 +1714,7 @@
             </div>
             <div class="divider"></div>
             <button class="btn btn-danger" onclick="showToast('Todas as outras sessões foram encerradas.','success')">
-              <i class="fa-solid fa-right-from-bracket"></i> Encerrar todas as outras sessões
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#log-out"></use></svg> Encerrar todas as outras sessões
             </button>
           </div>
         </div>
@@ -1724,7 +1723,7 @@
       <!-- TAB NOTIFICAÇÕES -->
       <div class="tab-panel" id="tab-notif">
         <div class="card pref-card">
-          <div class="card-title mb-20"><i class="fa-solid fa-bell"></i> Preferências de Notificação</div>
+          <div class="card-title mb-20"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#bell"></use></svg> Preferências de Notificação</div>
           <div class="pref-list">
             <div class="pref-row">
               <div>
@@ -1779,14 +1778,14 @@
           <p>Abra tickets e acompanhe seus chamados</p>
         </div>
         <button class="btn btn-primary" onclick="openModal('modalNovoTicket')">
-          <i class="fa-solid fa-plus"></i> Novo ticket
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg> Novo ticket
         </button>
       </div>
 
       <div class="grid-2 mb-20">
         <div class="card support-stat">
           <div class="stat-icon stat-icon--lg green">
-            <i class="fa-solid fa-circle-check"></i>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg>
           </div>
           <div>
             <div class="support-stat-label">Tempo médio de resposta</div>
@@ -1795,7 +1794,7 @@
         </div>
         <div class="card support-stat">
           <div class="stat-icon stat-icon--lg blue">
-            <i class="fa-solid fa-headset"></i>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg>
           </div>
           <div>
             <div class="support-stat-label">Suporte disponível</div>
@@ -1806,7 +1805,7 @@
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-list"></i> Meus Tickets</div>
+          <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#list"></use></svg> Meus Tickets</div>
           <div>
             <select class="select-sm" aria-label="Filtrar tickets">
               <option>Todos</option>
@@ -1839,7 +1838,7 @@
                 <td class="cell-sub">30/jun, 10:22</td>
                 <td class="cell-sub">30/jun, 14:08</td>
                 <td><span class="badge badge-yellow">Aguardando</span></td>
-                <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openModal('modalVerTicket')"><i class="fa-solid fa-eye"></i></button></td>
+                <td><button class="btn btn-ghost btn-sm" aria-label="Ver ticket" data-tip="Ver ticket" onclick="event.stopPropagation();openModal('modalVerTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#eye"></use></svg></button></td>
               </tr>
               <tr class="ticket-row">
                 <td class="cell-sub">#1042</td>
@@ -1851,7 +1850,7 @@
                 <td class="cell-sub">28/jun, 09:15</td>
                 <td class="cell-sub">29/jun, 11:07</td>
                 <td><span class="badge badge-yellow">Em andamento</span></td>
-                <td><button class="btn btn-ghost btn-sm"><i class="fa-solid fa-eye"></i></button></td>
+                <td><button class="btn btn-ghost btn-sm" aria-label="Ver ticket" data-tip="Ver ticket"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#eye"></use></svg></button></td>
               </tr>
               <tr class="ticket-row">
                 <td class="cell-sub">#1038</td>
@@ -1863,7 +1862,7 @@
                 <td class="cell-sub">15/jun, 16:40</td>
                 <td class="cell-sub">16/jun, 09:30</td>
                 <td><span class="badge badge-green">Resolvido</span></td>
-                <td><button class="btn btn-ghost btn-sm"><i class="fa-solid fa-eye"></i></button></td>
+                <td><button class="btn btn-ghost btn-sm" aria-label="Ver ticket" data-tip="Ver ticket"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#eye"></use></svg></button></td>
               </tr>
             </tbody>
           </table>
@@ -1881,8 +1880,8 @@
 <div class="modal-overlay" id="modalDnsRecord">
   <div class="modal modal--md">
     <div class="modal-header">
-      <h3 id="modalDnsTitle"><i class="fa-solid fa-server" style="color:var(--brand-600);margin-right:8px"></i>Adicionar Registro</h3>
-      <button class="modal-close" onclick="closeModal('modalDnsRecord')"><i class="fa-solid fa-xmark"></i></button>
+      <h3 id="modalDnsTitle"><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg>Adicionar Registro</h3>
+      <button class="modal-close" onclick="closeModal('modalDnsRecord')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <div class="form-row">
@@ -1930,7 +1929,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalDnsRecord')">Cancelar</button>
-      <button class="btn btn-primary" onclick="dnsSaveRecord()"><i class="fa-solid fa-floppy-disk"></i> Salvar registro</button>
+      <button class="btn btn-primary" onclick="dnsSaveRecord()"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#save"></use></svg> Salvar registro</button>
     </div>
   </div>
 </div>
@@ -1938,8 +1937,8 @@
 <div class="modal-overlay" id="modalNovaContaEmail">
   <div class="modal">
     <div class="modal-header">
-      <h3><i class="fa-solid fa-user-plus" style="color:var(--brand-600);margin-right:8px"></i>Nova Conta de E-mail</h3>
-      <button class="modal-close" onclick="closeModal('modalNovaContaEmail')"><i class="fa-solid fa-xmark"></i></button>
+      <h3><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#user-plus"></use></svg>Nova Conta de E-mail</h3>
+      <button class="modal-close" onclick="closeModal('modalNovaContaEmail')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <div class="form-row">
@@ -1969,7 +1968,7 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalNovaContaEmail')">Cancelar</button>
       <button class="btn btn-primary" onclick="closeModal('modalNovaContaEmail');showToast('Conta criada com sucesso!','success')">
-        <i class="fa-solid fa-plus"></i> Criar conta
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg> Criar conta
       </button>
     </div>
   </div>
@@ -1979,8 +1978,8 @@
 <div class="modal-overlay" id="modalNovoTicket">
   <div class="modal modal--md">
     <div class="modal-header">
-      <h3><i class="fa-solid fa-headset" style="color:var(--brand-600);margin-right:8px"></i>Novo Ticket de Suporte</h3>
-      <button class="modal-close" onclick="closeModal('modalNovoTicket')"><i class="fa-solid fa-xmark"></i></button>
+      <h3><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg>Novo Ticket de Suporte</h3>
+      <button class="modal-close" onclick="closeModal('modalNovoTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <div class="form-row">
@@ -2015,7 +2014,7 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalNovoTicket')">Cancelar</button>
       <button class="btn btn-primary" onclick="closeModal('modalNovoTicket');showToast('Ticket #1045 aberto! Você receberá uma resposta em até 2h.','success')">
-        <i class="fa-solid fa-paper-plane"></i> Abrir ticket
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#send"></use></svg> Abrir ticket
       </button>
     </div>
   </div>
@@ -2032,7 +2031,7 @@
           <span class="badge badge-blue">Técnico</span>
         </div>
       </div>
-      <button class="modal-close" onclick="closeModal('modalVerTicket')"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close" onclick="closeModal('modalVerTicket')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body modal-body--scroll">
       <div class="msg-list">
@@ -2058,7 +2057,7 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalVerTicket')">Fechar</button>
       <button class="btn btn-primary" onclick="closeModal('modalVerTicket');showToast('Resposta enviada!','success')">
-        <i class="fa-solid fa-paper-plane"></i> Responder
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#send"></use></svg> Responder
       </button>
     </div>
   </div>
@@ -2068,8 +2067,8 @@
 <div class="modal-overlay" id="modalContratarConsultoria">
   <div class="modal">
     <div class="modal-header">
-      <h3><i class="fa-solid fa-calendar-check" style="color:var(--brand-600);margin-right:8px"></i>Agendar Conversa</h3>
-      <button class="modal-close" onclick="closeModal('modalContratarConsultoria')"><i class="fa-solid fa-xmark"></i></button>
+      <h3><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#calendar-check"></use></svg>Agendar Conversa</h3>
+      <button class="modal-close" onclick="closeModal('modalContratarConsultoria')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <p>Um especialista CITMail entrará em contato para entender sua necessidade e apresentar uma proposta personalizada.</p>
@@ -2092,7 +2091,7 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalContratarConsultoria')">Cancelar</button>
       <button class="btn btn-primary" onclick="closeModal('modalContratarConsultoria');showToast('Solicitação enviada! Um especialista entrará em contato em até 1 dia útil.','success')">
-        <i class="fa-solid fa-paper-plane"></i> Enviar solicitação
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#send"></use></svg> Enviar solicitação
       </button>
     </div>
   </div>
@@ -2102,8 +2101,8 @@
 <div class="modal-overlay" id="modalContratarServidor">
   <div class="modal modal--md">
     <div class="modal-header">
-      <h3><i class="fa-solid fa-server" style="color:var(--brand-600);margin-right:8px"></i>Planos de Servidor Cloud</h3>
-      <button class="modal-close" onclick="closeModal('modalContratarServidor')"><i class="fa-solid fa-xmark"></i></button>
+      <h3><svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg>Planos de Servidor Cloud</h3>
+      <button class="modal-close" onclick="closeModal('modalContratarServidor')"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"></use></svg></button>
     </div>
     <div class="modal-body">
       <div class="plan-opts">
@@ -2136,7 +2135,7 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalContratarServidor')">Cancelar</button>
       <button class="btn btn-primary" onclick="closeModal('modalContratarServidor');showToast('Servidor contratado! Ativação em até 5 minutos.','success')">
-        <i class="fa-solid fa-check"></i> Contratar plano
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Contratar plano
       </button>
     </div>
   </div>
@@ -2211,11 +2210,11 @@
 
   /* ── TOAST ── */
   function showToast(msg, type = 'info') {
-    const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+    const icons = { success: 'circle-check', error: 'circle-x', info: 'info' };
     const wrap = document.getElementById('toastWrap');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.innerHTML = `<i class="fa-solid ${icons[type]}"></i><span>${msg}</span>`;
+    toast.innerHTML = `<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#${icons[type]}"></use></svg><span>${msg}</span>`;
     wrap.appendChild(toast);
     setTimeout(() => {
       toast.style.opacity = '0';
@@ -2295,17 +2294,17 @@
     const subEl   = document.getElementById('dnsPropSub');
     if (d.status === 'active') {
       iconEl.className = 'stat-icon green';
-      iconEl.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+      iconEl.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-check"></use></svg>';
       titleEl.textContent = 'DNS Ativo e Propagado';
       subEl.textContent   = `Todos os registros estão respondendo corretamente. Última verificação: ${d.lastCheck}.`;
     } else if (d.status === 'propagating') {
       iconEl.className = 'stat-icon yellow';
-      iconEl.innerHTML = '<i class="fa-solid fa-clock"></i>';
+      iconEl.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#clock"></use></svg>';
       titleEl.textContent = 'Propagação em andamento';
       subEl.textContent   = `Alterações recentes ainda podem estar propagando (até 48h). Última verificação: ${d.lastCheck}.`;
     } else {
       iconEl.className = 'stat-icon red';
-      iconEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+      iconEl.innerHTML = '<svg class="icon" aria-hidden="true"><use href="assets/icons.svg#circle-alert"></use></svg>';
       titleEl.textContent = 'Problema detectado';
       subEl.textContent   = `Um ou mais registros não estão respondendo. Última verificação: ${d.lastCheck}.`;
     }
@@ -2352,15 +2351,15 @@
         <span class="dns-ttl">${ttlLabel}</span>
         <span class="dns-prio">${r.priority || '—'}</span>
         <div class="dns-actions">
-          <button class="dns-btn dns-btn-edit" aria-label="Editar" data-tip="Editar" onclick="dnsOpenEditRecord(${r.id})"><i class="fa-solid fa-pen"></i></button>
-          <button class="dns-btn dns-btn-del" aria-label="Excluir" data-tip="Excluir" onclick="dnsDeleteRecord(${r.id})"><i class="fa-solid fa-trash"></i></button>
+          <button class="dns-btn dns-btn-edit" aria-label="Editar" data-tip="Editar" onclick="dnsOpenEditRecord(${r.id})"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#pencil"></use></svg></button>
+          <button class="dns-btn dns-btn-del" aria-label="Excluir" data-tip="Excluir" onclick="dnsDeleteRecord(${r.id})"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#trash-2"></use></svg></button>
         </div>
       </div>`;
     }).join('');
   }
 
   function dnsOpenAddRecord() {
-    document.getElementById('modalDnsTitle').innerHTML = '<i class="fa-solid fa-plus" style="color:var(--brand-600);margin-right:8px"></i>Adicionar Registro';
+    document.getElementById('modalDnsTitle').innerHTML = '<svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg>Adicionar Registro';
     document.getElementById('dnsRType').value  = 'A';
     document.getElementById('dnsRHost').value  = '';
     document.getElementById('dnsRValue').value = '';
@@ -2375,7 +2374,7 @@
     const records = dnsData[activeDnsDomain].records;
     const r = records.find(x => x.id === id);
     if (!r) return;
-    document.getElementById('modalDnsTitle').innerHTML = '<i class="fa-solid fa-pen" style="color:var(--brand-600);margin-right:8px"></i>Editar Registro';
+    document.getElementById('modalDnsTitle').innerHTML = '<svg class="icon" style="margin-right:8px" aria-hidden="true"><use href="assets/icons.svg#pencil"></use></svg>Editar Registro';
     document.getElementById('dnsRType').value  = r.type;
     document.getElementById('dnsRHost').value  = r.host;
     document.getElementById('dnsRValue').value = r.value;
