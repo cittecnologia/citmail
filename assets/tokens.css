@@ -53,7 +53,7 @@
   --cit-tracking-heading:-0.01em;
   --cit-tracking-body:0;
   --cit-tracking-label:0.02em;
-  --cit-tracking-eyebrow:0.14em; /* rótulos em caixa alta */
+  --cit-tracking-eyebrow:0.15em; /* rótulos em caixa alta */
 }
 
 /* CIT Tecnologia — espaçamento (base 4px) e grid. */
