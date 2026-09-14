@@ -1,0 +1,18 @@
+{
+  "name": "citmail",
+  "private": true,
+  "description": "CITMail — site estático; Node usado para o servidor de desenvolvimento (Vite) e testes E2E",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "vite": "^8.3.0"
+  }
+}
