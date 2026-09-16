@@ -3,7 +3,7 @@ import { test, expect } from './fixtures.js';
 
 const paginas = [
   { arquivo: 'index.html', titulo: 'CITMail — E-mail corporativo com domínio próprio' },
-  { arquivo: 'login.html', titulo: 'TEMPORÁRIO: título errado para provar que falha bloqueia o deploy' },
+  { arquivo: 'login.html', titulo: 'Entrar — CITMail' },
   { arquivo: 'checkout.html', titulo: 'Contratar Plano — CITMail' },
   { arquivo: 'painel.html', titulo: 'Painel do Cliente — CITMail' },
 ];
