@@ -272,9 +272,10 @@
 
     .hero-title {
       color: var(--white); margin-bottom: 20px;
-      font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.04;
+      font-size: clamp(2.25rem, 5vw, 3.25rem); line-height: 1.04;
+      text-wrap: balance;
     }
-    .hero-title .highlight { color: var(--cit-turquoise-400); }
+    .hero-title .highlight { color: var(--cit-turquoise-400); white-space: nowrap; }
     .hero-subtitle {
       color: var(--cit-text-inverse-secondary); font-size: 1rem;
       margin-bottom: 36px; max-width: 480px;
@@ -361,7 +362,6 @@
       font-size: .8rem; font-weight: 600; color: var(--cit-text-primary);
     }
     .hero-float-1 { top: -20px; right: -24px; }
-    .hero-float-2 { bottom: -16px; left: -24px; }
     .hero-float .icon { font-size: 1.2rem; }
 
     @media (max-width: 900px) {
@@ -369,7 +369,6 @@
       .hero-visual { order: -1; }
       .hero-mockup { max-width: 100%; }
       .hero-float-1 { top: -12px; right: 12px; }
-      .hero-float-2 { bottom: -12px; left: 12px; }
     }
 
     /* =========================================================
@@ -1079,13 +1078,11 @@
         <div>
           <div class="hero-badge">E-mail corporativo com domínio próprio</div>
           <h1 class="hero-title">
-            Seu e-mail com<br/>
-            <span class="highlight">domínio próprio</span><br/>
-            em até 5 min
+            Eleve o nível da sua marca com um <span class="highlight">e-mail profissional</span> personalizado
           </h1>
           <p class="hero-subtitle">
-            Sua equipe passa a usar o domínio da empresa assim que o pagamento é confirmado.
-            Contratação, cobrança e configuração acontecem sem intervenção manual.
+            Os e-mails da sua empresa com domínio próprio (exemplo: suaempresa.com.br) com segurança e praticidade.
+            Gerencie suas contas diretamente no painel, sem complicações.
           </p>
           <div class="hero-actions">
             <a href="checkout.html" class="btn btn-primary btn-lg">
@@ -1097,12 +1094,12 @@
           </div>
           <div class="hero-stats">
             <div class="hero-stat">
-              <div class="number">5 min</div>
-              <div class="label">Ativação após pagamento</div>
+              <div class="number"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg></div>
+              <div class="label">Suporte técnico humanizado</div>
             </div>
             <div class="hero-stat">
               <div class="number">99,5%</div>
-              <div class="label">Uptime com SLA</div>
+              <div class="label">Disponibilidade garantida</div>
             </div>
             <div class="hero-stat">
               <div class="number">500+</div>
@@ -1165,9 +1162,6 @@
           <div class="hero-float hero-float-1">
             <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> <span>SSL/TLS incluso</span>
           </div>
-          <div class="hero-float hero-float-2">
-            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> <span>Ativo em 5 min</span>
-          </div>
         </div>
       </div>
     </div>
@@ -1181,8 +1175,6 @@
       <div class="trust-bar-inner">
         <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Proteção antivírus e antispam</div>
         <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> SSL/TLS em todas as conexões</div>
-        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#refresh-cw"></use></svg> Pagamento recorrente automático</div>
-        <div class="trust-item"><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix, boleto e cartão</div>
         <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg> Suporte com resposta média em até 2h</div>
         <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#scale"></use></svg> Conformidade LGPD</div>
       </div>
