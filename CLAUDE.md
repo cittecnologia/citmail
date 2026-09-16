@@ -46,6 +46,20 @@ Regras:
 - Dependência entre histórias: PR com base na branch da história de que depende; após o merge dela, `git rebase develop` e redirecionar o PR para `develop`. Comentar a dependência nas duas histórias.
 - Push, abertura de PR, **merge de qualquer PR**, criação de tag e exclusão de branch remota só com confirmação explícita do responsável. O agente nunca faz merge por conta própria.
 
+## Fluxo de Product Owner
+
+Skills globais (`~/.claude/skills/po-*`, regras comuns em `~/.claude/po/convencoes.md`). Todas mostram prévia e só escrevem no Taiga após aprovação.
+
+| Skill | Uso |
+|---|---|
+| `/po-projeto` | Início de projeto: visão, épicos e histórias no backlog; página `visao-produto` na wiki. |
+| `/po-epico` | Novo épico com histórias; destino: sprint atual, nova sprint ou backlog. |
+| `/po-historia` | Nova história vinculada a épico; destino: sprint atual, nova sprint ou backlog. |
+| `/po-sprint criar \| planejar \| encerrar` | Sprint `Sprint NNN` (001–999): abertura com datas e objetivo, seleção por capacidade, encerramento com pendências e resultado. |
+| `/po-bug` | Bug como issue (passos, esperado/atual, severidade, evidências); correção segue `bugfix/*` ou `hotfix/*`. |
+
+O PO cria até o nível de história; tasks nascem na etapa 2 do fluxo abaixo. Histórias saem com critérios de aceite e pontos iniciais, que a etapa 1 revisa.
+
 ## Fluxo de desenvolvimento de história
 
 Executar com a skill **`/iniciar-historia <URL da história | #ref>`**, que conduz os passos abaixo, retoma de onde a história parou e aplica as regras deste arquivo. Sem a skill, seguir o resumo:
