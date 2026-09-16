@@ -6,7 +6,7 @@ name: Publicar homologação
 
 on:
   push:
-    branches: [develop]
+    branches: [develop, feature/CIT-13-publicar-homologacao] # TEMPORÁRIO: prova da CIT-13
   workflow_dispatch:
 
 permissions:
@@ -32,7 +32,7 @@ jobs:
   publicar:
     needs: testes
     # workflow_dispatch de outra branch fica "skipped"; quem protege os secrets é a regra de branches do environment
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/feature/CIT-13-publicar-homologacao' # TEMPORÁRIO: prova da CIT-13
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
