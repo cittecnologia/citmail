@@ -91,6 +91,10 @@ jobs:
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$known_hosts"
           chmod 600 "$known_hosts"
 
+          # TEMPORÁRIO (prova da CIT-13): ajuste único de dono e permissões da pasta; sudo lê a senha do stdin, sem eco no log
+          printf '%s\n' "$SSHPASS" | sshpass -e ssh -p "$SSH_PORT" -o UserKnownHostsFile="$known_hosts" -o StrictHostKeyChecking=yes -o ConnectTimeout=15 -o PubkeyAuthentication=no -o PreferredAuthentications=password,keyboard-interactive -o NumberOfPasswordPrompts=1 \
+            "$SSH_USER@$SSH_HOST" "sudo -S -p '' sh -c 'chown -R $SSH_USER:$SSH_USER /var/www/novo.citmail.com.br && chmod -R u+rwX,go+rX,go-w /var/www/novo.citmail.com.br'"
+
           # destino fixo; --delete-delay + --delay-updates trocam os arquivos no fim; .well-known/ (certificado) é preservado
           rsync -rt -O --delete-delay --delay-updates --itemize-changes \
             --filter 'P /.well-known/' \
