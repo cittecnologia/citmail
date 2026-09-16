@@ -13,9 +13,19 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Fluxo de desenvolvimento de história no `CLAUDE.md`.
 - Publicação automática da `develop` na homologação (`https://novo.citmail.com.br`), com testes antes e smoke depois do deploy (CIT-13).
 - Testes de páginas rodam contra um site publicado com `CITMAIL_BASE_URL` (CIT-13).
+- Testes E2E dos ajustes de textos e componentes da landing e do checkout (CIT-15).
+
+### Alterado
+- Landing: novos textos do hero (título, subtítulo e indicadores), da faixa de confiança e da seção Recursos (CIT-15).
+- Landing: busca de domínio com um único "@" como prefixo e sem a extensão .com (CIT-15).
+- Toggle do plano anual fica verde quando ativo, na landing e no checkout (CIT-15).
+- Mínimo de 2 contas passa a valer só para o plano de 5 GB (CIT-15).
+- Marketplace com os novos serviços, sem preços e sem os cards de Servidores e DevOps (CIT-15).
 
 ### Removido
 - `serve.py`, substituído pelo Vite.
+- Prazo de ativação de 5 minutos dos textos da landing e do checkout (CIT-15).
+- Opção de registro de domínio .com no checkout (CIT-15).
 
 ## [1.0.0] - 2026-09-13
 

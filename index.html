@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="CITMail — E-mail corporativo com domínio próprio. Planos a partir de R$ 19,90/mês. Ativação em até 5 minutos após o pagamento." />
+  <meta name="description" content="CITMail — E-mail corporativo com domínio próprio. Planos a partir de R$ 19,90/mês." />
   <title>CITMail — E-mail corporativo com domínio próprio</title>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/apple-touch-icon.png" />
@@ -272,9 +272,11 @@
 
     .hero-title {
       color: var(--white); margin-bottom: 20px;
-      font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.04;
+      font-size: clamp(2.25rem, 5vw, 3.25rem); line-height: 1.04;
+      text-wrap: balance;
     }
     .hero-title .highlight { color: var(--cit-turquoise-400); }
+    .hero-title .nowrap-word { white-space: nowrap; }
     .hero-subtitle {
       color: var(--cit-text-inverse-secondary); font-size: 1rem;
       margin-bottom: 36px; max-width: 480px;
@@ -361,7 +363,6 @@
       font-size: .8rem; font-weight: 600; color: var(--cit-text-primary);
     }
     .hero-float-1 { top: -20px; right: -24px; }
-    .hero-float-2 { bottom: -16px; left: -24px; }
     .hero-float .icon { font-size: 1.2rem; }
 
     @media (max-width: 900px) {
@@ -369,7 +370,6 @@
       .hero-visual { order: -1; }
       .hero-mockup { max-width: 100%; }
       .hero-float-1 { top: -12px; right: 12px; }
-      .hero-float-2 { bottom: -12px; left: 12px; }
     }
 
     /* =========================================================
@@ -515,6 +515,7 @@
       background: white; border-radius: 50%;
       transition: transform var(--transition);
     }
+    .toggle-switch.annual { background: var(--cit-success); }
     .toggle-switch.annual .toggle-knob { transform: translateX(22px); }
     .save-badge {
       display: inline-flex; align-items: center; height: 22px; padding: 0 8px;
@@ -935,8 +936,14 @@
     ========================================================= */
     #marketplace { background: var(--white); }
     .marketplace-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .marketplace-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .marketplace-grid { grid-template-columns: 1fr; }
     }
     .marketplace-card {
       background: var(--white);
@@ -949,9 +956,6 @@
     .marketplace-card .badge { align-self: flex-start; }
     .marketplace-icon { font-size: 2rem; }
     .marketplace-card p { font-size: 1rem; flex: 1; }
-    .marketplace-card .from { font-size: .8125rem; color: var(--cit-text-muted); }
-    .marketplace-card .price { font-family: var(--font-title); font-weight: 800; color: var(--cit-primary); }
-    .marketplace-card .price--text { font-weight: 700; }
 
     /* =========================================================
        PAINEL PREVIEW (Client Portal teaser)
@@ -1079,13 +1083,11 @@
         <div>
           <div class="hero-badge">E-mail corporativo com domínio próprio</div>
           <h1 class="hero-title">
-            Seu e-mail com<br/>
-            <span class="highlight">domínio próprio</span><br/>
-            em até 5 min
+            Eleve o nível da sua marca com um <span class="highlight"><span class="nowrap-word">e-mail</span> profissional</span> personalizado
           </h1>
           <p class="hero-subtitle">
-            Sua equipe passa a usar o domínio da empresa assim que o pagamento é confirmado.
-            Contratação, cobrança e configuração acontecem sem intervenção manual.
+            Os e-mails da sua empresa com domínio próprio (exemplo: suaempresa.com.br) com segurança e praticidade.
+            Gerencie suas contas diretamente no painel, sem complicações.
           </p>
           <div class="hero-actions">
             <a href="checkout.html" class="btn btn-primary btn-lg">
@@ -1097,12 +1099,12 @@
           </div>
           <div class="hero-stats">
             <div class="hero-stat">
-              <div class="number">5 min</div>
-              <div class="label">Ativação após pagamento</div>
+              <div class="number"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg></div>
+              <div class="label">Suporte técnico humanizado</div>
             </div>
             <div class="hero-stat">
               <div class="number">99,5%</div>
-              <div class="label">Uptime com SLA</div>
+              <div class="label">Disponibilidade garantida</div>
             </div>
             <div class="hero-stat">
               <div class="number">500+</div>
@@ -1165,9 +1167,6 @@
           <div class="hero-float hero-float-1">
             <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> <span>SSL/TLS incluso</span>
           </div>
-          <div class="hero-float hero-float-2">
-            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#zap"></use></svg> <span>Ativo em 5 min</span>
-          </div>
         </div>
       </div>
     </div>
@@ -1181,8 +1180,6 @@
       <div class="trust-bar-inner">
         <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg> Proteção antivírus e antispam</div>
         <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#lock"></use></svg> SSL/TLS em todas as conexões</div>
-        <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#refresh-cw"></use></svg> Pagamento recorrente automático</div>
-        <div class="trust-item"><svg class="icon icon-pix" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg> Pix, boleto e cartão</div>
         <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#headset"></use></svg> Suporte com resposta média em até 2h</div>
         <div class="trust-item"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#scale"></use></svg> Conformidade LGPD</div>
       </div>
@@ -1197,7 +1194,7 @@
       <div class="section-header text-center fade-in">
         <div class="tag"><svg class="icon icon-fill" aria-hidden="true"><use href="assets/icons.svg#star"></use></svg> Recursos</div>
         <h2 style="margin-top:14px">E-mail, domínio e proteção<br/>em um só contrato</h2>
-        <p>Domínio, webmail, apps e antispam contratados juntos, com uma fatura e um painel de gestão.</p>
+        <p>Domínio, Webmail, Apps, Add-ons e Antispam em um único painel de gestão.</p>
       </div>
       <div class="features-grid">
         <div class="feature-card fade-in">
@@ -1247,7 +1244,7 @@
         <p>Digite o nome da empresa e confira se o domínio está livre para registro.</p>
 
         <div class="domain-form">
-          <div class="domain-prefix"><svg class="icon" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#at-sign"></use></svg> @</div>
+          <div class="domain-prefix">@</div>
           <input class="domain-input" id="domainInput" type="text" placeholder="suaempresa" autocomplete="off" />
           <div class="domain-suffix" id="domainSuffix">.com.br</div>
           <button class="btn btn-primary" onclick="checkDomain()">
@@ -1257,7 +1254,6 @@
 
         <div class="tld-list">
           <span class="tld-chip active" data-tld=".com.br">.com.br</span>
-          <span class="tld-chip" data-tld=".com">.com</span>
           <span class="tld-chip" data-tld=".net.br">.net.br</span>
           <span class="tld-chip" data-tld=".org.br">.org.br</span>
           <span class="tld-chip" data-tld=".adv.br">.adv.br</span>
@@ -1284,7 +1280,7 @@
       <div class="discount-info fade-in">
         <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
         <span>
-          <strong>Mínimo de 2 contas por plano.</strong>
+          <strong>Mínimo de 2 contas no plano de 5 GB.</strong>
           Contrate 5 ou mais contas do mesmo tipo e ganhe <strong>5% de desconto</strong> sobre todas as contas daquele tipo.
           No plano anual, economize <strong>20% adicionais</strong> sobre o valor mensal.
         </span>
@@ -1343,7 +1339,7 @@
               <div class="atc-icon c25"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#inbox"></use></svg></div>
               <div class="atc-info">
                 <div class="atc-name">Conta E-mail 25 GB</div>
-                <div class="atc-storage">25 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
+                <div class="atc-storage">25 GB por caixa · IMAP/POP3/SMTP · Webmail</div>
               </div>
               <div class="atc-unit-price">
                 <div class="from">a partir de</div>
@@ -1375,7 +1371,7 @@
               <div class="atc-icon c50"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mails"></use></svg></div>
               <div class="atc-info">
                 <div class="atc-name">Conta E-mail 50 GB <span class="badge badge-blue atc-ai-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sparkles"></use></svg> IA inclusa</span></div>
-                <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
+                <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail</div>
               </div>
               <div class="atc-unit-price">
                 <div class="from">a partir de</div>
@@ -1504,7 +1500,7 @@
         <div class="step-card fade-in">
           <div class="step-number">3</div>
           <h3>Ativação Automática</h3>
-          <p>Confirmado o pagamento, criamos o domínio e as caixas em até 5 minutos.</p>
+          <p>Confirmado o pagamento, criamos o domínio e as caixas.</p>
         </div>
         <div class="step-card fade-in">
           <div class="step-number">4</div>
@@ -1598,7 +1594,6 @@
       <div class="section-header text-center fade-in">
         <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Marketplace</div>
         <h2 style="margin-top:14px">Contrate novos serviços<br/>pelo mesmo painel</h2>
-        <p>Backup, servidores e consultoria de TI na mesma conta e na mesma fatura do e-mail.</p>
       </div>
       <div class="marketplace-grid">
         <div class="marketplace-card fade-in">
@@ -1606,32 +1601,36 @@
           <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <h3>E-mail Corporativo</h3>
           <p>Caixas de e-mail com domínio próprio, webmail, IMAP/POP3/SMTP e proteção antispam.</p>
-          <div class="from">A partir de</div>
-          <div class="price">R$ 19,90/mês</div>
+        </div>
+        <div class="marketplace-card fade-in">
+          <div class="badge badge-green">Disponível</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#history"></use></svg></div>
+          <h3>Backup adicional</h3>
+          <p>Backup automático das contas de e-mail por períodos maiores.</p>
         </div>
         <div class="marketplace-card fade-in">
           <div class="badge badge-green">Disponível</div>
           <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud"></use></svg></div>
-          <h3>Backup em Nuvem</h3>
-          <p>Backup automático de arquivos, bancos de dados e sistemas. Restauração pelo painel.</p>
-          <div class="from">A partir de</div>
-          <div class="price">R$ 39,90/mês</div>
+          <h3>Armazenamento em nuvem</h3>
+          <p>Integrado ao e-mail, com sincronização de arquivos via computador e acesso web.</p>
         </div>
         <div class="marketplace-card fade-in">
-          <div class="badge badge-yellow">Em breve</div>
-          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg></div>
-          <h3>Servidores Cloud</h3>
-          <p>VPS e servidores dedicados na nuvem, com suporte técnico 24/7.</p>
-          <div class="from">A partir de</div>
-          <div class="price">R$ 79,90/mês</div>
+          <div class="badge badge-green">Disponível</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#video"></use></svg></div>
+          <h3>Talk</h3>
+          <p>Videoconferência ilimitada, com armazenamento das gravações em nuvem.</p>
         </div>
         <div class="marketplace-card fade-in">
-          <div class="badge badge-neutral">Especializado</div>
-          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#settings"></use></svg></div>
-          <h3>DevOps & Consultoria</h3>
-          <p>Projetos de infraestrutura, CI/CD, Docker, Kubernetes e consultoria de TI.</p>
-          <div class="from">Sob consulta</div>
-          <div class="price price--text">Fale conosco →</div>
+          <div class="badge badge-neutral">Sob consulta</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail-check"></use></svg></div>
+          <h3>E-mail Registrado</h3>
+          <p>Para comunicações que exigem formalidade e comprovação, o E-mail Registrado substitui processos burocráticos com eficiência e validade jurídica. Ideal para empresas que valorizam rastreabilidade, proteção e conformidade.</p>
+        </div>
+        <div class="marketplace-card fade-in">
+          <div class="badge badge-neutral">Sob consulta</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#laptop"></use></svg></div>
+          <h3>Microsoft 365</h3>
+          <p>E-mail, OneDrive, aplicativos online e offline. Planos que se encaixam desde pequenas a grandes empresas, que desejam escalar com aplicativos de produtividade da Microsoft.</p>
         </div>
       </div>
     </div>
@@ -1710,7 +1709,7 @@
             <span>Quanto tempo leva para o e-mail ser ativado?</span>
             <div class="faq-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#plus"></use></svg></div>
           </button>
-          <div class="faq-answer"><p>Até 5 minutos após a confirmação do pagamento. As credenciais de acesso chegam por e-mail. A propagação de DNS leva até 48h e costuma terminar em menos de 2 horas.</p></div>
+          <div class="faq-answer"><p>Após a confirmação do pagamento, criamos as contas e enviamos as credenciais de acesso por e-mail. A propagação de DNS leva até 48h e costuma terminar em menos de 6 horas. A partir desse período as contas estão aptas a enviar e receber e-mails.</p></div>
         </div>
 
         <div class="faq-item">
@@ -1774,7 +1773,7 @@
         <div class="tag">
           <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#rocket"></use></svg> Pronto para começar?
         </div>
-        <h2 style="margin-top:14px">E-mail com o domínio da empresa<br/>em até 5 minutos</h2>
+        <h2 style="margin-top:14px">E-mail com o domínio da empresa</h2>
         <p>Sem fidelidade e sem taxa de adesão. Cancele pelo painel quando quiser.</p>
         <div class="cta-actions">
           <a href="checkout.html" class="btn btn-white btn-lg">
@@ -1889,12 +1888,11 @@
 
     // ---- CALCULADORA DE CONTAS ----
     const ACCOUNT_TYPES = {
-      '5gb':  { base:10, inputId:'qty5',  subId:'sub5',  discTagId:'discTag5',  cardId:'card5',  unitId:'unitPrice5',  bdId:'breakdown5',  origId:'origPrice5',  finalId:'finalPrice5',  savId:'saving5'  },
-      '25gb': { base:16, inputId:'qty25', subId:'sub25', discTagId:'discTag25', cardId:'card25', unitId:'unitPrice25', bdId:'breakdown25', origId:'origPrice25', finalId:'finalPrice25', savId:'saving25' },
-      '50gb': { base:25, inputId:'qty50', subId:'sub50', discTagId:'discTag50', cardId:'card50', unitId:'unitPrice50', bdId:'breakdown50', origId:'origPrice50', finalId:'finalPrice50', savId:'saving50' },
+      '5gb':  { base:10, min:2, inputId:'qty5', subId:'sub5',  discTagId:'discTag5',  cardId:'card5',  unitId:'unitPrice5',  bdId:'breakdown5',  origId:'origPrice5',  finalId:'finalPrice5',  savId:'saving5'  },
+      '25gb': { base:16, min:1, inputId:'qty25', subId:'sub25', discTagId:'discTag25', cardId:'card25', unitId:'unitPrice25', bdId:'breakdown25', origId:'origPrice25', finalId:'finalPrice25', savId:'saving25' },
+      '50gb': { base:25, min:1, inputId:'qty50', subId:'sub50', discTagId:'discTag50', cardId:'card50', unitId:'unitPrice50', bdId:'breakdown50', origId:'origPrice50', finalId:'finalPrice50', savId:'saving50' },
     };
     const quantities = { '5gb': 0, '25gb': 0, '50gb': 0 };
-    const MIN_QTY = 2;
 
     function calcVolDisc(qty) { return qty >= 5 ? 5 : 0; }
 
@@ -1902,11 +1900,18 @@
       return val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // quantidade inteira ≥ 0; abaixo do mínimo do tipo sobe ao mínimo, ou zera ao diminuir
+    // regra duplicada em ckNormalizeQty (checkout.html): manter as duas iguais
+    function normalizeQty(type, raw, delta = 0) {
+      const min = ACCOUNT_TYPES[type].min;
+      const q   = Math.max(0, parseInt(raw) || 0);
+      if (q > 0 && q < min) return delta < 0 ? 0 : min;
+      return q;
+    }
+
     function changeQty(type, delta) {
-      const cfg = ACCOUNT_TYPES[type];
-      let next  = quantities[type] + delta;
-      if (next > 0 && next < MIN_QTY) next = delta > 0 ? MIN_QTY : 0;
-      next = Math.max(0, next);
+      const cfg  = ACCOUNT_TYPES[type];
+      const next = normalizeQty(type, quantities[type] + delta, delta);
       quantities[type] = next;
       document.getElementById(cfg.inputId).value = next;
       recalcType(type);
@@ -1915,9 +1920,7 @@
 
     function updateQty(type, raw) {
       const cfg = ACCOUNT_TYPES[type];
-      let val   = parseInt(raw) || 0;
-      if (val > 0 && val < MIN_QTY) val = MIN_QTY;
-      val = Math.max(0, val);
+      const val = normalizeQty(type, raw);
       quantities[type] = val;
       document.getElementById(cfg.inputId).value = val;
       recalcType(type);
