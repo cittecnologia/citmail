@@ -111,6 +111,7 @@
     .steps-bar {
       display: flex; align-items: flex-start;
       margin-bottom: 28px; gap: 0;
+      scroll-margin-top: 76px; /* header fixo (60px) + 16px, igual ao top do resumo */
     }
     .step-item {
       flex: 0 0 auto;
@@ -1834,7 +1835,12 @@
       currentStep = n;
       updateStepBar(n);
       if (n === 5) generatePaymentData();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Coluna única: o resumo fica no topo, então rola até a barra de etapas para o passo ficar à vista
+      if (window.matchMedia('(max-width: 960px)').matches) {
+        document.getElementById('stepsBar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
     function updateStepBar(n) {
