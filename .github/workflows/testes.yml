@@ -3,6 +3,8 @@ name: Testes E2E
 on:
   pull_request:
     branches: [develop, main]
+  # reaproveitado por publicar-homologacao.yml (o check "playwright" exigido pelo ruleset continua vindo do pull_request)
+  workflow_call:
 
 jobs:
   playwright:

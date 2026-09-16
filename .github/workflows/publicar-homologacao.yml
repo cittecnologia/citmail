@@ -1,0 +1,118 @@
+name: Publicar homologação
+
+# Publica a develop em https://novo.citmail.com.br (VPS) depois dos testes. Produção continua no GitHub Pages (main).
+# Environment "homologacao": secrets SSH_HOST, USER_PASSWORD, SSH_KNOWN_HOSTS; variables SSH_PORT, SSH_USER.
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# uma publicação por vez; a mais recente espera a anterior terminar
+concurrency:
+  group: publicar-homologacao
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  HOMOLOGACAO_URL: https://novo.citmail.com.br/
+
+jobs:
+  testes:
+    uses: ./.github/workflows/testes.yml
+
+  publicar:
+    needs: testes
+    # workflow_dispatch de outra branch fica "skipped" em vez de falhar na regra do environment
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: homologacao
+      url: ${{ env.HOMOLOGACAO_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # lista de permissão: só o que o site usa vai para o servidor
+      - name: Monta dist/
+        run: |
+          mkdir -p dist
+          cp ./*.html dist/
+          cp -r assets dist/
+          test -f dist/index.html && test -f dist/assets/icons.svg
+          find dist -type f | sort
+
+      - name: Instala sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+
+      - name: Envia para a VPS
+        # secrets só via env (nunca ${{ }} dentro do script); sshpass -e lê a senha de SSHPASS
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSHPASS: ${{ secrets.USER_PASSWORD }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
+          SSH_USER: ${{ vars.SSH_USER }}
+        run: |
+          faltando=()
+          [ -n "$SSH_HOST" ] || faltando+=("secret SSH_HOST")
+          [ -n "$SSHPASS" ] || faltando+=("secret USER_PASSWORD")
+          [ -n "$SSH_KNOWN_HOSTS" ] || faltando+=("secret SSH_KNOWN_HOSTS")
+          [ -n "$SSH_PORT" ] || faltando+=("variable SSH_PORT")
+          [ -n "$SSH_USER" ] || faltando+=("variable SSH_USER")
+          if [ ${#faltando[@]} -gt 0 ]; then
+            echo "::error::Environment homologacao incompleto: ${faltando[*]}"
+            exit 1
+          fi
+
+          # chave do host conferida por fora (ssh-keyscan fora do workflow); sem ela o ssh recusa a conexão
+          known_hosts="$RUNNER_TEMP/known_hosts"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$known_hosts"
+          chmod 600 "$known_hosts"
+
+          # destino fixo; --delete-delay + --delay-updates trocam os arquivos no fim; .well-known/ (certificado) é preservado
+          rsync -rlt -O --delete-delay --delay-updates --itemize-changes --chmod=D755,F644 \
+            --filter 'P /.well-known/' \
+            -e "sshpass -e ssh -p $SSH_PORT -o UserKnownHostsFile=$known_hosts -o StrictHostKeyChecking=yes -o ConnectTimeout=15 -o PubkeyAuthentication=no -o PreferredAuthentications=password,keyboard-interactive -o NumberOfPasswordPrompts=1" \
+            dist/ "$SSH_USER@$SSH_HOST:/var/www/novo.citmail.com.br/"
+
+  smoke:
+    needs: publicar
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conteúdo publicado igual ao commit
+        run: |
+          for arquivo in index.html assets/icons.svg; do
+            esperado=$(sha256sum "$arquivo" | cut -d' ' -f1)
+            publicado=$(curl -fsS -H 'Cache-Control: no-cache' "${HOMOLOGACAO_URL}${arquivo}" | sha256sum | cut -d' ' -f1)
+            echo "$arquivo: commit $esperado, publicado $publicado"
+            [ "$esperado" = "$publicado" ]
+          done
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+
+      - name: Páginas no domínio
+        env:
+          CITMAIL_BASE_URL: ${{ env.HOMOLOGACAO_URL }}
+        run: npx playwright test tests/paginas.spec.js --retries=0
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: smoke-homologacao
+          path: test-results/
+          retention-days: 3
