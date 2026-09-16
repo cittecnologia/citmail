@@ -1356,7 +1356,7 @@
                 </div>
                 <div class="alert-box alert-warn">
                   <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#triangle-alert"></use></svg>
-                  <span>O serviço será ativado <strong>após a compensação do boleto</strong> (1–3 dias úteis). Pelo Pix, a ativação ocorre após a confirmação do pagamento.</span>
+                  <span>O serviço será ativado <strong>após a compensação do boleto</strong> (1–3 dias úteis).</span>
                 </div>
               </div>
             </div>
@@ -1543,11 +1543,12 @@
     let   skyboxPlan  = null; // '50gb' | '100gb' | '1tb'
 
     /* ---- DOMAIN STEP ---- */
+    const DOMAIN_OPTS = { 'new-br':'doptBr', 'existing':'doptExist' };
     function selectDomainOpt(choice) {
+      if (!Object.keys(DOMAIN_OPTS).includes(choice)) return;
       domainChoice = choice;
-      ['doptBr','doptExist'].forEach(id => document.getElementById(id).classList.remove('selected'));
-      const map = { 'new-br':'doptBr', 'existing':'doptExist' };
-      document.getElementById(map[choice]).classList.add('selected');
+      Object.values(DOMAIN_OPTS).forEach(id => document.getElementById(id).classList.remove('selected'));
+      document.getElementById(DOMAIN_OPTS[choice]).classList.add('selected');
       document.getElementById('domainNewPanel').style.display  = choice === 'new-br' ? 'block' : 'none';
       document.getElementById('domainExistPanel').style.display = choice === 'existing' ? 'block' : 'none';
       document.getElementById('step2Error').style.display = 'none';
@@ -1592,7 +1593,7 @@
 
     function goStep2Next() {
       const errEl = document.getElementById('step2Error');
-      if (!domainChoice) { errEl.style.display = 'flex'; return; }
+      if (!Object.keys(DOMAIN_OPTS).includes(domainChoice)) { errEl.style.display = 'flex'; return; }
       if (domainChoice === 'new-br') {
         const name = document.getElementById('fDomNew').value.trim();
         if (!name) { document.getElementById('err-dom-new').classList.add('visible'); return; }
@@ -1742,6 +1743,7 @@
     function totalAccounts()     { return Object.values(ckQtys).reduce((a,b) => a+b, 0); }
 
     // quantidade inteira ≥ 0; abaixo do mínimo do tipo sobe ao mínimo, ou zera ao diminuir
+    // regra duplicada em normalizeQty (index.html): manter as duas iguais
     function ckNormalizeQty(type, raw, delta = 0) {
       const min = ACCOUNT_DEFS[type].min;
       const q   = Math.max(0, parseInt(raw)||0);

@@ -1901,6 +1901,7 @@
     }
 
     // quantidade inteira ≥ 0; abaixo do mínimo do tipo sobe ao mínimo, ou zera ao diminuir
+    // regra duplicada em ckNormalizeQty (checkout.html): manter as duas iguais
     function normalizeQty(type, raw, delta = 0) {
       const min = ACCOUNT_TYPES[type].min;
       const q   = Math.max(0, parseInt(raw) || 0);
