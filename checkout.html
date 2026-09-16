@@ -101,6 +101,7 @@
       align-items: start;
     }
     .main-col, .order-summary { min-width: 0; }
+    .main-col { container-type: inline-size; }
     @media (max-width: 900px) {
       .checkout-wrapper { grid-template-columns: minmax(0, 1fr); }
       .order-summary { order: -1; }
@@ -108,38 +109,51 @@
 
     /* ---- BARRA DE PASSOS ---- */
     .steps-bar {
-      display: flex; align-items: center;
+      display: flex; align-items: flex-start;
       margin-bottom: 28px; gap: 0;
     }
     .step-item {
-      display: flex; align-items: center; gap: 10px;
-      flex: 1;
+      flex: 0 0 auto;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      text-align: center;
     }
-    .step-item:last-child { flex: 0; }
     .step-circle {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 36px; height: 36px; border-radius: 50%;
       background: var(--white); color: var(--cit-text-secondary);
       border: 1px solid var(--cit-border-color-strong);
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--cit-font-mono); font-weight: 600; font-size: .8125rem;
+      font-family: var(--cit-font-mono); font-weight: 600; font-size: var(--cit-text-small);
       flex-shrink: 0; transition: background var(--transition), color var(--transition), border-color var(--transition);
     }
     .step-circle.active { background: var(--cit-primary); border-color: var(--cit-primary); color: var(--white); }
     .step-circle.done   { background: var(--cit-blue-50); border-color: var(--cit-blue-300); color: var(--cit-primary); }
     .step-label {
-      font-size: .8125rem; font-weight: 500; color: var(--cit-text-secondary);
+      display: block;
+      font-size: var(--cit-text-small); font-weight: 500; color: var(--cit-text-secondary);
       transition: color var(--transition); white-space: nowrap;
     }
     .step-label.active { color: var(--cit-primary); font-weight: 600; }
     .step-label.done   { color: var(--cit-text-primary); }
+    /* Conector na altura do centro do círculo (36px / 2) */
     .step-connector {
-      flex: 1; height: 1px; background: var(--cit-border-color-strong);
-      margin: 0 10px; transition: background var(--transition);
+      flex: 1 1 0; min-width: 16px; height: 1px; background: var(--cit-border-color-strong);
+      margin: 18px 0 0; transition: background var(--transition);
     }
     .step-connector.done { background: var(--cit-blue-300); }
-    @media (max-width: 520px) {
-      .step-label { display: none; }
-      .step-connector { margin: 0 4px; }
+    /* Os 6 rótulos precisam de ~453px; abaixo disso, só o rótulo da etapa atual */
+    @container (width < 460px) {
+      .step-label:not(.active) { display: none; }
+      .step-connector { min-width: 4px; }
+    }
+    @container (width < 300px) {
+      .step-circle { width: 32px; height: 32px; }
+      .step-connector { min-width: 2px; margin-top: 16px; }
+    }
+    @supports not (container-type: inline-size) {
+      @media (max-width: 520px) {
+        .step-label:not(.active) { display: none; }
+        .step-connector { min-width: 4px; }
+      }
     }
 
     /* ---- CARD ---- */
@@ -773,7 +787,7 @@
           <span class="step-label" id="sl5">Pagamento</span>
         </div>
         <div class="step-connector" id="conn5"></div>
-        <div class="step-item" style="flex:0">
+        <div class="step-item">
           <div class="step-circle" id="sc6"><svg class="icon" style="font-size:.7rem" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg></div>
           <span class="step-label" id="sl6">Acesso</span>
         </div>
