@@ -12,6 +12,8 @@ Gestão de tarefas no Taiga, projeto CITMAIL (slug `citmail`, id interno 1). Pon
 - Testes E2E: Playwright, `npm test` (sobe o Vite sozinho; perfis desktop e mobile). Specs em `tests/`, organizadas por página/funcionalidade (não por história); usar a fixture `erros` de `tests/fixtures.js` e marcar a história com tag (`{ tag: '@CIT-12' }`, filtrável com `npx playwright test --grep @CIT-12`).
 - Nos testes, APIs de terceiros (ViaCEP etc.) são mockadas com `page.route`; usar só dados fictícios. Nunca anexar `test-results/` ou `playwright-report/` a PR ou Taiga.
 - CI: `.github/workflows/testes.yml` roda `npm test` em todo PR para `develop` e `main`.
+- Homologação: `.github/workflows/publicar-homologacao.yml`, a cada push na `develop` (ou manual), roda os testes, envia só `*.html` e `assets/` por rsync para a VPS (`/var/www/novo.citmail.com.br`, `.well-known/` preservado) e faz o smoke em `https://novo.citmail.com.br`. Environment `homologacao`: secrets `SSH_HOST`, `USER_PASSWORD`, `SSH_KNOWN_HOSTS`; variables `SSH_PORT`, `SSH_USER`. Produção continua no GitHub Pages.
+- Testes contra um site publicado: `CITMAIL_BASE_URL=<url> npx playwright test tests/paginas.spec.js` (não sobe o Vite). Não copiar para PR ou Taiga logs com dados da VPS.
 
 ## Fluxo de branches: Git Flow (padrão obrigatório)
 
