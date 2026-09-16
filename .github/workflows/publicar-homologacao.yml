@@ -1,0 +1,135 @@
+name: Publicar homologação
+
+# Publica a develop em https://novo.citmail.com.br (VPS) depois dos testes. Produção continua no GitHub Pages (main).
+# Environment "homologacao" (deployment branches: só develop): secrets SSH_HOST, USER_PASSWORD, SSH_KNOWN_HOSTS; variables SSH_PORT, SSH_USER.
+# Para republicar, use "Run workflow" na develop: re-run de execução antiga publicaria um commit antigo.
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# uma publicação por vez por ref; a mais recente espera a anterior terminar
+# (por ref: um dispatch de outra branch, que só roda os testes, não cancela a fila da develop)
+concurrency:
+  group: publicar-homologacao-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  HOMOLOGACAO_URL: https://novo.citmail.com.br/
+
+jobs:
+  testes:
+    uses: ./.github/workflows/testes.yml
+
+  publicar:
+    needs: testes
+    # workflow_dispatch de outra branch fica "skipped"; quem protege os secrets é a regra de branches do environment
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: homologacao
+      url: ${{ env.HOMOLOGACAO_URL }}
+    steps:
+      # actions fixadas por SHA no job com secrets
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      # lista de permissão: só o que o site usa vai para o servidor (sem symlinks nem arquivos ocultos)
+      - name: Monta dist/
+        run: |
+          if [ -n "$(find ./*.html assets -type l)" ]; then
+            echo "::error::symlink não é permitido no site publicado"
+            exit 1
+          fi
+          mkdir -p dist
+          cp ./*.html dist/
+          cp -r assets dist/
+          find dist -name '.*' -exec rm -rf {} +
+          test -f dist/index.html && test -f dist/assets/icons.svg
+          find dist -type f | sort
+
+      - name: Instala sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+
+      - name: Envia para a VPS
+        # secrets só via env (nunca ${{ }} dentro do script); sshpass -e lê a senha de SSHPASS
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSHPASS: ${{ secrets.USER_PASSWORD }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
+          SSH_USER: ${{ vars.SSH_USER }}
+        run: |
+          faltando=()
+          [ -n "$SSH_HOST" ] || faltando+=("secret SSH_HOST")
+          [ -n "$SSHPASS" ] || faltando+=("secret USER_PASSWORD")
+          [ -n "$SSH_KNOWN_HOSTS" ] || faltando+=("secret SSH_KNOWN_HOSTS")
+          [ -n "$SSH_PORT" ] || faltando+=("variable SSH_PORT")
+          [ -n "$SSH_USER" ] || faltando+=("variable SSH_USER")
+          if [ ${#faltando[@]} -gt 0 ]; then
+            echo "::error::Environment homologacao incompleto: ${faltando[*]}"
+            exit 1
+          fi
+
+          # os valores entram no comando do ssh: só formatos esperados (evita injetar opções como -o ProxyCommand)
+          [[ "$SSH_PORT" =~ ^[0-9]{1,5}$ ]] || { echo "::error::variable SSH_PORT inválida"; exit 1; }
+          [[ "$SSH_USER" =~ ^[a-z_][a-z0-9_-]{0,31}$ ]] || { echo "::error::variable SSH_USER inválida"; exit 1; }
+          [[ "$SSH_HOST" =~ ^[A-Za-z0-9][A-Za-z0-9.-]*$ ]] || { echo "::error::secret SSH_HOST inválido"; exit 1; }
+
+          # chave do host conferida por fora: ssh-keyscan -p <porta> <mesmo valor de SSH_HOST>; sem ela o ssh recusa a conexão
+          known_hosts="$RUNNER_TEMP/known_hosts"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$known_hosts"
+          chmod 600 "$known_hosts"
+
+          # destino fixo; --delete-delay + --delay-updates trocam os arquivos no fim; .well-known/ (certificado) é preservado
+          rsync -rt -O --delete-delay --delay-updates --itemize-changes \
+            --filter 'P /.well-known/' \
+            -e "sshpass -e ssh -p $SSH_PORT -o UserKnownHostsFile=$known_hosts -o StrictHostKeyChecking=yes -o ConnectTimeout=15 -o PubkeyAuthentication=no -o PreferredAuthentications=password,keyboard-interactive -o NumberOfPasswordPrompts=1" \
+            dist/ "$SSH_USER@$SSH_HOST:/var/www/novo.citmail.com.br/"
+
+  smoke:
+    needs: publicar
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Conteúdo publicado igual ao commit
+        run: |
+          for arquivo in index.html assets/icons.svg; do
+            esperado=$(sha256sum "$arquivo" | cut -d' ' -f1)
+            publicado=$(curl -fsS --retry 3 --retry-all-errors -H 'Cache-Control: no-cache' "${HOMOLOGACAO_URL}${arquivo}" | sha256sum | cut -d' ' -f1)
+            echo "$arquivo: commit $esperado, publicado $publicado"
+            [ "$esperado" = "$publicado" ] || { echo "::error::$arquivo publicado difere do commit"; exit 1; }
+          done
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+
+      - name: Páginas no domínio
+        env:
+          CITMAIL_BASE_URL: ${{ env.HOMOLOGACAO_URL }}
+        run: npx playwright test tests/paginas.spec.js --retries=0
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: smoke-homologacao
+          path: test-results/
+          retention-days: 1

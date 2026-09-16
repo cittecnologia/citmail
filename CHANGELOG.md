@@ -11,6 +11,8 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Testes E2E com Playwright (`npm test`), em desktop e mobile: páginas sem erros, ícones do sprite existentes e recursos locais com caminho relativo.
 - Workflow de CI que roda os testes em PRs para `develop` e `main`.
 - Fluxo de desenvolvimento de história no `CLAUDE.md`.
+- Publicação automática da `develop` na homologação (`https://novo.citmail.com.br`), com testes antes e smoke depois do deploy (CIT-13).
+- Testes de páginas rodam contra um site publicado com `CITMAIL_BASE_URL` (CIT-13).
 
 ### Removido
 - `serve.py`, substituído pelo Vite.

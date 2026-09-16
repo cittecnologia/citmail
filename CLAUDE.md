@@ -11,7 +11,10 @@ Gestão de tarefas no Taiga, projeto CITMAIL (slug `citmail`, id interno 1). Pon
 - Servidor de desenvolvimento: Vite, `npm run dev` → `http://127.0.0.1:4200/citmail/` (config em `vite.config.js`: mesmo subcaminho do Pages, arquivo inexistente responde 404). O Vite só serve os arquivos; não há build.
 - Testes E2E: Playwright, `npm test` (sobe o Vite sozinho; perfis desktop e mobile). Specs em `tests/`, organizadas por página/funcionalidade (não por história); usar a fixture `erros` de `tests/fixtures.js` e marcar a história com tag (`{ tag: '@CIT-12' }`, filtrável com `npx playwright test --grep @CIT-12`).
 - Nos testes, APIs de terceiros (ViaCEP etc.) são mockadas com `page.route`; usar só dados fictícios. Nunca anexar `test-results/` ou `playwright-report/` a PR ou Taiga.
-- CI: `.github/workflows/testes.yml` roda `npm test` em todo PR para `develop` e `main`.
+- CI: `.github/workflows/testes.yml` roda `npm test` em todo PR para `develop` e `main` (e é reaproveitado pela homologação via `workflow_call`).
+- Homologação: `.github/workflows/publicar-homologacao.yml`, a cada push na `develop`, roda os testes, envia só `*.html` e `assets/` por rsync para a VPS (`/var/www/novo.citmail.com.br`; apaga o resto, exceto `.well-known/`) e faz o smoke em `https://novo.citmail.com.br`. Execução manual ("Run workflow") só publica na `develop`; em outra branch roda só os testes. Para republicar, usar execução manual, não re-run de execução antiga (publicaria commit antigo). Produção continua no GitHub Pages.
+- Environment `homologacao`: deployment branches só `develop` (é o que protege os secrets); secrets `SSH_HOST`, `USER_PASSWORD`, `SSH_KNOWN_HOSTS` (gerado com `ssh-keyscan -p <porta> <mesmo valor de SSH_HOST>`, impressão digital conferida na VPS); variables `SSH_PORT`, `SSH_USER`.
+- Testes contra um site publicado (não sobe o Vite): PowerShell `$env:CITMAIL_BASE_URL='<url>'; npx playwright test tests/paginas.spec.js`; bash `CITMAIL_BASE_URL=<url> npx playwright test tests/paginas.spec.js`. Não copiar para PR ou Taiga logs com dados da VPS.
 
 ## Fluxo de branches: Git Flow (padrão obrigatório)
 
