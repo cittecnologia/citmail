@@ -935,8 +935,14 @@
     ========================================================= */
     #marketplace { background: var(--white); }
     .marketplace-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .marketplace-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .marketplace-grid { grid-template-columns: 1fr; }
     }
     .marketplace-card {
       background: var(--white);
@@ -949,9 +955,6 @@
     .marketplace-card .badge { align-self: flex-start; }
     .marketplace-icon { font-size: 2rem; }
     .marketplace-card p { font-size: 1rem; flex: 1; }
-    .marketplace-card .from { font-size: .8125rem; color: var(--cit-text-muted); }
-    .marketplace-card .price { font-family: var(--font-title); font-weight: 800; color: var(--cit-primary); }
-    .marketplace-card .price--text { font-weight: 700; }
 
     /* =========================================================
        PAINEL PREVIEW (Client Portal teaser)
@@ -1590,7 +1593,6 @@
       <div class="section-header text-center fade-in">
         <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#store"></use></svg> Marketplace</div>
         <h2 style="margin-top:14px">Contrate novos serviços<br/>pelo mesmo painel</h2>
-        <p>Backup, servidores e consultoria de TI na mesma conta e na mesma fatura do e-mail.</p>
       </div>
       <div class="marketplace-grid">
         <div class="marketplace-card fade-in">
@@ -1598,32 +1600,36 @@
           <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <h3>E-mail Corporativo</h3>
           <p>Caixas de e-mail com domínio próprio, webmail, IMAP/POP3/SMTP e proteção antispam.</p>
-          <div class="from">A partir de</div>
-          <div class="price">R$ 19,90/mês</div>
+        </div>
+        <div class="marketplace-card fade-in">
+          <div class="badge badge-green">Disponível</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#history"></use></svg></div>
+          <h3>Backup adicional</h3>
+          <p>Backup automático das contas de e-mail por períodos maiores.</p>
         </div>
         <div class="marketplace-card fade-in">
           <div class="badge badge-green">Disponível</div>
           <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud"></use></svg></div>
-          <h3>Backup em Nuvem</h3>
-          <p>Backup automático de arquivos, bancos de dados e sistemas. Restauração pelo painel.</p>
-          <div class="from">A partir de</div>
-          <div class="price">R$ 39,90/mês</div>
+          <h3>Armazenamento em nuvem</h3>
+          <p>Integrado ao e-mail, com sincronização de arquivos via computador e acesso web.</p>
         </div>
         <div class="marketplace-card fade-in">
-          <div class="badge badge-yellow">Em breve</div>
-          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#server"></use></svg></div>
-          <h3>Servidores Cloud</h3>
-          <p>VPS e servidores dedicados na nuvem, com suporte técnico 24/7.</p>
-          <div class="from">A partir de</div>
-          <div class="price">R$ 79,90/mês</div>
+          <div class="badge badge-green">Disponível</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#video"></use></svg></div>
+          <h3>Talk</h3>
+          <p>Videoconferência ilimitada, com armazenamento das gravações em nuvem.</p>
         </div>
         <div class="marketplace-card fade-in">
-          <div class="badge badge-neutral">Especializado</div>
-          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#settings"></use></svg></div>
-          <h3>DevOps & Consultoria</h3>
-          <p>Projetos de infraestrutura, CI/CD, Docker, Kubernetes e consultoria de TI.</p>
-          <div class="from">Sob consulta</div>
-          <div class="price price--text">Fale conosco →</div>
+          <div class="badge badge-neutral">Sob consulta</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail-check"></use></svg></div>
+          <h3>E-mail Registrado</h3>
+          <p>Para comunicações que exigem formalidade e comprovação, o E-mail Registrado substitui processos burocráticos com eficiência e validade jurídica. Ideal para empresas que valorizam rastreabilidade, proteção e conformidade.</p>
+        </div>
+        <div class="marketplace-card fade-in">
+          <div class="badge badge-neutral">Sob consulta</div>
+          <div class="marketplace-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#laptop"></use></svg></div>
+          <h3>Microsoft 365</h3>
+          <p>E-mail, OneDrive, aplicativos online e offline. Planos que se encaixam desde pequenas a grandes empresas, que desejam escalar com aplicativos de produtividade da Microsoft.</p>
         </div>
       </div>
     </div>
