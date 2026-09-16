@@ -2,6 +2,19 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versionamento semântico.
 
+## [Não lançado]
+
+Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
+
+### Adicionado
+- Vite como servidor de desenvolvimento (`npm run dev`), no mesmo subcaminho `/citmail/` do GitHub Pages.
+- Testes E2E com Playwright (`npm test`), em desktop e mobile: páginas sem erros, ícones do sprite existentes e recursos locais com caminho relativo.
+- Workflow de CI que roda os testes em PRs para `develop` e `main`.
+- Fluxo de desenvolvimento de história no `CLAUDE.md`.
+
+### Removido
+- `serve.py`, substituído pelo Vite.
+
 ## [1.0.0] - 2026-09-13
 
 Primeira versão publicada. Migra o site para o [Brandbook CIT v1.0](https://github.com/cittecnologia/brandbook-cit): história US#2 no Taiga, PR #2.
