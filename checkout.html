@@ -879,19 +879,6 @@
             </div>
           </label>
 
-          <!-- .com -->
-          <label class="domain-opt-card" id="doptCom" onclick="selectDomainOpt('new-com')">
-            <div class="domain-opt-radio"><div class="domain-opt-dot"></div></div>
-            <div class="opt-info">
-              <div class="opt-name">Registrar domínio .com</div>
-              <div class="opt-desc">Extensão internacional, para operar também fora do Brasil</div>
-            </div>
-            <div class="opt-price-col">
-              <div class="opt-price">R$ 150,00</div>
-              <div class="opt-price-note">/ano · pagamento via Pix</div>
-            </div>
-          </label>
-
           <!-- Existing domain -->
           <label class="domain-opt-card" id="doptExist" onclick="selectDomainOpt('existing')">
             <div class="domain-opt-radio"><div class="domain-opt-dot"></div></div>
@@ -1549,7 +1536,7 @@
     /* ================================================================
        DOMAIN & ADD-ONS STATE
     ================================================================ */
-    let domainChoice  = null;   // 'new-br' | 'new-com' | 'existing'
+    let domainChoice  = null;   // 'new-br' | 'existing'
     let domPixSec     = 1800;
     let domPixIntvl   = null;
     const addonQtys   = { talk: 0, backup90: 0, backup365: 0, grupoEmail: 0, skybox: 0, extraDom: 0 };
@@ -1558,21 +1545,16 @@
     /* ---- DOMAIN STEP ---- */
     function selectDomainOpt(choice) {
       domainChoice = choice;
-      ['doptBr','doptCom','doptExist'].forEach(id => document.getElementById(id).classList.remove('selected'));
-      const map = { 'new-br':'doptBr', 'new-com':'doptCom', 'existing':'doptExist' };
+      ['doptBr','doptExist'].forEach(id => document.getElementById(id).classList.remove('selected'));
+      const map = { 'new-br':'doptBr', 'existing':'doptExist' };
       document.getElementById(map[choice]).classList.add('selected');
-      document.getElementById('domainNewPanel').style.display  = (choice === 'new-br' || choice === 'new-com') ? 'block' : 'none';
+      document.getElementById('domainNewPanel').style.display  = choice === 'new-br' ? 'block' : 'none';
       document.getElementById('domainExistPanel').style.display = choice === 'existing' ? 'block' : 'none';
       document.getElementById('step2Error').style.display = 'none';
       if (choice === 'new-br') {
         document.getElementById('domNewTld').textContent = '.com.br';
         document.getElementById('domPixDesc').textContent = 'Registrar domínio .com.br — R$ 79,00/ano';
         document.getElementById('domPixCode').textContent = genFakePix(79);
-        startDomPixTimer();
-      } else if (choice === 'new-com') {
-        document.getElementById('domNewTld').textContent = '.com';
-        document.getElementById('domPixDesc').textContent = 'Registrar domínio .com — R$ 150,00/ano';
-        document.getElementById('domPixCode').textContent = genFakePix(150);
         startDomPixTimer();
       } else {
         clearInterval(domPixIntvl);
@@ -1611,11 +1593,10 @@
     function goStep2Next() {
       const errEl = document.getElementById('step2Error');
       if (!domainChoice) { errEl.style.display = 'flex'; return; }
-      if (domainChoice === 'new-br' || domainChoice === 'new-com') {
+      if (domainChoice === 'new-br') {
         const name = document.getElementById('fDomNew').value.trim();
         if (!name) { document.getElementById('err-dom-new').classList.add('visible'); return; }
-        const tld = domainChoice === 'new-br' ? '.com.br' : '.com';
-        document.getElementById('successWebmail').textContent = 'webmail.' + name + tld;
+        document.getElementById('successWebmail').textContent = 'webmail.' + name + '.com.br';
       }
       if (domainChoice === 'existing') {
         const d = document.getElementById('fDomExist').value.trim();
