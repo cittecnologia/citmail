@@ -9,11 +9,12 @@ const paginas = [
 ];
 
 for (const { arquivo, titulo } of paginas) {
-  test(`${arquivo} carrega sem erros e com todos os ícones do sprite`, { tag: '@CIT-12' }, async ({ page, erros }) => {
+  // também é o smoke da homologação (CITMAIL_BASE_URL), por isso não fixa o subcaminho /citmail/
+  test(`${arquivo} carrega sem erros e com todos os ícones do sprite`, { tag: ['@CIT-12', '@CIT-13'] }, async ({ page, baseURL, erros }) => {
     await page.goto(arquivo, { waitUntil: 'networkidle' });
 
-    // garante que é a página pedida (e não um fallback)
-    await expect(page).toHaveURL(new RegExp(`/citmail/${arquivo.replace('.', '\\.')}$`));
+    // garante que é a página pedida (e não um fallback ou redirecionamento)
+    await expect(page).toHaveURL(new URL(arquivo, baseURL).href);
     await expect(page).toHaveTitle(titulo);
 
     // todo <use href="...icons.svg#id"> precisa apontar para um símbolo existente no sprite
