@@ -1,7 +1,8 @@
 name: Publicar homologação
 
 # Publica a develop em https://novo.citmail.com.br (VPS) depois dos testes. Produção continua no GitHub Pages (main).
-# Environment "homologacao": secrets SSH_HOST, USER_PASSWORD, SSH_KNOWN_HOSTS; variables SSH_PORT, SSH_USER.
+# Environment "homologacao" (deployment branches: só develop): secrets SSH_HOST, USER_PASSWORD, SSH_KNOWN_HOSTS; variables SSH_PORT, SSH_USER.
+# Para republicar, use "Run workflow" na develop: re-run de execução antiga publicaria um commit antigo.
 
 on:
   push:
@@ -11,9 +12,10 @@ on:
 permissions:
   contents: read
 
-# uma publicação por vez; a mais recente espera a anterior terminar
+# uma publicação por vez por ref; a mais recente espera a anterior terminar
+# (por ref: um dispatch de outra branch, que só roda os testes, não cancela a fila da develop)
 concurrency:
-  group: publicar-homologacao
+  group: publicar-homologacao-${{ github.ref }}
   cancel-in-progress: false
 
 defaults:
@@ -29,7 +31,7 @@ jobs:
 
   publicar:
     needs: testes
-    # workflow_dispatch de outra branch fica "skipped" em vez de falhar na regra do environment
+    # workflow_dispatch de outra branch fica "skipped"; quem protege os secrets é a regra de branches do environment
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -37,14 +39,22 @@ jobs:
       name: homologacao
       url: ${{ env.HOMOLOGACAO_URL }}
     steps:
-      - uses: actions/checkout@v4
+      # actions fixadas por SHA no job com secrets
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
-      # lista de permissão: só o que o site usa vai para o servidor
+      # lista de permissão: só o que o site usa vai para o servidor (sem symlinks nem arquivos ocultos)
       - name: Monta dist/
         run: |
+          if [ -n "$(find ./*.html assets -type l)" ]; then
+            echo "::error::symlink não é permitido no site publicado"
+            exit 1
+          fi
           mkdir -p dist
           cp ./*.html dist/
           cp -r assets dist/
+          find dist -name '.*' -exec rm -rf {} +
           test -f dist/index.html && test -f dist/assets/icons.svg
           find dist -type f | sort
 
@@ -71,13 +81,18 @@ jobs:
             exit 1
           fi
 
-          # chave do host conferida por fora (ssh-keyscan fora do workflow); sem ela o ssh recusa a conexão
+          # os valores entram no comando do ssh: só formatos esperados (evita injetar opções como -o ProxyCommand)
+          [[ "$SSH_PORT" =~ ^[0-9]{1,5}$ ]] || { echo "::error::variable SSH_PORT inválida"; exit 1; }
+          [[ "$SSH_USER" =~ ^[a-z_][a-z0-9_-]{0,31}$ ]] || { echo "::error::variable SSH_USER inválida"; exit 1; }
+          [[ "$SSH_HOST" =~ ^[A-Za-z0-9][A-Za-z0-9.-]*$ ]] || { echo "::error::secret SSH_HOST inválido"; exit 1; }
+
+          # chave do host conferida por fora: ssh-keyscan -p <porta> <mesmo valor de SSH_HOST>; sem ela o ssh recusa a conexão
           known_hosts="$RUNNER_TEMP/known_hosts"
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$known_hosts"
           chmod 600 "$known_hosts"
 
           # destino fixo; --delete-delay + --delay-updates trocam os arquivos no fim; .well-known/ (certificado) é preservado
-          rsync -rlt -O --delete-delay --delay-updates --itemize-changes --chmod=D755,F644 \
+          rsync -rt -O --delete-delay --delay-updates --itemize-changes \
             --filter 'P /.well-known/' \
             -e "sshpass -e ssh -p $SSH_PORT -o UserKnownHostsFile=$known_hosts -o StrictHostKeyChecking=yes -o ConnectTimeout=15 -o PubkeyAuthentication=no -o PreferredAuthentications=password,keyboard-interactive -o NumberOfPasswordPrompts=1" \
             dist/ "$SSH_USER@$SSH_HOST:/var/www/novo.citmail.com.br/"
@@ -87,18 +102,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       - name: Conteúdo publicado igual ao commit
         run: |
           for arquivo in index.html assets/icons.svg; do
             esperado=$(sha256sum "$arquivo" | cut -d' ' -f1)
-            publicado=$(curl -fsS -H 'Cache-Control: no-cache' "${HOMOLOGACAO_URL}${arquivo}" | sha256sum | cut -d' ' -f1)
+            publicado=$(curl -fsS --retry 3 --retry-all-errors -H 'Cache-Control: no-cache' "${HOMOLOGACAO_URL}${arquivo}" | sha256sum | cut -d' ' -f1)
             echo "$arquivo: commit $esperado, publicado $publicado"
-            [ "$esperado" = "$publicado" ]
+            [ "$esperado" = "$publicado" ] || { echo "::error::$arquivo publicado difere do commit"; exit 1; }
           done
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm
@@ -110,9 +127,9 @@ jobs:
           CITMAIL_BASE_URL: ${{ env.HOMOLOGACAO_URL }}
         run: npx playwright test tests/paginas.spec.js --retries=0
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: smoke-homologacao
           path: test-results/
-          retention-days: 3
+          retention-days: 1

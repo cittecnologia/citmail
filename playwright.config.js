@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 const CI = !!process.env.CI;
 // site já publicado (ex.: smoke da homologação): testa essa URL e não sobe o Vite
-const baseExterna = process.env.CITMAIL_BASE_URL?.replace(/\/?$/, '/');
+const baseExterna = process.env.CITMAIL_BASE_URL ? process.env.CITMAIL_BASE_URL.replace(/\/?$/, '/') : undefined;
 
 export default defineConfig({
   testDir: './tests',

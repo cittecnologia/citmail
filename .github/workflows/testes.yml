@@ -6,6 +6,9 @@ on:
   # reaproveitado por publicar-homologacao.yml (o check "playwright" exigido pelo ruleset continua vindo do pull_request)
   workflow_call:
 
+permissions:
+  contents: read
+
 jobs:
   playwright:
     runs-on: ubuntu-latest
