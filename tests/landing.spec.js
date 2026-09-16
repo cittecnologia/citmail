@@ -22,6 +22,28 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
     expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
   });
 
+  for (const largura of [320, 360]) {
+    test(`h1 cabe na largura útil em telas de ${largura}px sem quebrar "e-mail" no hífen`, async ({ page, erros }) => {
+      await page.setViewportSize({ width: largura, height: 800 });
+      await page.goto('index.html');
+      await expect(page.locator('.hero-title')).toBeVisible();
+      // a coluna do hero é alargada pelo mockup ao lado (fora do escopo), então o h1 é medido
+      // restrito à largura útil do container: nenhum trecho do título pode passar dela
+      const medida = await page.evaluate(() => {
+        const h1 = /** @type {HTMLElement} */ (document.querySelector('.hero-title'));
+        const container = /** @type {HTMLElement} */ (h1.closest('.container'));
+        const estilo = getComputedStyle(container);
+        const util = document.documentElement.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
+        h1.style.width = `${util}px`;
+        const palavra = /** @type {HTMLElement} */ (h1.querySelector('.highlight .nowrap-word'));
+        return { util, scrollWidth: h1.scrollWidth, linhasEmail: palavra.getClientRects().length, textoEmail: palavra.textContent };
+      });
+      expect(medida.scrollWidth).toBeLessThanOrEqual(medida.util);
+      expect(medida.textoEmail).toBe('e-mail');
+      expect(medida.linhasEmail).toBe(1);
+    });
+  }
+
   test('subtítulo do hero exibe o texto final', async ({ page, erros }) => {
     await page.goto('index.html');
     await expect(page.locator('.hero-subtitle')).toHaveText(
