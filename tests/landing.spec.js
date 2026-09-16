@@ -3,8 +3,24 @@ import { test, expect } from './fixtures.js';
 
 // CIT-15: ajuste de textos e componentes da landing (index.html).
 // Cada teste roda nos dois perfis configurados em playwright.config.js (desktop e mobile).
-test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
 
+/**
+ * Cor calculada de var(--cit-success) na página, lida de um elemento sonda,
+ * para os testes não fixarem o valor do token.
+ * @param {import('@playwright/test').Page} page
+ */
+async function corSucesso(page) {
+  return page.evaluate(() => {
+    const sonda = document.createElement('div');
+    sonda.style.backgroundColor = 'var(--cit-success)';
+    document.body.appendChild(sonda);
+    const cor = getComputedStyle(sonda).backgroundColor;
+    sonda.remove();
+    return cor;
+  });
+}
+
+test.describe('landing — hero', { tag: '@CIT-15' }, () => {
   test('h1 exibe o texto final com destaque em "e-mail profissional"', async ({ page, erros }) => {
     await page.goto('index.html');
     const h1 = page.locator('.hero-title');
@@ -76,7 +92,9 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
     // guarda de regressão: o outro selo flutuante continua no lugar
     await expect(page.locator('.hero-float-1')).toHaveCount(1);
   });
+});
 
+test.describe('landing — faixa de confiança', { tag: '@CIT-15' }, () => {
   test('faixa de confiança tem 4 itens e não cita pagamento recorrente nem meios de pagamento', async ({ page, erros }) => {
     await page.goto('index.html');
     const itens = page.locator('.trust-bar-inner .trust-item');
@@ -85,7 +103,9 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
     expect(texto.join(' ')).not.toContain('Pagamento recorrente automático');
     expect(texto.join(' ')).not.toContain('Pix, boleto e cartão');
   });
+});
 
+test.describe('landing — recursos e domínio', { tag: '@CIT-15' }, () => {
   test('subtítulo da seção Recursos exibe o texto final', async ({ page, erros }) => {
     await page.goto('index.html');
     await expect(page.locator('#features .section-header p')).toHaveText(
@@ -111,21 +131,27 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
     await expect(page.locator('.tld-chip[data-tld=".adv.br"]')).toHaveCount(1);
     await expect(page.locator('.tld-chip[data-tld=".med.br"]')).toHaveCount(1);
   });
+});
 
-  test('toggle mensal/anual fica verde no anual e volta ao valor original no mensal', async ({ page, erros }) => {
+test.describe('landing — plano anual', { tag: '@CIT-15' }, () => {
+  test('toggle mensal/anual fica verde só no anual e volta ao valor original no mensal', async ({ page, erros }) => {
     await page.goto('index.html');
+    const verde = await corSucesso(page);
     const toggle = page.locator('#billingToggle');
     await toggle.scrollIntoViewIfNeeded();
     // lê o valor inicial em vez de fixar a cor azul, para não acoplar o teste a um token específico
     const corInicial = await toggle.evaluate(el => getComputedStyle(el).backgroundColor);
+    expect(corInicial).not.toBe(verde);
 
     await toggle.click();
-    await expect(toggle).toHaveCSS('background-color', 'rgb(30, 142, 78)');
+    await expect(toggle).toHaveCSS('background-color', verde);
 
     await toggle.click();
     await expect(toggle).toHaveCSS('background-color', corInicial);
   });
+});
 
+test.describe('landing — quantidade de contas', { tag: '@CIT-15' }, () => {
   test('plano de 5 GB: botões e digitação respeitam o mínimo de 2 contas', async ({ page, erros }) => {
     await page.goto('index.html');
     const card = page.locator('#card5');
@@ -136,7 +162,7 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
     await aumentar.click();
     await expect(input).toHaveValue('2');
 
-    await diminuir.click();
+    // abaixo do mínimo zera em um único clique
     await diminuir.click();
     await expect(input).toHaveValue('0');
 
@@ -149,6 +175,17 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
     await expect(input).toHaveValue('0');
   });
 
+  test('plano de 5 GB: diminuir de 3 contas vai para 2', async ({ page, erros }) => {
+    await page.goto('index.html');
+    const input = page.locator('#qty5');
+    await input.fill('3');
+    await input.press('Tab');
+    await expect(input).toHaveValue('3');
+
+    await page.locator('#card5').getByRole('button', { name: 'Diminuir' }).click();
+    await expect(input).toHaveValue('2');
+  });
+
   test('planos de 25 GB e 50 GB aceitam quantidade mínima de 1 conta', async ({ page, erros }) => {
     await page.goto('index.html');
     const qty25 = page.locator('#qty25');
@@ -156,6 +193,9 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
 
     await page.locator('#card25').getByRole('button', { name: 'Aumentar' }).click();
     await expect(qty25).toHaveValue('1');
+
+    await page.locator('#card25').getByRole('button', { name: 'Diminuir' }).click();
+    await expect(qty25).toHaveValue('0');
 
     await qty50.fill('1');
     await qty50.press('Tab');
@@ -177,22 +217,9 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
     await expect(page.locator('#card50 .atc-storage')).not.toContainText('Mínimo 2 contas');
     await expect(page.locator('.discount-info strong').first()).toHaveText('Mínimo de 2 contas no plano de 5 GB.');
   });
+});
 
-  test('nenhuma referência a prazo de "5 min" resta no HTML da landing', async ({ page, erros }) => {
-    await page.goto('index.html');
-    const html = await page.content();
-    expect(html).not.toMatch(/\b5(?:\s|&nbsp;)*min/i);
-  });
-
-  test('FAQ de DNS exibe o texto final', async ({ page, erros }) => {
-    await page.goto('index.html');
-    const resposta = page.locator('.faq-answer p').filter({ hasText: 'propagação de DNS' });
-    await expect(resposta).toHaveText(
-      'Após a confirmação do pagamento, criamos as contas e enviamos as credenciais de acesso por e-mail. ' +
-      'A propagação de DNS leva até 48h e costuma terminar em menos de 6 horas. A partir desse período as contas estão aptas a enviar e receber e-mails.'
-    );
-  });
-
+test.describe('landing — marketplace', { tag: '@CIT-15' }, () => {
   test('marketplace exibe os 6 serviços na ordem, com selos e ícones corretos', async ({ page, erros }) => {
     await page.goto('index.html');
     const cards = page.locator('#marketplace .marketplace-card');
@@ -257,6 +284,23 @@ test.describe('CIT-15 — landing (index.html)', { tag: '@CIT-15' }, () => {
     const grid = page.locator('#marketplace .marketplace-grid');
     const colunas = await grid.evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').length);
     expect(colunas).toBe(2);
+  });
+});
+
+test.describe('landing — textos, FAQ e meta', { tag: '@CIT-15' }, () => {
+  test('nenhuma referência a prazo de "5 min" resta no HTML da landing', async ({ page, erros }) => {
+    await page.goto('index.html');
+    const html = await page.content();
+    expect(html).not.toMatch(/\b5(?:\s|&nbsp;)*min/i);
+  });
+
+  test('FAQ de DNS exibe o texto final', async ({ page, erros }) => {
+    await page.goto('index.html');
+    const resposta = page.locator('.faq-answer p').filter({ hasText: 'propagação de DNS' });
+    await expect(resposta).toHaveText(
+      'Após a confirmação do pagamento, criamos as contas e enviamos as credenciais de acesso por e-mail. ' +
+      'A propagação de DNS leva até 48h e costuma terminar em menos de 6 horas. A partir desse período as contas estão aptas a enviar e receber e-mails.'
+    );
   });
 
   test('<title> da landing permanece inalterado', async ({ page, erros }) => {
