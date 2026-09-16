@@ -1276,7 +1276,7 @@
       <div class="discount-info fade-in">
         <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
         <span>
-          <strong>Mínimo de 2 contas por plano.</strong>
+          <strong>Mínimo de 2 contas no plano de 5 GB.</strong>
           Contrate 5 ou mais contas do mesmo tipo e ganhe <strong>5% de desconto</strong> sobre todas as contas daquele tipo.
           No plano anual, economize <strong>20% adicionais</strong> sobre o valor mensal.
         </span>
@@ -1335,7 +1335,7 @@
               <div class="atc-icon c25"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#inbox"></use></svg></div>
               <div class="atc-info">
                 <div class="atc-name">Conta E-mail 25 GB</div>
-                <div class="atc-storage">25 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
+                <div class="atc-storage">25 GB por caixa · IMAP/POP3/SMTP · Webmail</div>
               </div>
               <div class="atc-unit-price">
                 <div class="from">a partir de</div>
@@ -1367,7 +1367,7 @@
               <div class="atc-icon c50"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mails"></use></svg></div>
               <div class="atc-info">
                 <div class="atc-name">Conta E-mail 50 GB <span class="badge badge-blue atc-ai-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sparkles"></use></svg> IA inclusa</span></div>
-                <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
+                <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail</div>
               </div>
               <div class="atc-unit-price">
                 <div class="from">a partir de</div>
@@ -1881,12 +1881,11 @@
 
     // ---- CALCULADORA DE CONTAS ----
     const ACCOUNT_TYPES = {
-      '5gb':  { base:10, inputId:'qty5',  subId:'sub5',  discTagId:'discTag5',  cardId:'card5',  unitId:'unitPrice5',  bdId:'breakdown5',  origId:'origPrice5',  finalId:'finalPrice5',  savId:'saving5'  },
-      '25gb': { base:16, inputId:'qty25', subId:'sub25', discTagId:'discTag25', cardId:'card25', unitId:'unitPrice25', bdId:'breakdown25', origId:'origPrice25', finalId:'finalPrice25', savId:'saving25' },
-      '50gb': { base:25, inputId:'qty50', subId:'sub50', discTagId:'discTag50', cardId:'card50', unitId:'unitPrice50', bdId:'breakdown50', origId:'origPrice50', finalId:'finalPrice50', savId:'saving50' },
+      '5gb':  { base:10, min:2, inputId:'qty5', subId:'sub5',  discTagId:'discTag5',  cardId:'card5',  unitId:'unitPrice5',  bdId:'breakdown5',  origId:'origPrice5',  finalId:'finalPrice5',  savId:'saving5'  },
+      '25gb': { base:16, min:1, inputId:'qty25', subId:'sub25', discTagId:'discTag25', cardId:'card25', unitId:'unitPrice25', bdId:'breakdown25', origId:'origPrice25', finalId:'finalPrice25', savId:'saving25' },
+      '50gb': { base:25, min:1, inputId:'qty50', subId:'sub50', discTagId:'discTag50', cardId:'card50', unitId:'unitPrice50', bdId:'breakdown50', origId:'origPrice50', finalId:'finalPrice50', savId:'saving50' },
     };
     const quantities = { '5gb': 0, '25gb': 0, '50gb': 0 };
-    const MIN_QTY = 2;
 
     function calcVolDisc(qty) { return qty >= 5 ? 5 : 0; }
 
@@ -1894,11 +1893,17 @@
       return val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // quantidade inteira ≥ 0; abaixo do mínimo do tipo sobe ao mínimo, ou zera ao diminuir
+    function normalizeQty(type, raw, delta = 0) {
+      const min = ACCOUNT_TYPES[type].min;
+      const q   = Math.max(0, parseInt(raw) || 0);
+      if (q > 0 && q < min) return delta < 0 ? 0 : min;
+      return q;
+    }
+
     function changeQty(type, delta) {
-      const cfg = ACCOUNT_TYPES[type];
-      let next  = quantities[type] + delta;
-      if (next > 0 && next < MIN_QTY) next = delta > 0 ? MIN_QTY : 0;
-      next = Math.max(0, next);
+      const cfg  = ACCOUNT_TYPES[type];
+      const next = normalizeQty(type, quantities[type] + delta, delta);
       quantities[type] = next;
       document.getElementById(cfg.inputId).value = next;
       recalcType(type);
@@ -1907,9 +1912,7 @@
 
     function updateQty(type, raw) {
       const cfg = ACCOUNT_TYPES[type];
-      let val   = parseInt(raw) || 0;
-      if (val > 0 && val < MIN_QTY) val = MIN_QTY;
-      val = Math.max(0, val);
+      const val = normalizeQty(type, raw);
       quantities[type] = val;
       document.getElementById(cfg.inputId).value = val;
       recalcType(type);

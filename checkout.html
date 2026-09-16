@@ -784,7 +784,7 @@
         <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calculator"></use></svg> Selecione suas Contas de E-mail</div>
 
         <p class="step-intro">
-          Escolha a quantidade de contas de cada tipo. Mínimo de 2 contas por tipo. Desconto de 5% a partir de 5 contas do mesmo tipo (não se aplica ao plano anual).
+          Escolha a quantidade de contas de cada tipo. Mínimo de 2 contas no plano de 5 GB. Desconto de 5% a partir de 5 contas do mesmo tipo (não se aplica ao plano anual).
         </p>
 
         <!-- E-mail 5 GB -->
@@ -1734,9 +1734,9 @@
        ACCOUNT TYPES DATA
     ================================================================ */
     const ACCOUNT_DEFS = {
-      '5gb':  { base: 10, label: 'E-mail 5 GB',  unitId:'ckUnit5',  qtyId:'ckQty5',  subId:'ckSub5',  discId:'ckDisc5',  cardId:'ckCard5'  },
-      '25gb': { base: 16, label: 'E-mail 25 GB', unitId:'ckUnit25', qtyId:'ckQty25', subId:'ckSub25', discId:'ckDisc25', cardId:'ckCard25' },
-      '50gb': { base: 25, label: 'E-mail 50 GB', unitId:'ckUnit50', qtyId:'ckQty50', subId:'ckSub50', discId:'ckDisc50', cardId:'ckCard50' },
+      '5gb':  { base: 10, min: 2, label: 'E-mail 5 GB', unitId:'ckUnit5',  qtyId:'ckQty5',  subId:'ckSub5',  discId:'ckDisc5',  cardId:'ckCard5'  },
+      '25gb': { base: 16, min: 1, label: 'E-mail 25 GB', unitId:'ckUnit25', qtyId:'ckQty25', subId:'ckSub25', discId:'ckDisc25', cardId:'ckCard25' },
+      '50gb': { base: 25, min: 1, label: 'E-mail 50 GB', unitId:'ckUnit50', qtyId:'ckQty50', subId:'ckSub50', discId:'ckDisc50', cardId:'ckCard50' },
     };
     const ckQtys      = { '5gb': 0, '25gb': 0, '50gb': 0 };
     let annualBilling = false;
@@ -1760,19 +1760,23 @@
     function grandTotal()        { return Object.keys(ACCOUNT_DEFS).reduce((s,t) => s + ckQtys[t]*unitPrice(t), 0) + addonsMonthly(); }
     function totalAccounts()     { return Object.values(ckQtys).reduce((a,b) => a+b, 0); }
 
+    // quantidade inteira ≥ 0; abaixo do mínimo do tipo sobe ao mínimo, ou zera ao diminuir
+    function ckNormalizeQty(type, raw, delta = 0) {
+      const min = ACCOUNT_DEFS[type].min;
+      const q   = Math.max(0, parseInt(raw)||0);
+      if (q > 0 && q < min) return delta < 0 ? 0 : min;
+      return q;
+    }
     function ckChangeQty(type, delta) {
       const d = ACCOUNT_DEFS[type];
-      let q = ckQtys[type] + delta;
-      if (q < 0) q = 0;
-      if (q === 1) q = delta > 0 ? 2 : 0;   // skip 1: enforce min 2
+      const q = ckNormalizeQty(type, ckQtys[type] + delta, delta);
       ckQtys[type] = q;
       document.getElementById(d.qtyId).value = q;
       ckRefresh();
     }
     function ckUpdateQty(type, raw) {
       const d = ACCOUNT_DEFS[type];
-      let q = Math.max(0, parseInt(raw)||0);
-      if (q === 1) q = 2;   // enforce min 2
+      const q = ckNormalizeQty(type, raw);
       ckQtys[type] = q;
       document.getElementById(d.qtyId).value = q;
       ckRefresh();
@@ -2194,9 +2198,9 @@
     ================================================================ */
     (function init() {
       const params = new URLSearchParams(window.location.search);
-      const qty5   = parseInt(params.get('qty5'))  || 0;
-      const qty25  = parseInt(params.get('qty25')) || 0;
-      const qty50  = parseInt(params.get('qty50')) || 0;
+      const qty5   = ckNormalizeQty('5gb',  params.get('qty5'));
+      const qty25  = ckNormalizeQty('25gb', params.get('qty25'));
+      const qty50  = ckNormalizeQty('50gb', params.get('qty50'));
       const cycle  = params.get('cycle');
 
       ckQtys['5gb']  = qty5;
