@@ -14,6 +14,7 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Publicação automática da `develop` na homologação (`https://novo.citmail.com.br`), com testes antes e smoke depois do deploy (CIT-13).
 - Testes de páginas rodam contra um site publicado com `CITMAIL_BASE_URL` (CIT-13).
 - Testes E2E dos ajustes de textos e componentes da landing e do checkout (CIT-15).
+- Testes E2E de layout, rolagem e tipografia do checkout (CIT-19).
 
 ### Alterado
 - Landing: novos textos do hero (título, subtítulo e indicadores), da faixa de confiança e da seção Recursos (CIT-15).
@@ -21,6 +22,11 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Toggle do plano anual fica verde quando ativo, na landing e no checkout (CIT-15).
 - Mínimo de 2 contas passa a valer só para o plano de 5 GB (CIT-15).
 - Marketplace com os novos serviços, sem preços e sem os cards de Servidores e DevOps (CIT-15).
+- Checkout: barra de etapas com os rótulos abaixo dos círculos, sem sobrepor o resumo do pedido (CIT-19).
+- Checkout: coluna única até 960px, com rolagem até a barra de etapas ao trocar de passo (CIT-19).
+- Checkout: resumo do pedido com rolagem interna quando não cabe na janela e acessível por teclado (CIT-19).
+- Checkout: fontes maiores nas etapas, nos cards e no resumo do pedido (CIT-19).
+- Checkout: ajustes de transbordo no webmail, nos add-ons e no Skybox (CIT-19).
 
 ### Removido
 - `serve.py`, substituído pelo Vite.
