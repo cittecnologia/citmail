@@ -126,14 +126,15 @@ async function lerFontes(page, seletores, excecoes = []) {
   }, [seletores, excecoes]);
 }
 
-// Larguras da barra: limiares do container (coluna 300px ↔ 331/332; coluna 460px ↔ 499/500)
+// Larguras da barra: limiares do container (coluna 300px ↔ 331/332; coluna 500px ↔ 543/544)
 // e do grid (960/961), além de larguras comuns.
-const LARGURAS_BARRA = [320, 331, 332, 412, 499, 500, 521, 744, 960, 961, 1024, 1243, 1920];
-// Rótulos visíveis esperados por largura, fixados a partir da geometria medida (coluna = largura − 32px
-// de padding até 960px): 499 → coluna 459px → só o ativo; 500 → coluna 460px → todos.
+const LARGURAS_BARRA = [320, 331, 332, 412, 500, 521, 543, 544, 744, 960, 961, 1024, 1243, 1920];
+// Rótulos visíveis esperados por largura, fixados a partir da geometria medida (coluna ≈ 92% da largura
+// até 960px): 543 → coluna 499,6px → só o ativo; 544 → coluna 500,5px → todos.
+// O limite de 500px deixa folga para as métricas da fonte no Linux (6 rótulos ≈ 472px) e no Windows (≈ 453px).
 const ROTULOS_POR_LARGURA = /** @type {Record<number, number>} */ ({
-  320: 1, 331: 1, 332: 1, 412: 1, 499: 1,
-  500: 6, 521: 6, 744: 6, 960: 6, 961: 6, 1024: 6, 1243: 6, 1920: 6,
+  320: 1, 331: 1, 332: 1, 412: 1, 500: 1, 521: 1, 543: 1,
+  544: 6, 744: 6, 960: 6, 961: 6, 1024: 6, 1243: 6, 1920: 6,
 });
 // Círculos da barra por largura: 32px só com coluna < 300px (320 → 288px, 331 → 299px).
 const CIRCULO_POR_LARGURA = /** @type {Record<number, number>} */ ({ 320: 32, 331: 32 });

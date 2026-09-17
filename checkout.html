@@ -142,8 +142,9 @@
       margin: 18px 0 0; transition: background var(--transition);
     }
     .step-connector.done { background: var(--cit-blue-300); }
-    /* Os 6 rótulos precisam de ~453px; abaixo disso, só o rótulo da etapa atual */
-    @container (width < 460px) {
+    /* Os 6 rótulos precisam de ~453px no Windows e ~472px no Linux (métricas da fonte variam);
+       abaixo de 500px, só o rótulo da etapa atual */
+    @container (width < 500px) {
       .step-label:not(.active) { display: none; }
       .step-connector { min-width: 4px; }
     }
@@ -152,7 +153,7 @@
       .step-connector { min-width: 2px; margin-top: 16px; }
     }
     @supports not (container-type: inline-size) {
-      @media (max-width: 520px) {
+      @media (max-width: 543px) {
         .step-label:not(.active) { display: none; }
         .step-connector { min-width: 4px; }
       }
