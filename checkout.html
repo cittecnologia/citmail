@@ -92,6 +92,7 @@
 
     /* ---- LAYOUT ---- */
     .checkout-wrapper {
+      --checkout-sticky-top: 76px; /* header fixo (60px) + 16px: topo do resumo fixo e margem de rolagem da barra */
       max-width: 1100px;
       margin: 0 auto;
       padding: clamp(20px, 4vw, 48px) clamp(16px, 4vw, 24px);
@@ -111,7 +112,7 @@
     .steps-bar {
       display: flex; align-items: flex-start;
       margin-bottom: 28px; gap: 0;
-      scroll-margin-top: 76px; /* header fixo (60px) + 16px, igual ao top do resumo */
+      scroll-margin-top: var(--checkout-sticky-top);
     }
     .step-item {
       flex: 0 0 auto;
@@ -368,7 +369,7 @@
       font-family: var(--font-title); font-weight: 600; font-size: var(--cit-text-small);
       color: var(--cit-text-primary); margin-bottom: 4px;
     }
-    .pix-box--sm .pix-box-title { font-size: var(--cit-text-small); margin-bottom: 10px; }
+    .pix-box--sm .pix-box-title { margin-bottom: 10px; }
     .pix-box-desc { font-size: var(--cit-text-small); color: var(--cit-text-secondary); margin-bottom: 14px; }
     .pix-box .pix-qr { margin: 0 auto 14px; }
     .pix-box .pix-qr--sm { margin-bottom: 12px; }
@@ -463,11 +464,18 @@
     .btn-back-row:hover { color: var(--cit-text-primary); background: var(--cit-bg-muted); }
 
     /* ---- RESUMO DO PEDIDO ---- */
-    /* Mais alto que a janela, o resumo fixo rola por dentro para o rodapé continuar alcançável (76px no topo + 16px embaixo). */
+    /* Mais alto que a janela, o resumo fixo rola por dentro para o rodapé continuar alcançável.
+       108px = header (60px) + maior padding do .checkout-wrapper (48px): topo do resumo com a página em scrollY=0,
+       para caber na janela já antes de a página rolar (rolada, fica a 76px do topo e sobram 32px embaixo). */
     .order-summary {
-      position: sticky; top: 76px;
-      max-height: calc(100vh - 92px); overflow-y: auto;
+      position: sticky; top: var(--checkout-sticky-top);
+      max-height: calc(100vh - 108px);
+      max-height: calc(100dvh - 108px);
+      overflow-x: hidden; overflow-y: auto;
+      border-radius: var(--cit-radius-lg); /* mesmo raio do .card, para o anel de foco acompanhar o contorno */
     }
+    .order-summary:focus { outline: none; }
+    .order-summary:focus-visible { box-shadow: var(--cit-focus-ring); }
     /* Uma coluna: o resumo fica acima do formulário e, fixo, cobriria os campos ao rolar. */
     @media (max-width: 960px) { .order-summary { position: static; max-height: none; overflow: visible; } }
     .summary-plan {
@@ -629,7 +637,7 @@
       display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 12px;
       font-family: var(--font-title); font-weight: 600; font-size: var(--cit-text-small); margin-bottom: 8px;
     }
-    .addons-subtotal-head span:last-child { color: var(--cit-primary); white-space: nowrap; }
+    .addons-subtotal-head span:last-child { color: var(--cit-primary); white-space: nowrap; margin-left: auto; }
     .addons-subtotal-lines { display: flex; flex-direction: column; gap: 4px; }
     .addon-sub-line { display: flex; justify-content: space-between; gap: 12px; font-size: var(--cit-text-small); color: var(--cit-text-secondary); }
 
@@ -1502,7 +1510,7 @@
     </div><!-- /main-col -->
 
     <!-- RIGHT COLUMN: ORDER SUMMARY -->
-    <aside class="order-summary" id="orderSummary">
+    <aside class="order-summary" id="orderSummary" tabindex="0" role="region" aria-label="Resumo do pedido">
       <div class="card">
         <div class="card-title card-title--plain">
           <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#receipt"></use></svg> Resumo do Pedido
@@ -1829,6 +1837,8 @@
     /* ================================================================
        STEP NAVIGATION
     ================================================================ */
+    // Mesmo limite dos dois @media (max-width: 960px) do CSS (grid em coluna única e resumo não fixo).
+    const COLUNA_UNICA_MQ = '(max-width: 960px)';
     function goStep(n) {
       document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
       document.getElementById('step' + n).classList.add('active');
@@ -1836,10 +1846,11 @@
       updateStepBar(n);
       if (n === 5) generatePaymentData();
       // Coluna única: o resumo fica no topo, então rola até a barra de etapas para o passo ficar à vista
-      if (window.matchMedia('(max-width: 960px)').matches) {
-        document.getElementById('stepsBar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      if (window.matchMedia(COLUNA_UNICA_MQ).matches) {
+        document.getElementById('stepsBar').scrollIntoView({ behavior, block: 'start' });
       } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior });
       }
     }
 
