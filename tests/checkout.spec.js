@@ -1,5 +1,8 @@
 // @ts-check
 import { test, expect } from './fixtures.js';
+// CIT-22: guarda de carga (assets/precos.js não carrega) — espera erro de propósito, por isso usa o
+// `test` puro do Playwright em vez da fixture `erros` (que falharia com qualquer erro registrado).
+import { test as testSemErros } from '@playwright/test';
 
 // CIT-15: ajuste de textos e componentes do checkout (checkout.html).
 // Cada teste roda nos dois perfis configurados em playwright.config.js (desktop e mobile).
@@ -1557,6 +1560,20 @@ test.describe('checkout — CIT-22: cores dos riscados e dos preços cobrados (C
     await expect(page.locator('#adTalk .addon-price')).not.toHaveCSS('color', sucesso);
     await expect(page.locator('#sumEconomia')).not.toHaveCSS('color', sucesso);
   });
+
+  test('mini-row-price, mini-row-sub e valores das sum-line usam --cit-success-strong; o total geral não muda', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    const sucessoForte = await corToken(page, '--cit-success-strong');
+    const primaria = await corToken(page, '--cit-primary');
+
+    await expect(page.locator('#ckCard5 .mini-row-price')).toHaveCSS('color', sucessoForte);
+    await expect(page.locator('#ckCard5 .mini-row-sub')).toHaveCSS('color', sucessoForte);
+    await expect(page.locator('#sumAccountLines .sum-line span:last-child').first()).toHaveCSS('color', sucessoForte);
+
+    // Guarda de regressão (CA12): #sumTotal (total geral) mantém a cor de hoje, não vira --cit-success-strong.
+    await expect(page.locator('#sumTotal')).toHaveCSS('color', primaria);
+    await expect(page.locator('#sumTotal')).not.toHaveCSS('color', sucessoForte);
+  });
 });
 
 test.describe('checkout — CIT-22: contraste do riscado e do cobrado (CA13)', { tag: '@CIT-22' }, () => {
@@ -1575,6 +1592,24 @@ test.describe('checkout — CIT-22: contraste do riscado e do cobrado (CA13)', {
       '#sumAccountLines .sum-disc s',
     ]);
     for (const [sel, valor] of Object.entries(c)) expect(valor, `contraste de ${sel}`).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test('add-ons ativos (Talk ×1, Skybox 50 selecionado) mantêm contraste ≥ 4,5:1 sobre o fundo real de seleção', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 1);
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 1);
+    await page.locator('#skyOpt50').click();
+    await expect(page.locator('#adTalk')).toHaveClass(/active/);
+    await expect(page.locator('#skyOpt50')).toHaveClass(/selected/);
+
+    const c = await contrastes(page, [
+      '#adTalk [data-preco-tabela="talk"]',
+      '#adTalk .addon-price',
+      '#skyOpt50 [data-preco-tabela="skybox:50gb"]',
+      '#skyOpt50 .sky-opt-price',
+    ]);
+    for (const [sel, valor] of Object.entries(c)) expect(valor, `contraste de ${sel} (ativo)`).toBeGreaterThanOrEqual(4.5);
   });
 });
 
@@ -1720,5 +1755,22 @@ test.describe('checkout — CIT-22: Pix e boleto em centavos inteiros (CA18)', {
     await page.goto('checkout.html');
     await page.evaluate(() => selectDomainOpt('new-br'));
     await expect(page.locator('#domPixCode')).toContainText('540000079');
+  });
+});
+
+// CIT-22: guarda de carga quando assets/precos.js não carrega. Estes testes ESPERAM erro de rede/console
+// de propósito (abortam o script e conferem o aviso), por isso não usam a fixture `erros` — usam o `test`
+// puro do Playwright (testSemErros), que não falha ao ver erros registrados.
+testSemErros.describe('checkout — CIT-22: guarda quando assets/precos.js não carrega', { tag: '@CIT-22' }, () => {
+  testSemErros('mostra o aviso "Não foi possível carregar os preços. Recarregue a página." no passo 1 e no resumo', async ({ page }) => {
+    await page.route('**/assets/precos.js*', route => route.abort());
+    await page.goto('checkout.html');
+    await expect(page.locator('#step1 .sum-empty[role="alert"]')).toHaveText(
+      'Não foi possível carregar os preços. Recarregue a página.'
+    );
+    await expect(page.locator('#sumAccountLines .sum-empty[role="alert"]')).toHaveText(
+      'Não foi possível carregar os preços. Recarregue a página.'
+    );
+    await expect(page.locator('.summary-total')).toBeHidden();
   });
 });

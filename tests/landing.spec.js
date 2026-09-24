@@ -1,5 +1,8 @@
 // @ts-check
 import { test, expect } from './fixtures.js';
+// CIT-22: guarda de carga (assets/precos.js não carrega) — espera erro de propósito, por isso usa o
+// `test` puro do Playwright em vez da fixture `erros` (que falharia com qualquer erro registrado).
+import { test as testSemErros } from '@playwright/test';
 
 // CIT-15: ajuste de textos e componentes da landing (index.html).
 // Cada teste roda nos dois perfis configurados em playwright.config.js (desktop e mobile).
@@ -358,6 +361,56 @@ async function contrasteContraFundo(page, seletor, tokenFundo) {
   }, [seletor, tokenFundo]);
 }
 
+test.describe('landing — CIT-22: economia com e sem volume no mensal (CA3)', { tag: '@CIT-22' }, () => {
+  test('10×5GB mensal: tabela, −15% contratação, −5% volume e economia', async ({ page, erros }) => {
+    await page.goto('index.html');
+    await page.evaluate(() => updateQty('5gb', '10'));
+    await expect(page.locator('#csSummaryLines .cs-disc')).toHaveText(
+      'de R$ 117,60 · −15% contratação −R$ 17,60 · −5% volume −R$ 5,00'
+    );
+    await expect(page.locator('#csTotal')).toHaveText('R$ 95,00');
+    await expect(page.locator('#csEconomia')).toHaveText('Você economiza R$ 22,60/mês');
+  });
+
+  test('4×5GB mensal: sem volume, só a contratação', async ({ page, erros }) => {
+    await page.goto('index.html');
+    await page.evaluate(() => updateQty('5gb', '4'));
+    await expect(page.locator('#csSummaryLines .cs-disc')).toHaveText('de R$ 47,04 · −15% contratação −R$ 7,04');
+    await expect(page.locator('#csTotal')).toHaveText('R$ 40,00');
+    await expect(page.locator('#csEconomia')).toHaveText('Você economiza R$ 7,04/mês');
+  });
+
+  test('5×5GB mensal: "−15% contratação" é Σ(tabela − atual), não 15% da tabela (−R$ 8,80, não 8,82)', async ({ page, erros }) => {
+    await page.goto('index.html');
+    await page.evaluate(() => updateQty('5gb', '5'));
+    await expect(page.locator('#csSummaryLines .cs-disc')).toContainText('−15% contratação −R$ 8,80');
+    await expect(page.locator('#csSummaryLines .cs-disc')).not.toContainText('8,82');
+  });
+});
+
+test.describe('landing — CIT-22: rótulos com 15% e sem frases de urgência falsa (CA4)', { tag: '@CIT-22' }, () => {
+  const PROIBIDAS = [/volta ao preço/i, /voltará/i, /por tempo limitado/i, /oferta termina/i, /até o dia/i, /últimos dias/i, /preço original/i, /somente hoje/i];
+
+  test('"15%" aparece no texto da seção de preços e na .discount-info', async ({ page, erros }) => {
+    await page.goto('index.html');
+    await expect(page.locator('#pricing .section-header p')).toContainText('15%');
+    await expect(page.locator('.discount-info')).toContainText('15%');
+  });
+
+  test('.discount-info, cards de conta e .calc-summary não citam frases de urgência falsa (lista fechada)', async ({ page, erros }) => {
+    await page.goto('index.html');
+    await page.evaluate(() => updateQty('5gb', '2'));
+
+    const textos = await page.evaluate(() => {
+      const sels = ['.discount-info', '#card5', '#card25', '#card50', '.calc-summary'];
+      return sels.map(sel => /** @type {[string, string]} */ ([sel, document.querySelector(sel)?.textContent || '']));
+    });
+    for (const [sel, texto] of textos) {
+      for (const re of PROIBIDAS) expect(texto, `${sel} não deveria casar com ${re}`).not.toMatch(re);
+    }
+  });
+});
+
 test.describe('landing — CIT-22: cards sem quantidade mostram a tabela riscada (CA5)', { tag: '@CIT-22' }, () => {
   test('mensal: "de"/"por" nos três cards, sem quantidade', async ({ page, erros }) => {
     await page.goto('index.html');
@@ -468,6 +521,33 @@ test.describe('landing — CIT-22: paridade com o checkout e selo de volume só 
     await page.evaluate(() => setBilling('annual'));
     await expect(page.locator('#discTag5')).toHaveText('');
   });
+
+  test('dica "Adicione mais N conta(s)" aparece no mensal com menos de 5 contas e fica ausente no anual', async ({ page, erros }) => {
+    await page.goto('index.html');
+    await page.evaluate(() => updateQty('5gb', '2'));
+    await expect(page.locator('#discTag5')).toContainText('Adicione mais 3 conta(s)');
+
+    await page.evaluate(() => setBilling('annual'));
+    await expect(page.locator('#discTag5')).toHaveText('');
+  });
+
+  for (const c of CASOS) {
+    test(`${c.qty}×${c.tipo} ${c.anual ? 'anual' : 'mensal'}: seguindo o href do CTA, #sumTotal do checkout confere com o #csTotal lido antes`, async ({ page, erros }) => {
+      await page.goto('index.html');
+      await page.evaluate(([tipo, qty, anual]) => {
+        // @ts-ignore — tipo vem de ACCOUNT_TYPES, definido no script inline da página
+        updateQty(tipo, String(qty));
+        if (anual) setBilling('annual');
+      }, [c.tipo, c.qty, c.anual]);
+
+      const totalLanding = (await page.locator('#csTotal').textContent()).trim();
+      expect(totalLanding).toBe(c.total);
+      const href = await page.locator('#calcCtaBtn').getAttribute('href');
+
+      await page.goto(/** @type {string} */ (href));
+      await expect(page.locator('#sumTotal')).toHaveText(totalLanding);
+    });
+  }
 });
 
 test.describe('landing — CIT-22: cores dos riscados e dos preços cobrados (CA12)', { tag: '@CIT-22' }, () => {
@@ -491,6 +571,18 @@ test.describe('landing — CIT-22: cores dos riscados e dos preços cobrados (CA
     const totalTabelaVal = page.locator('#csSummaryLines .cs-line').last().locator('.val');
     await expect(totalTabelaVal).not.toHaveCSS('color', cinza400);
     await expect(totalTabelaVal).not.toHaveCSS('color', sucesso);
+  });
+
+  test('.atc-unit-price .price e .cs-line .val do item usam --cit-success-strong; #csTotal (total geral) não muda', async ({ page, erros }) => {
+    await page.goto('index.html');
+    await page.evaluate(() => updateQty('5gb', '2'));
+
+    const sucessoForte = await corToken(page, '--cit-success-strong');
+    await expect(page.locator('#card5 .atc-unit-price .price')).toHaveCSS('color', sucessoForte);
+    await expect(page.locator('#csSummaryLines .cs-line .val').first()).toHaveCSS('color', sucessoForte);
+
+    // Guarda de regressão (CA12): #csTotal (total geral da calculadora) mantém a cor de hoje.
+    await expect(page.locator('#csTotal')).not.toHaveCSS('color', sucessoForte);
   });
 });
 
@@ -581,5 +673,68 @@ test.describe('landing — CIT-22: fonte única de preços, sem valor fixo no HT
       elementosComDataBase: document.querySelectorAll('[data-base]').length,
     }));
     expect(chaves).toEqual({ accountTypesComBase: false, elementosComDataBase: 0 });
+  });
+});
+
+test.describe('landing — CIT-22: paridade da cascata de preços entre landing e checkout (CA7)', { tag: '@CIT-22' }, () => {
+  /**
+   * Lê, na página atual, o resultado de cascataCentavos/PRECOS.contas numa grade tipo × qtd (0..12) × ciclo.
+   * cascataCentavos e PRECOS vêm de assets/precos.js, carregado por ambas as páginas — o mesmo helper
+   * roda em cada uma para comparar por igualdade profunda.
+   * @param {import('@playwright/test').Page} page
+   */
+  async function gradeCascata(page) {
+    return page.evaluate(() => {
+      const tipos = ['5gb', '25gb', '50gb'];
+      const grade = [];
+      for (const tipo of tipos) {
+        for (let qty = 0; qty <= 12; qty++) {
+          for (const anual of [false, true]) {
+            grade.push(cascataCentavos(PRECOS.contas[tipo], qty, { conta: true, anual }));
+          }
+        }
+      }
+      return { grade, contas: PRECOS.contas };
+    });
+  }
+
+  test('cascataCentavos e PRECOS.contas são idênticos entre landing e checkout, numa grade tipo × qtd 0..12 × ciclo', async ({ page, erros }) => {
+    await page.goto('index.html');
+    const daLanding = await gradeCascata(page);
+
+    await page.goto('checkout.html');
+    const doCheckout = await gradeCascata(page);
+
+    expect(doCheckout, 'cascataCentavos/PRECOS.contas do checkout deveriam ser idênticos aos da landing').toEqual(daLanding);
+  });
+
+  test('index.html e checkout.html carregam o mesmo assets/precos.js?v=', async ({ page, erros }) => {
+    // O Vite reescreve "assets/..." para "/citmail/assets/..." só ao servir index.html (não checkout.html,
+    // caminho pré-existente e fora do escopo desta história); por isso a comparação usa só o "?v=", não o
+    // atributo src inteiro.
+    await page.goto('index.html');
+    const srcLanding = await page.evaluate(() => document.querySelector('script[src*="precos.js"]')?.getAttribute('src'));
+    expect(srcLanding).toMatch(/\bassets\/precos\.js\?v=\d+$/);
+    const vLanding = srcLanding.match(/\?v=(\d+)$/)[1];
+
+    await page.goto('checkout.html');
+    const srcCheckout = await page.evaluate(() => document.querySelector('script[src*="precos.js"]')?.getAttribute('src'));
+    expect(srcCheckout).toMatch(/\bassets\/precos\.js\?v=\d+$/);
+    const vCheckout = srcCheckout.match(/\?v=(\d+)$/)[1];
+
+    expect(vCheckout, 'checkout.html deveria carregar o mesmo ?v= de assets/precos.js que a landing').toBe(vLanding);
+  });
+});
+
+// CIT-22: guarda de carga quando assets/precos.js não carrega. Este teste ESPERA erro de rede/console
+// de propósito (aborta o script e confere o aviso), por isso não usa a fixture `erros` — usa o `test`
+// puro do Playwright (testSemErros), que não falha ao ver erros registrados.
+testSemErros.describe('landing — CIT-22: guarda quando assets/precos.js não carrega', { tag: '@CIT-22' }, () => {
+  testSemErros('mostra o aviso "Não foi possível carregar os preços. Recarregue a página." no lugar da calculadora', async ({ page }) => {
+    await page.route('**/assets/precos.js*', route => route.abort());
+    await page.goto('index.html');
+    await expect(page.locator('#pricing .calc-wrapper .discount-info[role="alert"]')).toHaveText(
+      'Não foi possível carregar os preços. Recarregue a página.'
+    );
   });
 });
