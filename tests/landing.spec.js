@@ -766,6 +766,10 @@ testSemErros.describe('landing — CIT-22: guarda quando assets/precos.js não c
     await page.locator('#navToggle').click();
     await expect(page.locator('#header')).toHaveClass(/nav-mobile-open/);
 
+    // toggle de ciclo removido (sem preços não teria efeito); chamadas diretas saem cedo sem erro
+    await expect(page.locator('#pricing .billing-toggle')).toHaveCount(0);
+    await page.evaluate(() => { setBilling('annual'); toggleBilling(); changeQty('5gb', 1); updateQty('25gb', '3'); recalcAll(); });
+
     expect(pageerrors, 'não deveria haver pageerror com a guarda de carga').toEqual([]);
   });
 });

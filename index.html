@@ -1883,6 +1883,7 @@
     if (!precosOk) {
       document.querySelector('#pricing .calc-wrapper').innerHTML =
         '<p class="discount-info" role="alert">Não foi possível carregar os preços. Recarregue a página.</p>';
+      document.querySelector('#pricing .billing-toggle').remove(); // sem preços, o ciclo não tem efeito
     }
     // ---- HEADER scroll effect ----
     const header = document.getElementById('header');
