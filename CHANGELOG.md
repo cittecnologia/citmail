@@ -17,6 +17,10 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Testes E2E de layout, rolagem e tipografia do checkout (CIT-19).
 - Checkout: aviso de desconto no passo de add-ons (CIT-21).
 - Testes E2E dos preços, da sanfona e do aviso de desconto dos add-ons (CIT-21).
+- Preço de tabela riscado ao lado do preço cobrado, no checkout (passos 1 e 3) e na landing (cards e calculadora). O preço de tabela é o atual ÷ 0,85, arredondado em centavos, e o preço cobrado não muda (CIT-22).
+- Checkout e landing: cascata de descontos por item ("−15% contratação", "−20% anual" ou "−5% volume") e "Você economiza R$ X/mês", com o valor anual no plano anual. A linha "−15% contratação" soma a diferença entre tabela e preço atual de cada item, e não 15% da tabela exibida: 5 contas de 5 GB mostram −R$ 8,80, não −R$ 8,82 (CIT-22).
+- `assets/precos.js`: fonte única de preços e da regra de desconto, compartilhada pela landing e pelo checkout, conferida no build e no smoke da homologação (CIT-22).
+- Testes E2E dos preços com desconto e testes que fixam os valores cobrados antes da mudança (CIT-22).
 
 ### Alterado
 - Landing: novos textos do hero (título, subtítulo e indicadores), da faixa de confiança e da seção Recursos (CIT-15).
@@ -34,6 +38,11 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Checkout: preços dos add-ons numa tabela única, usada no passo 3, no subtotal e no resumo (CIT-21).
 - Checkout: linhas de add-ons sem cursor de clique nem destaque ao passar o mouse (CIT-21).
 - Checkout: título do passo de add-ons como `h2` (CIT-21).
+- Landing: o plano anual passa a seguir a regra do checkout, com 20% de desconto e sem o desconto por volume. O selo e a dica de volume aparecem só no plano mensal (CIT-22).
+- Landing: cards de conta mostram "de/por" no lugar de "a partir de"; a calculadora mostra "Total de tabela" no lugar de "Subtotal s/ desc."; novos textos de desconto (CIT-22).
+- Landing: até 960 px, o resumo da calculadora deixa de acompanhar a rolagem; sem transbordo horizontal a 320 px (CIT-22).
+- Checkout: aviso dos add-ons passa a "GARANTA 15% DE DESCONTO NESTA CONTRATAÇÃO" (CIT-22).
+- Checkout: valores calculados em centavos inteiros; Pix e boleto de demonstração sem erro de ponto flutuante (CIT-22).
 
 ### Removido
 - `serve.py`, substituído pelo Vite.
