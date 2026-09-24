@@ -630,6 +630,17 @@
     .sky-qty { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
     .sky-qty-label { font-size: var(--cit-text-small); font-weight: 600; color: var(--cit-text-secondary); }
 
+    /* Aviso de desconto do passo 3: texto em warning-strong sobre warning-subtle; warning só no ícone e na borda */
+    .aviso-desconto {
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; padding: 14px 16px;
+      background: var(--cit-warning-subtle); color: var(--cit-warning-strong);
+      border: 1px solid var(--cit-warning); border-left-width: 4px; border-radius: var(--cit-radius-md);
+    }
+    .aviso-desconto-icone { flex-shrink: 0; margin-top: 2px; color: var(--cit-warning); font-size: var(--cit-text-body); }
+    .aviso-desconto-corpo { min-width: 0; }
+    .aviso-desconto-titulo { font-family: var(--font-title); font-weight: 700; font-size: var(--cit-text-body); overflow-wrap: anywhere; }
+    .aviso-desconto-texto { font-size: var(--cit-text-small); }
+
     /* Sanfona de add-ons: cabeçalho (h3 > button) e painel (role=region, hidden quando fechado) */
     [hidden] { display: none !important; }
     .addon-sec { border: 1px solid var(--cit-border-color); border-radius: var(--cit-radius-md); background: var(--white); }
@@ -1013,6 +1024,14 @@
         <p class="step-intro">
           Serviços cobrados por conta, somados à mesma fatura. Use <strong>+</strong> e <strong>−</strong> para ajustar a quantidade. O total é atualizado automaticamente.
         </p>
+
+        <div class="aviso-desconto" id="avisoDescontoAddons">
+          <svg class="icon aviso-desconto-icone" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg>
+          <div class="aviso-desconto-corpo">
+            <p class="aviso-desconto-titulo">APROVEITE A OPORTUNIDADE PARA GARANTIR O DESCONTO</p>
+            <p class="aviso-desconto-texto">Condição exclusiva desta contratação</p>
+          </div>
+        </div>
 
         <!-- Add-ons em seções recolhíveis (sanfona); Grupo de E-mail fica fora, sempre visível -->
         <div class="addon-list">

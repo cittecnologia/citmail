@@ -157,12 +157,12 @@ const SELETORES_TIPO_BODY = [
   '.opt-name',
   '.field input', '.field select', '.installments-select',
 ];
-// Passo 3 (add-ons), incluindo o cabeçalho das seções da sanfona e o indicador de subtotal (CIT-21).
+// Passo 3 (add-ons), incluindo o cabeçalho das seções da sanfona, o indicador de subtotal e o aviso de desconto (CIT-21).
 const SELETORES_TIPO_SMALL_PASSO3 = [
   '.addon-desc', '.addon-price', '.addon-period', '.sky-opts-title', '.sky-opt-name', '.sky-opt-price', '.sky-qty-label', '.addon-sub-line', '.addons-subtotal-head',
-  '.addon-sec-ind',
+  '.addon-sec-ind', '.aviso-desconto-texto',
 ];
-const SELETORES_TIPO_BODY_PASSO3 = ['.addon-name', '.addon-sub-val', '.addon-sec-nome'];
+const SELETORES_TIPO_BODY_PASSO3 = ['.addon-name', '.addon-sub-val', '.addon-sec-nome', '.aviso-desconto-titulo'];
 // Exceções documentadas: alertas com explicação longa usam o corpo de leitura (16px), ver checkout.html.
 const EXCECOES_TIPO_BODY = ['#domainExistPanel .alert-box', '.boleto-inner .alert-box'];
 
@@ -1058,4 +1058,79 @@ test.describe('checkout — add-ons: sanfona', { tag: '@CIT-21' }, () => {
       }
     });
   }
+});
+
+test.describe('checkout — add-ons: aviso de desconto', { tag: '@CIT-21' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('aviso visível só no passo 3, entre a introdução e as seções', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    const aviso = page.locator('#avisoDescontoAddons');
+    await expect(aviso).toHaveCount(1);
+
+    for (const passo of [1, 2, 3, 4, 5, 6]) {
+      await page.evaluate(n => goStep(n), passo);
+      if (passo === 3) await expect(aviso, 'passo 3').toBeVisible();
+      else await expect(aviso, `passo ${passo}`).toBeHidden();
+    }
+
+    await page.evaluate(() => goStep(3));
+    const ordem = await page.evaluate(() => {
+      const aviso = document.getElementById('avisoDescontoAddons');
+      const intro = document.querySelector('#step3 .step-intro');
+      const lista = document.querySelector('#step3 .addon-list');
+      const segue = (/** @type {Node} */ a, /** @type {Node} */ b) => !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+      return segue(intro, aviso) && segue(aviso, lista);
+    });
+    expect(ordem, 'aviso deveria ficar entre a introdução e as seções').toBe(true);
+  });
+
+  test('texto exato, em maiúsculas no HTML e sem percentual', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    const aviso = page.locator('#avisoDescontoAddons');
+
+    await expect(aviso.locator('.aviso-desconto-titulo')).toHaveText('APROVEITE A OPORTUNIDADE PARA GARANTIR O DESCONTO');
+    // Maiúsculas no próprio HTML, não por text-transform.
+    expect(await aviso.locator('.aviso-desconto-titulo').evaluate(e => e.textContent.trim())).toBe('APROVEITE A OPORTUNIDADE PARA GARANTIR O DESCONTO');
+    await expect(aviso.locator('.aviso-desconto-texto')).toHaveText('Condição exclusiva desta contratação');
+    expect(await aviso.textContent()).not.toMatch(/\d+\s?%/);
+  });
+
+  test('contraste do título e do texto do aviso é de pelo menos 4,5:1', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    const contrastes = await page.evaluate(() => {
+      const rgba = (/** @type {string} */ c) => (c.match(/[\d.]+/g) || []).map(Number);
+      const lum = (/** @type {number[]} */ [r, g, b]) => {
+        const f = (/** @type {number} */ v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+        return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+      };
+      // Fundo efetivo: compõe os fundos dos ancestrais (com alfa) sobre branco.
+      const fundo = (/** @type {Element} */ el) => {
+        const camadas = [];
+        for (let e = el; e; e = e.parentElement) {
+          const c = rgba(getComputedStyle(e).backgroundColor);
+          const a = c.length > 3 ? c[3] : 1;
+          if (a > 0) camadas.push([c[0], c[1], c[2], a]);
+          if (a >= 1) break;
+        }
+        let cor = [255, 255, 255];
+        for (const [r, g, b, a] of camadas.reverse()) cor = [r * a + cor[0] * (1 - a), g * a + cor[1] * (1 - a), b * a + cor[2] * (1 - a)];
+        return cor;
+      };
+      const contraste = (/** @type {string} */ sel) => {
+        const el = /** @type {Element} */ (document.querySelector(sel));
+        const l1 = lum(rgba(getComputedStyle(el).color).slice(0, 3));
+        const l2 = lum(fundo(el));
+        return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+      };
+      return { titulo: contraste('#avisoDescontoAddons .aviso-desconto-titulo'), texto: contraste('#avisoDescontoAddons .aviso-desconto-texto') };
+    });
+    expect(contrastes.titulo, 'contraste do título').toBeGreaterThanOrEqual(4.5);
+    expect(contrastes.texto, 'contraste do texto').toBeGreaterThanOrEqual(4.5);
+  });
 });
