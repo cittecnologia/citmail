@@ -1001,7 +1001,7 @@
             <div class="addon-info">
               <div class="addon-name">Talk — Videoconferência</div>
               <div class="addon-desc">Reuniões, chamadas e webinars integrados ao e-mail</div>
-              <div class="addon-price">R$ 4,70/conta/mês</div>
+              <div class="addon-price" data-preco="talk"></div>
             </div>
             <div class="addon-ctrl">
               <div class="mini-qty-ctrl" id="qcTalk">
@@ -1022,7 +1022,7 @@
             <div class="addon-info">
               <div class="addon-name">Backup 90 dias</div>
               <div class="addon-desc">Retenção e restauração de e-mails por 90 dias</div>
-              <div class="addon-price">R$ 6,00/conta/mês</div>
+              <div class="addon-price" data-preco="backup90"></div>
             </div>
             <div class="addon-ctrl">
               <div class="mini-qty-ctrl" id="qcBackup90">
@@ -1043,7 +1043,7 @@
             <div class="addon-info">
               <div class="addon-name">Backup 365 dias</div>
               <div class="addon-desc">Retenção e restauração de e-mails por 1 ano</div>
-              <div class="addon-price">R$ 19,00/conta/mês</div>
+              <div class="addon-price" data-preco="backup365"></div>
             </div>
             <div class="addon-ctrl">
               <div class="mini-qty-ctrl" id="qcBackup365">
@@ -1064,7 +1064,7 @@
             <div class="addon-info">
               <div class="addon-name">Grupo de E-mail</div>
               <div class="addon-desc">Listas de distribuição para equipes e departamentos</div>
-              <div class="addon-price">R$ 2,00/conta/mês</div>
+              <div class="addon-price" data-preco="grupoEmail"></div>
             </div>
             <div class="addon-ctrl">
               <div class="mini-qty-ctrl" id="qcGrupo">
@@ -1098,17 +1098,17 @@
               <label class="sky-opt" id="skyOpt50" onclick="selectSkybox('50gb')">
                 <input type="radio" name="skybox" value="50gb" />
                 <div class="sky-opt-name">50 GB / conta</div>
-                <div class="sky-opt-price">R$ 17,70/conta/mês</div>
+                <div class="sky-opt-price" data-preco="skybox:50gb"></div>
               </label>
               <label class="sky-opt" id="skyOpt100" onclick="selectSkybox('100gb')">
                 <input type="radio" name="skybox" value="100gb" />
                 <div class="sky-opt-name">100 GB / conta</div>
-                <div class="sky-opt-price">R$ 28,70/conta/mês</div>
+                <div class="sky-opt-price" data-preco="skybox:100gb"></div>
               </label>
               <label class="sky-opt" id="skyOpt1tb" onclick="selectSkybox('1tb')">
                 <input type="radio" name="skybox" value="1tb" />
                 <div class="sky-opt-name">1 TB / conta</div>
-                <div class="sky-opt-price">R$ 319,00/conta/mês</div>
+                <div class="sky-opt-price" data-preco="skybox:1tb"></div>
               </label>
               <!-- Skybox qty -->
               <div class="sky-qty">
@@ -1129,7 +1129,7 @@
               <div class="addon-info">
                 <div class="addon-name">Domínio .com.br extra</div>
                 <div class="addon-desc">Domínios adicionais — cobrança anual via Pix separado</div>
-                <div class="addon-price">R$ 79,00/domínio/ano</div>
+                <div class="addon-price" data-preco="extraDom"></div>
               </div>
               <div class="addon-ctrl">
                 <div class="mini-qty-ctrl" id="qcExtraDom">
@@ -1639,15 +1639,41 @@
     }
 
     /* ---- ADD-ONS STEP ---- */
-    const ADDON_PRICES = { talk: 4.70, backup90: 6.00, backup365: 19.00, grupoEmail: 2.00 };
-    const SKYBOX_PRICES = { '50gb': 17.70, '100gb': 28.70, '1tb': 319.00 };
+    // Tabela única de preços dos add-ons: valores, nomes e rótulos usados no passo 3, no painel de
+    // selecionados e no resumo. `unidade` e `periodo` formam o texto do preço exibido ("/conta/mês").
+    // Domínio extra é cobrado por ano via Pix separado e fica fora do total mensal.
+    const ADDONS = {
+      talk:       { nome: 'Talk',            rotuloCurto: 'Talk',         preco: 4.70,  unidade: 'conta',   periodo: 'mês', linha: 'adTalk',      sub: 'asTalk',      qtd: 'aqTalk' },
+      backup90:   { nome: 'Backup 90 dias',  rotuloCurto: 'Backup 90d',   preco: 6.00,  unidade: 'conta',   periodo: 'mês', linha: 'adBackup90',  sub: 'asBackup90',  qtd: 'aqBackup90' },
+      backup365:  { nome: 'Backup 365 dias', rotuloCurto: 'Backup 365d',  preco: 19.00, unidade: 'conta',   periodo: 'mês', linha: 'adBackup365', sub: 'asBackup365', qtd: 'aqBackup365' },
+      grupoEmail: { nome: 'Grupo de E-mail', rotuloCurto: 'Grupo E-mail', preco: 2.00,  unidade: 'conta',   periodo: 'mês', linha: 'adGrupo',     sub: 'asGrupo',     qtd: 'aqGrupo' },
+      skybox:     { nome: 'Skybox',          rotuloCurto: 'Skybox',                     unidade: 'conta',   periodo: 'mês', linha: 'adSkybox',    sub: 'asSkybox',    qtd: 'aqSkybox',
+        planos: {
+          '50gb':  { preco: 17.70,  rotuloCurto: '50GB',  opcao: 'skyOpt50' },
+          '100gb': { preco: 28.70,  rotuloCurto: '100GB', opcao: 'skyOpt100' },
+          '1tb':   { preco: 319.00, rotuloCurto: '1TB',   opcao: 'skyOpt1tb' },
+        } },
+      extraDom:   { nome: 'Domínio extra',   rotuloCurto: 'Domínio extra', preco: 79.00, unidade: 'domínio', periodo: 'ano', linha: 'adExtraDom',  sub: 'asExtraDom',  qtd: 'aqExtraDom' },
+    };
+    // Add-ons por conta cobrados na mensalidade (Skybox à parte, por plano).
+    const ADDONS_MENSAIS = ['talk', 'backup90', 'backup365', 'grupoEmail'];
+    function precoSkybox() { return skyboxPlan ? (ADDONS.skybox.planos[skyboxPlan]?.preco || 0) : 0; }
+
+    // Preenche os preços exibidos no passo 3 (atributo data-preco = chave ou "skybox:plano").
+    function preencherPrecosAddons() {
+      document.querySelectorAll('[data-preco]').forEach(el => {
+        const [key, plano] = el.dataset.preco.split(':');
+        const a = ADDONS[key];
+        const preco = plano ? a.planos[plano].preco : a.preco;
+        el.textContent = `R$ ${fmtR(preco)}/${a.unidade}/${a.periodo}`;
+      });
+    }
 
     function addonChange(key, delta) {
       let q = (addonQtys[key] || 0) + delta;
       if (q < 0) q = 0;
       addonQtys[key] = q;
-      const inputMap = { talk:'aqTalk', backup90:'aqBackup90', backup365:'aqBackup365', grupoEmail:'aqGrupo', skybox:'aqSkybox', extraDom:'aqExtraDom' };
-      const inp = document.getElementById(inputMap[key]);
+      const inp = document.getElementById(ADDONS[key].qtd);
       if (inp) inp.value = q;
       refreshAddons();
     }
@@ -1660,9 +1686,8 @@
 
     function selectSkybox(plan) {
       skyboxPlan = plan;
-      ['50gb','100gb','1tb'].forEach(p => {
-        const map = {'50gb':'skyOpt50','100gb':'skyOpt100','1tb':'skyOpt1tb'};
-        const el = document.getElementById(map[p]);
+      Object.entries(ADDONS.skybox.planos).forEach(([p, cfg]) => {
+        const el = document.getElementById(cfg.opcao);
         if (el) el.classList.toggle('selected', p === plan);
         const radio = el && el.querySelector('input[type=radio]');
         if (radio) radio.checked = p === plan;
@@ -1672,35 +1697,29 @@
 
     function refreshAddons() {
       // Update per-row subtotals and active state
-      const rowMap = {
-        talk:       { rowId:'adTalk',      subId:'asTalk',      price: ADDON_PRICES.talk,    perUnit:true  },
-        backup90:   { rowId:'adBackup90',  subId:'asBackup90',  price: ADDON_PRICES.backup90, perUnit:true },
-        backup365:  { rowId:'adBackup365', subId:'asBackup365', price: ADDON_PRICES.backup365,perUnit:true },
-        grupoEmail: { rowId:'adGrupo',     subId:'asGrupo',     price: ADDON_PRICES.grupoEmail,perUnit:true},
-      };
-      Object.entries(rowMap).forEach(([key, cfg]) => {
+      ADDONS_MENSAIS.forEach(key => {
+        const cfg = ADDONS[key];
         const q   = addonQtys[key] || 0;
-        const val = q * cfg.price;
-        const subEl = document.getElementById(cfg.subId);
+        const val = q * cfg.preco;
+        const subEl = document.getElementById(cfg.sub);
         if (subEl) subEl.textContent = `R$ ${fmtR(val)}`;
-        const rowEl = document.getElementById(cfg.rowId);
+        const rowEl = document.getElementById(cfg.linha);
         if (rowEl) rowEl.classList.toggle('active', q > 0);
       });
 
       // Skybox
       const skyQ = addonQtys.skybox || 0;
-      const skyPrice = skyboxPlan ? (SKYBOX_PRICES[skyboxPlan] || 0) : 0;
-      const skyVal = skyQ * skyPrice;
-      const skySub = document.getElementById('asSkybox');
+      const skyVal = skyQ * precoSkybox();
+      const skySub = document.getElementById(ADDONS.skybox.sub);
       if (skySub) skySub.textContent = `R$ ${fmtR(skyVal)}`;
-      document.getElementById('adSkybox').classList.toggle('active', skyQ > 0 && !!skyboxPlan);
+      document.getElementById(ADDONS.skybox.linha).classList.toggle('active', skyQ > 0 && !!skyboxPlan);
 
       // Extra domain
       const domQ  = addonQtys.extraDom || 0;
-      const domVal = domQ * 79;
-      const domSub = document.getElementById('asExtraDom');
+      const domVal = domQ * ADDONS.extraDom.preco;
+      const domSub = document.getElementById(ADDONS.extraDom.sub);
       if (domSub) domSub.textContent = `R$ ${fmtR(domVal)}`;
-      document.getElementById('adExtraDom').classList.toggle('active', domQ > 0);
+      document.getElementById(ADDONS.extraDom.linha).classList.toggle('active', domQ > 0);
       const pixPanel = document.getElementById('extraDomPixPanel');
       if (pixPanel) {
         pixPanel.style.display = domQ > 0 ? 'block' : 'none';
@@ -1712,11 +1731,11 @@
 
       // Subtotal summary panel
       const lines = [];
-      Object.entries(rowMap).forEach(([key, cfg]) => {
+      ADDONS_MENSAIS.forEach(key => {
         const q = addonQtys[key] || 0;
-        if (q > 0) lines.push({ label: cfg.rowId === 'adGrupo' ? 'Grupo E-mail' : key === 'talk' ? 'Talk' : key === 'backup90' ? 'Backup 90d' : 'Backup 365d', v: q * cfg.price });
+        if (q > 0) lines.push({ label: ADDONS[key].rotuloCurto, v: q * ADDONS[key].preco });
       });
-      if (skyQ > 0 && skyboxPlan) lines.push({ label: `Skybox ${skyboxPlan.toUpperCase()}`, v: skyVal });
+      if (skyQ > 0 && skyboxPlan) lines.push({ label: `${ADDONS.skybox.rotuloCurto} ${ADDONS.skybox.planos[skyboxPlan].rotuloCurto}`, v: skyVal });
 
       const box = document.getElementById('addonsSubtotal');
       if (lines.length) {
@@ -1762,11 +1781,8 @@
     function unitPrice(type)     { const d = ACCOUNT_DEFS[type]; const b = annualBilling ? d.base*0.80 : d.base; const disc = calcDiscount(ckQtys[type]); return b*(1-disc/100); }
     function addonsMonthly() {
       let t = 0;
-      t += (addonQtys.talk       || 0) * 4.70;
-      t += (addonQtys.backup90   || 0) * 6.00;
-      t += (addonQtys.backup365  || 0) * 19.00;
-      t += (addonQtys.grupoEmail || 0) * 2.00;
-      t += (addonQtys.skybox     || 0) * (skyboxPlan ? (SKYBOX_PRICES[skyboxPlan] || 0) : 0);
+      ADDONS_MENSAIS.forEach(key => { t += (addonQtys[key] || 0) * ADDONS[key].preco; });
+      t += (addonQtys.skybox || 0) * precoSkybox();
       return t;
     }
     function grandTotal()        { return Object.keys(ACCOUNT_DEFS).reduce((s,t) => s + ckQtys[t]*unitPrice(t), 0) + addonsMonthly(); }
@@ -1909,26 +1925,21 @@
       });
       // Add-ons lines
       const totalQ = totalAccounts();
-      const addonMap = [
-        { key:'talk',       label:'Talk',          v: 4.70  },
-        { key:'backup90',   label:'Backup 90d',    v: 6.00  },
-        { key:'backup365',  label:'Backup 365d',   v: 19.00 },
-        { key:'grupoEmail', label:'Grupo E-mail',  v: 2.00  },
-      ];
-      addonMap.forEach(a => {
-        const q = addonQtys[a.key] || 0;
+      ADDONS_MENSAIS.forEach(key => {
+        const a = ADDONS[key];
+        const q = addonQtys[key] || 0;
         if (!q) return;
         hasAny = true;
         html += `<div class="sum-line">
-          <span>${a.label} ×${q}</span>
-          <span>R$ ${fmtR(a.v * q)}</span>
+          <span>${a.rotuloCurto} ×${q}</span>
+          <span>R$ ${fmtR(a.preco * q)}</span>
         </div>`;
       });
-      if (addonQtys.skybox && skyboxPlan && SKYBOX_PRICES[skyboxPlan]) {
+      if (addonQtys.skybox && precoSkybox()) {
         hasAny = true;
-        const sv = SKYBOX_PRICES[skyboxPlan] * addonQtys.skybox;
+        const sv = precoSkybox() * addonQtys.skybox;
         html += `<div class="sum-line">
-          <span>Skybox ${skyboxPlan.toUpperCase()} ×${addonQtys.skybox}</span>
+          <span>${ADDONS.skybox.rotuloCurto} ${ADDONS.skybox.planos[skyboxPlan].rotuloCurto} ×${addonQtys.skybox}</span>
           <span>R$ ${fmtR(sv)}</span>
         </div>`;
       }
@@ -2239,6 +2250,7 @@
         document.getElementById('cycleLabel').textContent = 'Cobrado anualmente (ativo)';
       }
 
+      preencherPrecosAddons();
       ckRefresh();
       updateStepBar(1);
     })();
