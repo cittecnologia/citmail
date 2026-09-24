@@ -41,7 +41,7 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Landing: o plano anual passa a seguir a regra do checkout, com 20% de desconto e sem o desconto por volume; o total exibido do anual com 5 ou mais contas do mesmo tipo sobe para o valor que o checkout já cobrava. O selo e a dica de volume aparecem só no plano mensal (CIT-22).
 - Landing: cards de conta mostram "de/por" no lugar de "a partir de"; a calculadora mostra "Total de tabela" no lugar de "Subtotal s/ desc."; novos textos de desconto (CIT-22).
 - Landing: até 960 px, o resumo da calculadora deixa de acompanhar a rolagem; sem transbordo horizontal nos cards a 360/412 px e na página a 320 px (CIT-22).
-- Checkout e landing: valor cobrado em verde sempre que aparece ao lado do preço de tabela; aviso visível se os preços não carregarem (CIT-22).
+- Checkout e landing: valor cobrado em verde sempre que aparece ao lado do preço de tabela; aviso visível se os preços não carregarem, com o restante da página funcionando e sem o seletor Mensal/Anual na landing (CIT-22).
 - Checkout: aviso dos add-ons passa a "GARANTA 15% DE DESCONTO NESTA CONTRATAÇÃO" (CIT-22).
 - Checkout: valores calculados em centavos inteiros; Pix e boleto de demonstração sem erro de ponto flutuante (CIT-22).
 
