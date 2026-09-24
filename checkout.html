@@ -14,6 +14,8 @@
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* O atributo hidden sempre esconde, mesmo em elementos com display próprio (ex.: painéis da sanfona). */
+    [hidden] { display: none !important; }
     :root {
       /* Aliases legados -> tokens do Brandbook CIT (assets/tokens.css). */
       --brand-900: var(--cit-navy-500);
@@ -268,7 +270,7 @@
       transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
     }
     .payment-option { cursor: pointer; overflow: hidden; }
-    .payment-option:hover, .domain-opt-card:hover, .addon-row:hover, .mini-calc-row:hover, .sky-opt:hover { border-color: var(--cit-blue-300); }
+    .payment-option:hover, .domain-opt-card:hover, .mini-calc-row:hover, .sky-opt:hover { border-color: var(--cit-blue-300); }
     .payment-option.selected, .domain-opt-card.selected, .addon-row.active, .mini-calc-row.has-qty, .sky-opt.selected {
       border-color: var(--cit-primary);
       background: var(--cit-blue-50);
@@ -609,7 +611,6 @@
     .addon-row {
       display: flex; align-items: center; gap: 14px;
       padding: 12px 14px;
-      cursor: pointer;
     }
     .addon-row--stack { flex-direction: column; align-items: stretch; gap: 10px; }
     .addon-head { display: flex; align-items: center; gap: 10px; }
@@ -630,6 +631,35 @@
     .sky-opt-price { font-weight: 600; font-size: var(--cit-text-small); color: var(--cit-primary); white-space: nowrap; }
     .sky-qty { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
     .sky-qty-label { font-size: var(--cit-text-small); font-weight: 600; color: var(--cit-text-secondary); }
+
+    /* Aviso de desconto do passo 3: texto em warning-strong sobre warning-subtle; warning só no ícone e na borda */
+    .aviso-desconto {
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; padding: 14px 16px;
+      background: var(--cit-warning-subtle); color: var(--cit-warning-strong);
+      border: 1px solid var(--cit-warning); border-left-width: 4px; border-radius: var(--cit-radius-md);
+    }
+    .aviso-desconto-icone { flex-shrink: 0; margin-top: 2px; color: var(--cit-warning); font-size: var(--cit-text-body); }
+    .aviso-desconto-corpo { min-width: 0; }
+    .aviso-desconto-titulo { font-family: var(--font-title); font-weight: 700; font-size: var(--cit-text-body); overflow-wrap: anywhere; }
+    .aviso-desconto-texto { font-size: var(--cit-text-small); }
+
+    /* Sanfona de add-ons: cabeçalho (h3 > button) e painel (role=region, hidden quando fechado) */
+    .addon-sec { border: 1px solid var(--cit-border-color); border-radius: var(--cit-radius-md); background: var(--white); }
+    .addon-sec-head { font-size: inherit; font-weight: inherit; }
+    .addon-sec-btn {
+      width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 12px;
+      padding: 14px 16px; background: none; border: none; border-radius: var(--cit-radius-md);
+      font: inherit; color: var(--cit-text-primary); text-align: left; cursor: pointer;
+    }
+    .addon-sec-btn:focus-visible { outline: none; box-shadow: var(--cit-focus-ring); }
+    .addon-sec-nome { font-family: var(--font-title); font-weight: 600; font-size: var(--cit-text-body); overflow-wrap: anywhere; }
+    .addon-sec-ind { font-size: var(--cit-text-small); font-weight: 600; color: var(--cit-primary); white-space: nowrap; }
+    .addon-sec-chevron { color: var(--cit-text-secondary); }
+    .addon-sec-btn[aria-expanded="false"] .addon-sec-chevron { transform: rotate(180deg); }
+    @media (prefers-reduced-motion: no-preference) {
+      .addon-sec-chevron { transition: transform var(--transition); }
+    }
+    .addon-sec-painel { display: flex; flex-direction: column; gap: 8px; padding: 0 12px 12px; }
 
     .addons-subtotal {
       background: var(--cit-blue-50); border: 1px solid var(--cit-blue-200);
@@ -734,7 +764,10 @@
       .mini-row-sub { margin-left: auto; }
       .addon-row:not(.addon-row--stack), .addon-head { flex-wrap: wrap; }
       .addon-row:not(.addon-row--stack) > .addon-info, .addon-head > .addon-info { flex-basis: calc(100% - 44px); }
-      .addon-row .addon-ctrl { margin-left: auto; }
+      .addon-row .addon-ctrl { margin-left: auto; flex-shrink: 1; flex-wrap: wrap; justify-content: flex-end; max-width: 100%; }
+      .addon-sec-btn { grid-template-columns: minmax(0, 1fr) auto; padding: 12px 14px; }
+      .addon-sec-ind { grid-row: 2; grid-column: 1 / -1; white-space: normal; overflow-wrap: anywhere; }
+      .addon-sec-painel { padding: 0 8px 8px; }
       .sky-opts { padding-left: 0; }
       .sky-opt { flex-wrap: wrap; }
       .sky-opt-price { margin-left: auto; }
@@ -987,73 +1020,205 @@
 
       <!-- ========== STEP 3: ADD-ONS ========== -->
       <div class="step-panel card" id="step3">
-        <div class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#puzzle"></use></svg> Add-ons e Serviços Extras</div>
+        <h2 class="card-title"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#puzzle"></use></svg> Add-ons e Serviços Extras</h2>
         <p class="step-intro">
           Serviços cobrados por conta, somados à mesma fatura. Use <strong>+</strong> e <strong>−</strong> para ajustar a quantidade. O total é atualizado automaticamente.
         </p>
 
-        <!-- Add-on rows with qty controls -->
+        <div class="aviso-desconto" id="avisoDescontoAddons">
+          <svg class="icon aviso-desconto-icone" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg>
+          <div class="aviso-desconto-corpo">
+            <p class="aviso-desconto-titulo">APROVEITE A OPORTUNIDADE PARA GARANTIR O DESCONTO</p>
+            <p class="aviso-desconto-texto">Condição exclusiva desta contratação</p>
+          </div>
+        </div>
+
+        <!-- Add-ons em seções recolhíveis (sanfona); Grupo de E-mail fica fora, sempre visível -->
         <div class="addon-list">
 
-          <!-- Talk -->
-          <div class="addon-row" id="adTalk">
-            <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#video"></use></svg></span>
-            <div class="addon-info">
-              <div class="addon-name">Talk — Videoconferência</div>
-              <div class="addon-desc">Reuniões, chamadas e webinars integrados ao e-mail</div>
-              <div class="addon-price">R$ 4,70/conta/mês</div>
-            </div>
-            <div class="addon-ctrl">
-              <div class="mini-qty-ctrl" id="qcTalk">
-                <button class="mini-qty-btn" onclick="addonChange('talk',-1)">−</button>
-                <input class="mini-qty-val" id="aqTalk" type="number" value="0" min="0" onchange="addonInput('talk',this.value)" />
-                <button class="mini-qty-btn" onclick="addonChange('talk',1)">+</button>
-              </div>
-              <div class="addon-sub">
-                <div class="addon-sub-val" id="asTalk">R$ 0,00</div>
-                <div class="addon-period">/mês</div>
+          <div class="addon-sec">
+            <h3 class="addon-sec-head">
+              <button type="button" class="addon-sec-btn" id="secArmazenamento" aria-expanded="true" aria-controls="secArmazenamentoPainel" onclick="alternarSecao('Armazenamento')">
+                <span class="addon-sec-nome">Armazenamento em nuvem</span>
+                <span class="addon-sec-ind" id="secArmazenamentoInd" hidden><span class="sr-only">subtotal </span><span class="addon-sec-ind-val"></span></span>
+                <svg class="icon addon-sec-chevron" aria-hidden="true"><use href="assets/icons.svg#chevron-up"></use></svg>
+              </button>
+            </h3>
+            <div class="addon-sec-painel" id="secArmazenamentoPainel" role="region" aria-labelledby="secArmazenamento">
+              <!-- Skybox -->
+              <div class="addon-row addon-row--stack" id="adSkybox">
+                <div class="addon-head">
+                  <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud"></use></svg></span>
+                  <div class="addon-info">
+                    <div class="addon-name">Skybox — Armazenamento em Nuvem</div>
+                    <div class="addon-desc">Guarde arquivos com segurança na nuvem CITCloud</div>
+                  </div>
+                  <div class="addon-sub">
+                    <div class="addon-sub-val" id="asSkybox">R$ 0,00</div>
+                    <div class="addon-period">/mês</div>
+                  </div>
+                </div>
+                <!-- Plan selector -->
+                <div class="sky-opts" id="skyboxOpts">
+                  <div class="sky-opts-title">Selecione o plano e a quantidade de licenças:</div>
+                  <label class="sky-opt" id="skyOpt50" onclick="selectSkybox('50gb')">
+                    <input type="radio" name="skybox" value="50gb" />
+                    <div class="sky-opt-name">50 GB / conta</div>
+                    <div class="sky-opt-price" data-preco="skybox:50gb"></div>
+                  </label>
+                  <label class="sky-opt" id="skyOpt100" onclick="selectSkybox('100gb')">
+                    <input type="radio" name="skybox" value="100gb" />
+                    <div class="sky-opt-name">100 GB / conta</div>
+                    <div class="sky-opt-price" data-preco="skybox:100gb"></div>
+                  </label>
+                  <label class="sky-opt" id="skyOpt1tb" onclick="selectSkybox('1tb')">
+                    <input type="radio" name="skybox" value="1tb" />
+                    <div class="sky-opt-name">1 TB / conta</div>
+                    <div class="sky-opt-price" data-preco="skybox:1tb"></div>
+                  </label>
+                  <!-- Skybox qty -->
+                  <div class="sky-qty">
+                    <span class="sky-qty-label">Quantidade de licenças:</span>
+                    <div class="mini-qty-ctrl" id="qcSkybox">
+                      <button class="mini-qty-btn" data-acao="menos" onclick="addonChange('skybox',-1)">−</button>
+                      <input class="mini-qty-val" id="aqSkybox" type="number" value="0" min="0" onchange="addonInput('skybox',this.value)" />
+                      <button class="mini-qty-btn" data-acao="mais" onclick="addonChange('skybox',1)">+</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Backup 90d -->
-          <div class="addon-row" id="adBackup90">
-            <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#database"></use></svg></span>
-            <div class="addon-info">
-              <div class="addon-name">Backup 90 dias</div>
-              <div class="addon-desc">Retenção e restauração de e-mails por 90 dias</div>
-              <div class="addon-price">R$ 6,00/conta/mês</div>
-            </div>
-            <div class="addon-ctrl">
-              <div class="mini-qty-ctrl" id="qcBackup90">
-                <button class="mini-qty-btn" onclick="addonChange('backup90',-1)">−</button>
-                <input class="mini-qty-val" id="aqBackup90" type="number" value="0" min="0" onchange="addonInput('backup90',this.value)" />
-                <button class="mini-qty-btn" onclick="addonChange('backup90',1)">+</button>
-              </div>
-              <div class="addon-sub">
-                <div class="addon-sub-val" id="asBackup90">R$ 0,00</div>
-                <div class="addon-period">/mês</div>
+          <div class="addon-sec">
+            <h3 class="addon-sec-head">
+              <button type="button" class="addon-sec-btn" id="secTalk" aria-expanded="false" aria-controls="secTalkPainel" onclick="alternarSecao('Talk')">
+                <span class="addon-sec-nome">Talk – Videoconferência</span>
+                <span class="addon-sec-ind" id="secTalkInd" hidden><span class="sr-only">subtotal </span><span class="addon-sec-ind-val"></span></span>
+                <svg class="icon addon-sec-chevron" aria-hidden="true"><use href="assets/icons.svg#chevron-up"></use></svg>
+              </button>
+            </h3>
+            <div class="addon-sec-painel" id="secTalkPainel" role="region" aria-labelledby="secTalk" hidden>
+              <!-- Talk -->
+              <div class="addon-row" id="adTalk">
+                <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#video"></use></svg></span>
+                <div class="addon-info">
+                  <div class="addon-name">Talk – Videoconferência</div>
+                  <div class="addon-desc">Reuniões, chamadas e webinars integrados ao e-mail</div>
+                  <div class="addon-price" data-preco="talk"></div>
+                </div>
+                <div class="addon-ctrl">
+                  <div class="mini-qty-ctrl" id="qcTalk">
+                    <button class="mini-qty-btn" data-acao="menos" onclick="addonChange('talk',-1)">−</button>
+                    <input class="mini-qty-val" id="aqTalk" type="number" value="0" min="0" onchange="addonInput('talk',this.value)" />
+                    <button class="mini-qty-btn" data-acao="mais" onclick="addonChange('talk',1)">+</button>
+                  </div>
+                  <div class="addon-sub">
+                    <div class="addon-sub-val" id="asTalk">R$ 0,00</div>
+                    <div class="addon-period">/mês</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Backup 365d -->
-          <div class="addon-row" id="adBackup365">
-            <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg></span>
-            <div class="addon-info">
-              <div class="addon-name">Backup 365 dias</div>
-              <div class="addon-desc">Retenção e restauração de e-mails por 1 ano</div>
-              <div class="addon-price">R$ 19,00/conta/mês</div>
-            </div>
-            <div class="addon-ctrl">
-              <div class="mini-qty-ctrl" id="qcBackup365">
-                <button class="mini-qty-btn" onclick="addonChange('backup365',-1)">−</button>
-                <input class="mini-qty-val" id="aqBackup365" type="number" value="0" min="0" onchange="addonInput('backup365',this.value)" />
-                <button class="mini-qty-btn" onclick="addonChange('backup365',1)">+</button>
+          <div class="addon-sec">
+            <h3 class="addon-sec-head">
+              <button type="button" class="addon-sec-btn" id="secBackup" aria-expanded="false" aria-controls="secBackupPainel" onclick="alternarSecao('Backup')">
+                <span class="addon-sec-nome">Backup</span>
+                <span class="addon-sec-ind" id="secBackupInd" hidden><span class="sr-only">subtotal </span><span class="addon-sec-ind-val"></span></span>
+                <svg class="icon addon-sec-chevron" aria-hidden="true"><use href="assets/icons.svg#chevron-up"></use></svg>
+              </button>
+            </h3>
+            <div class="addon-sec-painel" id="secBackupPainel" role="region" aria-labelledby="secBackup" hidden>
+              <!-- Backup 90d -->
+              <div class="addon-row" id="adBackup90">
+                <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#database"></use></svg></span>
+                <div class="addon-info">
+                  <div class="addon-name">Backup 90 dias</div>
+                  <div class="addon-desc">Retenção e restauração de e-mails por 90 dias</div>
+                  <div class="addon-price" data-preco="backup90"></div>
+                </div>
+                <div class="addon-ctrl">
+                  <div class="mini-qty-ctrl" id="qcBackup90">
+                    <button class="mini-qty-btn" data-acao="menos" onclick="addonChange('backup90',-1)">−</button>
+                    <input class="mini-qty-val" id="aqBackup90" type="number" value="0" min="0" onchange="addonInput('backup90',this.value)" />
+                    <button class="mini-qty-btn" data-acao="mais" onclick="addonChange('backup90',1)">+</button>
+                  </div>
+                  <div class="addon-sub">
+                    <div class="addon-sub-val" id="asBackup90">R$ 0,00</div>
+                    <div class="addon-period">/mês</div>
+                  </div>
+                </div>
               </div>
-              <div class="addon-sub">
-                <div class="addon-sub-val" id="asBackup365">R$ 0,00</div>
-                <div class="addon-period">/mês</div>
+
+              <!-- Backup 365d -->
+              <div class="addon-row" id="adBackup365">
+                <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#shield-check"></use></svg></span>
+                <div class="addon-info">
+                  <div class="addon-name">Backup 365 dias</div>
+                  <div class="addon-desc">Retenção e restauração de e-mails por 1 ano</div>
+                  <div class="addon-price" data-preco="backup365"></div>
+                </div>
+                <div class="addon-ctrl">
+                  <div class="mini-qty-ctrl" id="qcBackup365">
+                    <button class="mini-qty-btn" data-acao="menos" onclick="addonChange('backup365',-1)">−</button>
+                    <input class="mini-qty-val" id="aqBackup365" type="number" value="0" min="0" onchange="addonInput('backup365',this.value)" />
+                    <button class="mini-qty-btn" data-acao="mais" onclick="addonChange('backup365',1)">+</button>
+                  </div>
+                  <div class="addon-sub">
+                    <div class="addon-sub-val" id="asBackup365">R$ 0,00</div>
+                    <div class="addon-period">/mês</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="addon-sec">
+            <h3 class="addon-sec-head">
+              <button type="button" class="addon-sec-btn" id="secDominio" aria-expanded="false" aria-controls="secDominioPainel" onclick="alternarSecao('Dominio')">
+                <span class="addon-sec-nome">Domínio secundário</span>
+                <span class="addon-sec-ind" id="secDominioInd" hidden><span class="sr-only">subtotal </span><span class="addon-sec-ind-val"></span></span>
+                <svg class="icon addon-sec-chevron" aria-hidden="true"><use href="assets/icons.svg#chevron-up"></use></svg>
+              </button>
+            </h3>
+            <div class="addon-sec-painel" id="secDominioPainel" role="region" aria-labelledby="secDominio" hidden>
+              <!-- Domínio extra -->
+              <div class="addon-row addon-row--stack" id="adExtraDom">
+                <div class="addon-head">
+                  <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg></span>
+                  <div class="addon-info">
+                    <div class="addon-name">Domínio .com.br extra</div>
+                    <div class="addon-desc">Domínios adicionais — cobrança anual via Pix separado</div>
+                    <div class="addon-price" data-preco="extraDom"></div>
+                  </div>
+                  <div class="addon-ctrl">
+                    <div class="mini-qty-ctrl" id="qcExtraDom">
+                      <button class="mini-qty-btn" data-acao="menos" onclick="addonChange('extraDom',-1)">−</button>
+                      <input class="mini-qty-val" id="aqExtraDom" type="number" value="0" min="0" onchange="addonInput('extraDom',this.value)" />
+                      <button class="mini-qty-btn" data-acao="mais" onclick="addonChange('extraDom',1)">+</button>
+                    </div>
+                    <div class="addon-sub">
+                      <div class="addon-sub-val" id="asExtraDom">R$ 0,00</div>
+                      <div class="addon-period">/ano</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Extra domain PIX panel -->
+                <div id="extraDomPixPanel" class="pix-box pix-box--sm" style="display:none">
+                  <div class="pix-box-title">
+                    <svg class="icon icon-pix" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg>Pix para domínios extras — <span id="extraDomPixTotal">R$ 0,00</span>/ano
+                  </div>
+                  <div class="pix-qr pix-qr--sm">
+                    <span class="pix-qr-placeholder"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#qr-code"></use></svg></span>
+                  </div>
+                  <div class="pix-code-box">
+                    <div class="pix-code" id="extraDomPixCode">aguardando geração…</div>
+                    <button class="pix-copy" onclick="copyExtraDomPix()"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar</button>
+                  </div>
+                  <p class="pix-note">Continue para a próxima etapa enquanto o Pix é processado.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -1064,98 +1229,18 @@
             <div class="addon-info">
               <div class="addon-name">Grupo de E-mail</div>
               <div class="addon-desc">Listas de distribuição para equipes e departamentos</div>
-              <div class="addon-price">R$ 2,00/conta/mês</div>
+              <div class="addon-price" data-preco="grupoEmail"></div>
             </div>
             <div class="addon-ctrl">
               <div class="mini-qty-ctrl" id="qcGrupo">
-                <button class="mini-qty-btn" onclick="addonChange('grupoEmail',-1)">−</button>
+                <button class="mini-qty-btn" data-acao="menos" onclick="addonChange('grupoEmail',-1)">−</button>
                 <input class="mini-qty-val" id="aqGrupo" type="number" value="0" min="0" onchange="addonInput('grupoEmail',this.value)" />
-                <button class="mini-qty-btn" onclick="addonChange('grupoEmail',1)">+</button>
+                <button class="mini-qty-btn" data-acao="mais" onclick="addonChange('grupoEmail',1)">+</button>
               </div>
               <div class="addon-sub">
                 <div class="addon-sub-val" id="asGrupo">R$ 0,00</div>
                 <div class="addon-period">/mês</div>
               </div>
-            </div>
-          </div>
-
-          <!-- Skybox -->
-          <div class="addon-row addon-row--stack" id="adSkybox">
-            <div class="addon-head">
-              <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#cloud"></use></svg></span>
-              <div class="addon-info">
-                <div class="addon-name">Skybox — Armazenamento em Nuvem</div>
-                <div class="addon-desc">Guarde arquivos com segurança na nuvem CITCloud</div>
-              </div>
-              <div class="addon-sub">
-                <div class="addon-sub-val" id="asSkybox">R$ 0,00</div>
-                <div class="addon-period">/mês</div>
-              </div>
-            </div>
-            <!-- Plan selector -->
-            <div class="sky-opts" id="skyboxOpts">
-              <div class="sky-opts-title">Selecione o plano e a quantidade de licenças:</div>
-              <label class="sky-opt" id="skyOpt50" onclick="selectSkybox('50gb')">
-                <input type="radio" name="skybox" value="50gb" />
-                <div class="sky-opt-name">50 GB / conta</div>
-                <div class="sky-opt-price">R$ 17,70/conta/mês</div>
-              </label>
-              <label class="sky-opt" id="skyOpt100" onclick="selectSkybox('100gb')">
-                <input type="radio" name="skybox" value="100gb" />
-                <div class="sky-opt-name">100 GB / conta</div>
-                <div class="sky-opt-price">R$ 28,70/conta/mês</div>
-              </label>
-              <label class="sky-opt" id="skyOpt1tb" onclick="selectSkybox('1tb')">
-                <input type="radio" name="skybox" value="1tb" />
-                <div class="sky-opt-name">1 TB / conta</div>
-                <div class="sky-opt-price">R$ 319,00/conta/mês</div>
-              </label>
-              <!-- Skybox qty -->
-              <div class="sky-qty">
-                <span class="sky-qty-label">Quantidade de licenças:</span>
-                <div class="mini-qty-ctrl" id="qcSkybox">
-                  <button class="mini-qty-btn" onclick="addonChange('skybox',-1)">−</button>
-                  <input class="mini-qty-val" id="aqSkybox" type="number" value="0" min="0" onchange="addonInput('skybox',this.value)" />
-                  <button class="mini-qty-btn" onclick="addonChange('skybox',1)">+</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Domínio extra -->
-          <div class="addon-row addon-row--stack" id="adExtraDom">
-            <div class="addon-head">
-              <span class="addon-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#globe"></use></svg></span>
-              <div class="addon-info">
-                <div class="addon-name">Domínio .com.br extra</div>
-                <div class="addon-desc">Domínios adicionais — cobrança anual via Pix separado</div>
-                <div class="addon-price">R$ 79,00/domínio/ano</div>
-              </div>
-              <div class="addon-ctrl">
-                <div class="mini-qty-ctrl" id="qcExtraDom">
-                  <button class="mini-qty-btn" onclick="addonChange('extraDom',-1)">−</button>
-                  <input class="mini-qty-val" id="aqExtraDom" type="number" value="0" min="0" onchange="addonInput('extraDom',this.value)" />
-                  <button class="mini-qty-btn" onclick="addonChange('extraDom',1)">+</button>
-                </div>
-                <div class="addon-sub">
-                  <div class="addon-sub-val" id="asExtraDom">R$ 0,00</div>
-                  <div class="addon-period">/ano</div>
-                </div>
-              </div>
-            </div>
-            <!-- Extra domain PIX panel -->
-            <div id="extraDomPixPanel" class="pix-box pix-box--sm" style="display:none">
-              <div class="pix-box-title">
-                <svg class="icon icon-pix" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg>Pix para domínios extras — <span id="extraDomPixTotal">R$ 0,00</span>/ano
-              </div>
-              <div class="pix-qr pix-qr--sm">
-                <span class="pix-qr-placeholder"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#qr-code"></use></svg></span>
-              </div>
-              <div class="pix-code-box">
-                <div class="pix-code" id="extraDomPixCode">aguardando geração…</div>
-                <button class="pix-copy" onclick="copyExtraDomPix()"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#copy"></use></svg> Copiar</button>
-              </div>
-              <p class="pix-note">Continue para a próxima etapa enquanto o Pix é processado.</p>
             </div>
           </div>
 
@@ -1639,15 +1724,112 @@
     }
 
     /* ---- ADD-ONS STEP ---- */
-    const ADDON_PRICES = { talk: 4.70, backup90: 6.00, backup365: 19.00, grupoEmail: 2.00 };
-    const SKYBOX_PRICES = { '50gb': 17.70, '100gb': 28.70, '1tb': 319.00 };
+    // Tabela única de preços dos add-ons: valores, nomes e rótulos usados no passo 3, no painel de
+    // selecionados e no resumo. `unidade` e `periodo` formam o texto do preço exibido ("/conta/mês").
+    // Domínio extra é cobrado por ano via Pix separado e fica fora do total mensal.
+    const ADDONS = {
+      talk:       { nome: 'Talk',            rotuloCurto: 'Talk',         preco: 4.70,  unidade: 'conta',   periodo: 'mês', linha: 'adTalk',      sub: 'asTalk',      qtd: 'aqTalk' },
+      backup90:   { nome: 'Backup 90 dias',  rotuloCurto: 'Backup 90d',   preco: 6.00,  unidade: 'conta',   periodo: 'mês', linha: 'adBackup90',  sub: 'asBackup90',  qtd: 'aqBackup90' },
+      backup365:  { nome: 'Backup 365 dias', rotuloCurto: 'Backup 365d',  preco: 19.00, unidade: 'conta',   periodo: 'mês', linha: 'adBackup365', sub: 'asBackup365', qtd: 'aqBackup365' },
+      grupoEmail: { nome: 'Grupo de E-mail', rotuloCurto: 'Grupo E-mail', preco: 2.00,  unidade: 'conta',   periodo: 'mês', linha: 'adGrupo',     sub: 'asGrupo',     qtd: 'aqGrupo' },
+      skybox:     { nome: 'Skybox',          rotuloCurto: 'Skybox',                     unidade: 'conta',   periodo: 'mês', linha: 'adSkybox',    sub: 'asSkybox',    qtd: 'aqSkybox',
+        // Nome acessível do campo contém o texto visível "Quantidade de licenças" (WCAG 2.5.3).
+        rotuloQtd: 'Quantidade de licenças de Skybox',
+        planos: {
+          '50gb':  { preco: 17.70,  rotuloCurto: '50GB',  opcao: 'skyOpt50' },
+          '100gb': { preco: 28.70,  rotuloCurto: '100GB', opcao: 'skyOpt100' },
+          '1tb':   { preco: 319.00, rotuloCurto: '1TB',   opcao: 'skyOpt1tb' },
+        } },
+      extraDom:   { nome: 'Domínio extra',   rotuloCurto: 'Domínio extra', preco: 79.00, unidade: 'domínio', periodo: 'ano', linha: 'adExtraDom',  sub: 'asExtraDom',  qtd: 'aqExtraDom' },
+    };
+    // Add-ons cobrados na mensalidade, na ordem do painel de selecionados e do resumo.
+    const ADDONS_MENSAIS = ['talk', 'backup90', 'backup365', 'grupoEmail', 'skybox'];
+
+    // Ponto único do cálculo: preço unitário (Skybox pelo plano escolhido; sem plano, 0) e valor = qtd × preço.
+    function precoUnitario(key) {
+      if (key === 'skybox') return skyboxPlan ? (ADDONS.skybox.planos[skyboxPlan]?.preco || 0) : 0;
+      return ADDONS[key].preco;
+    }
+    function valorAddon(key) {
+      return (addonQtys[key] || 0) * precoUnitario(key);
+    }
+    // Rótulo curto da linha (Skybox com o plano, ex.: "Skybox 50GB").
+    function rotuloAddon(key) {
+      const a = ADDONS[key];
+      return key === 'skybox' && skyboxPlan ? `${a.rotuloCurto} ${a.planos[skyboxPlan].rotuloCurto}` : a.rotuloCurto;
+    }
+    // Linhas mensais com valor (Skybox só com plano e quantidade), usadas no painel de selecionados,
+    // no resumo e no total. Domínio extra fica fora: é anual, com Pix próprio.
+    function linhasAddonsMensais() {
+      return ADDONS_MENSAIS
+        .filter(key => valorAddon(key) > 0)
+        .map(key => ({ key, rotulo: rotuloAddon(key), qtd: addonQtys[key], valor: valorAddon(key) }));
+    }
+
+    // Preenche os preços exibidos no passo 3 (atributo data-preco = chave ou "skybox:plano")
+    // e os nomes acessíveis dos controles de quantidade de cada add-on.
+    function preencherTextosAddons() {
+      document.querySelectorAll('[data-preco]').forEach(el => {
+        const [key, plano] = el.dataset.preco.split(':');
+        const a = ADDONS[key];
+        const preco = plano ? a?.planos?.[plano]?.preco : a?.preco;
+        if (preco === undefined) { console.warn(`data-preco desconhecido: ${el.dataset.preco}`); return; }
+        el.textContent = `R$ ${fmtR(preco)}/${a.unidade}/${a.periodo}`;
+      });
+      Object.values(ADDONS).forEach(a => {
+        const inp = document.getElementById(a.qtd);
+        const ctrl = inp?.closest('.mini-qty-ctrl');
+        if (!ctrl) { console.warn(`controle de quantidade não encontrado: #${a.qtd}`); return; }
+        inp.setAttribute('aria-label', a.rotuloQtd || `Quantidade de ${a.nome}`);
+        ctrl.querySelector('[data-acao="menos"]')?.setAttribute('aria-label', `Diminuir ${a.nome}`);
+        ctrl.querySelector('[data-acao="mais"]')?.setAttribute('aria-label', `Aumentar ${a.nome}`);
+      });
+    }
+
+    // Seções da sanfona do passo 3 (id do botão = 'sec' + chave). Grupo de E-mail fica fora.
+    // O período do indicador vem da tabela ADDONS (todos os add-ons de uma seção têm o mesmo).
+    const SECOES_ADDONS = {
+      Armazenamento: { addons: ['skybox'], abertaPorPadrao: true },
+      Talk:          { addons: ['talk'] },
+      Backup:        { addons: ['backup90', 'backup365'] },
+      Dominio:       { addons: ['extraDom'] },
+    };
+    // Skybox conta como seleção com plano OU quantidade (critério 5). Hoje a parte do plano não muda
+    // o resultado, porque Armazenamento já abre por padrão; fica para o caso de o padrão mudar.
+    function secaoTemSelecao(sec) {
+      return sec.addons.some(key => (addonQtys[key] || 0) > 0 || (key === 'skybox' && !!skyboxPlan));
+    }
+    function definirSecao(id, aberta) {
+      document.getElementById('sec' + id).setAttribute('aria-expanded', String(aberta));
+      document.getElementById('sec' + id + 'Painel').hidden = !aberta;
+    }
+    function alternarSecao(id) {
+      definirSecao(id, document.getElementById('sec' + id).getAttribute('aria-expanded') !== 'true');
+      atualizarIndicadoresSecoes();
+    }
+    // Estado inicial a cada entrada no passo 3: padrão aberta ou com seleção; demais fechadas.
+    function abrirSecoesIniciais() {
+      Object.entries(SECOES_ADDONS).forEach(([id, sec]) => definirSecao(id, !!sec.abertaPorPadrao || secaoTemSelecao(sec)));
+      atualizarIndicadoresSecoes();
+    }
+    // Indicador no cabeçalho: subtotal da seção só quando fechada e com valor. O prefixo "subtotal"
+    // é só para leitor de tela (span .sr-only fixo); sem valor, o indicador inteiro fica hidden.
+    function atualizarIndicadoresSecoes() {
+      Object.entries(SECOES_ADDONS).forEach(([id, sec]) => {
+        const aberta = document.getElementById('sec' + id).getAttribute('aria-expanded') === 'true';
+        const valor = sec.addons.reduce((s, key) => s + valorAddon(key), 0);
+        const texto = !aberta && valor > 0 ? `R$ ${fmtR(valor)}/${ADDONS[sec.addons[0]].periodo}` : '';
+        const ind = document.getElementById('sec' + id + 'Ind');
+        ind.querySelector('.addon-sec-ind-val').textContent = texto;
+        ind.hidden = !texto;
+      });
+    }
 
     function addonChange(key, delta) {
       let q = (addonQtys[key] || 0) + delta;
       if (q < 0) q = 0;
       addonQtys[key] = q;
-      const inputMap = { talk:'aqTalk', backup90:'aqBackup90', backup365:'aqBackup365', grupoEmail:'aqGrupo', skybox:'aqSkybox', extraDom:'aqExtraDom' };
-      const inp = document.getElementById(inputMap[key]);
+      const inp = document.getElementById(ADDONS[key].qtd);
       if (inp) inp.value = q;
       refreshAddons();
     }
@@ -1655,14 +1837,16 @@
     function addonInput(key, raw) {
       const q = Math.max(0, parseInt(raw) || 0);
       addonQtys[key] = q;
+      // O campo mostra o que é cobrado (ex.: -3 → 0, 2.7 → 2).
+      const inp = document.getElementById(ADDONS[key].qtd);
+      if (inp) inp.value = q;
       refreshAddons();
     }
 
     function selectSkybox(plan) {
       skyboxPlan = plan;
-      ['50gb','100gb','1tb'].forEach(p => {
-        const map = {'50gb':'skyOpt50','100gb':'skyOpt100','1tb':'skyOpt1tb'};
-        const el = document.getElementById(map[p]);
+      Object.entries(ADDONS.skybox.planos).forEach(([p, cfg]) => {
+        const el = document.getElementById(cfg.opcao);
         if (el) el.classList.toggle('selected', p === plan);
         const radio = el && el.querySelector('input[type=radio]');
         if (radio) radio.checked = p === plan;
@@ -1671,36 +1855,17 @@
     }
 
     function refreshAddons() {
-      // Update per-row subtotals and active state
-      const rowMap = {
-        talk:       { rowId:'adTalk',      subId:'asTalk',      price: ADDON_PRICES.talk,    perUnit:true  },
-        backup90:   { rowId:'adBackup90',  subId:'asBackup90',  price: ADDON_PRICES.backup90, perUnit:true },
-        backup365:  { rowId:'adBackup365', subId:'asBackup365', price: ADDON_PRICES.backup365,perUnit:true },
-        grupoEmail: { rowId:'adGrupo',     subId:'asGrupo',     price: ADDON_PRICES.grupoEmail,perUnit:true},
-      };
-      Object.entries(rowMap).forEach(([key, cfg]) => {
-        const q   = addonQtys[key] || 0;
-        const val = q * cfg.price;
-        const subEl = document.getElementById(cfg.subId);
+      // Subtotal e estado ativo de cada linha (Skybox sem plano fica em R$ 0,00 e inativo)
+      Object.entries(ADDONS).forEach(([key, cfg]) => {
+        const val = valorAddon(key);
+        const subEl = document.getElementById(cfg.sub);
         if (subEl) subEl.textContent = `R$ ${fmtR(val)}`;
-        const rowEl = document.getElementById(cfg.rowId);
-        if (rowEl) rowEl.classList.toggle('active', q > 0);
+        document.getElementById(cfg.linha)?.classList.toggle('active', val > 0);
       });
 
-      // Skybox
-      const skyQ = addonQtys.skybox || 0;
-      const skyPrice = skyboxPlan ? (SKYBOX_PRICES[skyboxPlan] || 0) : 0;
-      const skyVal = skyQ * skyPrice;
-      const skySub = document.getElementById('asSkybox');
-      if (skySub) skySub.textContent = `R$ ${fmtR(skyVal)}`;
-      document.getElementById('adSkybox').classList.toggle('active', skyQ > 0 && !!skyboxPlan);
-
-      // Extra domain
-      const domQ  = addonQtys.extraDom || 0;
-      const domVal = domQ * 79;
-      const domSub = document.getElementById('asExtraDom');
-      if (domSub) domSub.textContent = `R$ ${fmtR(domVal)}`;
-      document.getElementById('adExtraDom').classList.toggle('active', domQ > 0);
+      // Extra domain (anual, Pix separado)
+      const domQ   = addonQtys.extraDom || 0;
+      const domVal = valorAddon('extraDom');
       const pixPanel = document.getElementById('extraDomPixPanel');
       if (pixPanel) {
         pixPanel.style.display = domQ > 0 ? 'block' : 'none';
@@ -1711,20 +1876,15 @@
       }
 
       // Subtotal summary panel
-      const lines = [];
-      Object.entries(rowMap).forEach(([key, cfg]) => {
-        const q = addonQtys[key] || 0;
-        if (q > 0) lines.push({ label: cfg.rowId === 'adGrupo' ? 'Grupo E-mail' : key === 'talk' ? 'Talk' : key === 'backup90' ? 'Backup 90d' : 'Backup 365d', v: q * cfg.price });
-      });
-      if (skyQ > 0 && skyboxPlan) lines.push({ label: `Skybox ${skyboxPlan.toUpperCase()}`, v: skyVal });
+      const lines = linhasAddonsMensais();
 
       const box = document.getElementById('addonsSubtotal');
       if (lines.length) {
-        const total = lines.reduce((s,l) => s + l.v, 0);
+        const total = lines.reduce((s,l) => s + l.valor, 0);
         document.getElementById('addonsSubtotalVal').textContent = `+ R$ ${fmtR(total)}/mês`;
         document.getElementById('addonsSubtotalLines').innerHTML = lines.map(l =>
           `<div class="addon-sub-line">
-            <span>${l.label}</span><span>R$ ${fmtR(l.v)}/mês</span>
+            <span>${l.rotulo}</span><span>R$ ${fmtR(l.valor)}/mês</span>
           </div>`).join('');
         box.style.display = 'block';
       } else {
@@ -1733,6 +1893,7 @@
 
       updateSummary();
       updateInstallments();
+      atualizarIndicadoresSecoes();
     }
 
     function copyExtraDomPix() {
@@ -1760,15 +1921,7 @@
     function calcDiscount(qty)   { return (!annualBilling && qty >= 5) ? 5 : 0; }
     function fmtR(v)             { return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
     function unitPrice(type)     { const d = ACCOUNT_DEFS[type]; const b = annualBilling ? d.base*0.80 : d.base; const disc = calcDiscount(ckQtys[type]); return b*(1-disc/100); }
-    function addonsMonthly() {
-      let t = 0;
-      t += (addonQtys.talk       || 0) * 4.70;
-      t += (addonQtys.backup90   || 0) * 6.00;
-      t += (addonQtys.backup365  || 0) * 19.00;
-      t += (addonQtys.grupoEmail || 0) * 2.00;
-      t += (addonQtys.skybox     || 0) * (skyboxPlan ? (SKYBOX_PRICES[skyboxPlan] || 0) : 0);
-      return t;
-    }
+    function addonsMonthly()     { return linhasAddonsMensais().reduce((s, l) => s + l.valor, 0); }
     function grandTotal()        { return Object.keys(ACCOUNT_DEFS).reduce((s,t) => s + ckQtys[t]*unitPrice(t), 0) + addonsMonthly(); }
     function totalAccounts()     { return Object.values(ckQtys).reduce((a,b) => a+b, 0); }
 
@@ -1846,6 +1999,7 @@
       document.getElementById('step' + n).classList.add('active');
       currentStep = n;
       updateStepBar(n);
+      if (n === 3) abrirSecoesIniciais();
       if (n === 5) generatePaymentData();
       // Coluna única: o resumo fica no topo, então rola até a barra de etapas para o passo ficar à vista
       const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
@@ -1909,29 +2063,13 @@
       });
       // Add-ons lines
       const totalQ = totalAccounts();
-      const addonMap = [
-        { key:'talk',       label:'Talk',          v: 4.70  },
-        { key:'backup90',   label:'Backup 90d',    v: 6.00  },
-        { key:'backup365',  label:'Backup 365d',   v: 19.00 },
-        { key:'grupoEmail', label:'Grupo E-mail',  v: 2.00  },
-      ];
-      addonMap.forEach(a => {
-        const q = addonQtys[a.key] || 0;
-        if (!q) return;
+      linhasAddonsMensais().forEach(l => {
         hasAny = true;
         html += `<div class="sum-line">
-          <span>${a.label} ×${q}</span>
-          <span>R$ ${fmtR(a.v * q)}</span>
+          <span>${l.rotulo} ×${l.qtd}</span>
+          <span>R$ ${fmtR(l.valor)}</span>
         </div>`;
       });
-      if (addonQtys.skybox && skyboxPlan && SKYBOX_PRICES[skyboxPlan]) {
-        hasAny = true;
-        const sv = SKYBOX_PRICES[skyboxPlan] * addonQtys.skybox;
-        html += `<div class="sum-line">
-          <span>Skybox ${skyboxPlan.toUpperCase()} ×${addonQtys.skybox}</span>
-          <span>R$ ${fmtR(sv)}</span>
-        </div>`;
-      }
       linesEl.innerHTML = hasAny ? html
         : '<div class="sum-empty">Nenhuma conta selecionada</div>';
     }
@@ -2239,6 +2377,8 @@
         document.getElementById('cycleLabel').textContent = 'Cobrado anualmente (ativo)';
       }
 
+      preencherTextosAddons();
+      abrirSecoesIniciais();
       ckRefresh();
       updateStepBar(1);
     })();

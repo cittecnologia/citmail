@@ -15,6 +15,8 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Testes de páginas rodam contra um site publicado com `CITMAIL_BASE_URL` (CIT-13).
 - Testes E2E dos ajustes de textos e componentes da landing e do checkout (CIT-15).
 - Testes E2E de layout, rolagem e tipografia do checkout (CIT-19).
+- Checkout: aviso de desconto no passo de add-ons (CIT-21).
+- Testes E2E dos preços, da sanfona e do aviso de desconto dos add-ons (CIT-21).
 
 ### Alterado
 - Landing: novos textos do hero (título, subtítulo e indicadores), da faixa de confiança e da seção Recursos (CIT-15).
@@ -27,6 +29,11 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Checkout: resumo do pedido com rolagem interna quando não cabe na janela e acessível por teclado (CIT-19).
 - Checkout: fontes maiores nas etapas, nos cards e no resumo do pedido (CIT-19).
 - Checkout: ajustes de transbordo no webmail, nos add-ons e no Skybox (CIT-19).
+- Checkout: add-ons em seções recolhíveis (Armazenamento em nuvem, Talk, Backup e Domínio secundário), com subtotal no cabeçalho da seção fechada; Grupo de E-mail fica fora das seções (CIT-21).
+- Checkout: botões − e + e campos de quantidade dos add-ons com nome acessível próprio (CIT-21).
+- Checkout: preços dos add-ons numa tabela única, usada no passo 3, no subtotal e no resumo (CIT-21).
+- Checkout: linhas de add-ons sem cursor de clique nem destaque ao passar o mouse (CIT-21).
+- Checkout: título do passo de add-ons como `h2` (CIT-21).
 
 ### Removido
 - `serve.py`, substituído pelo Vite.

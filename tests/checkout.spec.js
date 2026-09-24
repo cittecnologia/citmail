@@ -157,11 +157,12 @@ const SELETORES_TIPO_BODY = [
   '.opt-name',
   '.field input', '.field select', '.installments-select',
 ];
-// Passo 3 (add-ons): só font-size nesta história; revisar na CIT-21 (sanfona), que reestrutura o passo.
+// Passo 3 (add-ons), incluindo o cabeçalho das seções da sanfona, o indicador de subtotal e o aviso de desconto (CIT-21).
 const SELETORES_TIPO_SMALL_PASSO3 = [
   '.addon-desc', '.addon-price', '.addon-period', '.sky-opts-title', '.sky-opt-name', '.sky-opt-price', '.sky-qty-label', '.addon-sub-line', '.addons-subtotal-head',
+  '.addon-sec-ind', '.aviso-desconto-texto',
 ];
-const SELETORES_TIPO_BODY_PASSO3 = ['.addon-name', '.addon-sub-val'];
+const SELETORES_TIPO_BODY_PASSO3 = ['.addon-name', '.addon-sub-val', '.addon-sec-nome', '.aviso-desconto-titulo'];
 // Exceções documentadas: alertas com explicação longa usam o corpo de leitura (16px), ver checkout.html.
 const EXCECOES_TIPO_BODY = ['#domainExistPanel .alert-box', '.boleto-inner .alert-box'];
 
@@ -540,5 +541,626 @@ test.describe('checkout — CIT-19', { tag: '@CIT-19' }, () => {
         expect(lido, `largura ${largura}px: font-size por seletor (todas as ocorrências)`).toEqual(esperado);
       });
     }
+  });
+});
+
+// CIT-21: add-ons do passo 3 (tabela única de preços, sanfona e aviso de desconto).
+
+/**
+ * Abre a seção de add-ons indicada no passo 3, se estiver fechada.
+ * @param {import('@playwright/test').Page} page
+ * @param {string} nome nome visível da seção, ex.: 'Backup'
+ */
+async function abrirSecao(page, nome) {
+  const botao = botaoSecao(page, nome);
+  if (await botao.getAttribute('aria-expanded') !== 'true') await botao.click();
+  await expect(botao).toHaveAttribute('aria-expanded', 'true');
+}
+
+/**
+ * Botão do cabeçalho de uma seção da sanfona de add-ons (nome acessível começa pelo nome da seção;
+ * o indicador de subtotal, quando visível, entra depois).
+ * @param {import('@playwright/test').Page} page
+ * @param {string} nome
+ */
+function botaoSecao(page, nome) {
+  const esc = nome.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return page.locator('#step3 .addon-sec-btn').filter({ has: page.locator('.addon-sec-nome', { hasText: new RegExp(`^${esc}$`) }) });
+}
+
+/**
+ * Digita a quantidade de um add-on no campo do passo 3 (dispara o onchange com Tab).
+ * @param {import('@playwright/test').Page} page
+ * @param {string} secao nome da seção que contém o add-on
+ * @param {string} inputId id do campo de quantidade, ex.: 'aqTalk'
+ * @param {number} qtd
+ */
+async function definirQtdAddon(page, secao, inputId, qtd) {
+  await abrirSecao(page, secao);
+  const input = page.locator(`#${inputId}`);
+  await input.fill(String(qtd));
+  await input.press('Tab');
+}
+
+/**
+ * Textos das linhas (cada filho da linha, sem espaços extras) de um contêiner de linhas.
+ * @param {import('@playwright/test').Page} page
+ * @param {string} seletor seletor das linhas, ex.: '#sumAccountLines .sum-line'
+ */
+async function linhas(page, seletor) {
+  return page.evaluate(sel => [...document.querySelectorAll(sel)]
+    .map(l => [...l.children].map(s => s.textContent.replace(/\s+/g, ' ').trim())), seletor);
+}
+
+test.describe('checkout — add-ons: preços (não regressão)', { tag: '@CIT-21' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('preços exibidos em cada add-on do passo 3', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    const precos = await page.evaluate(() => Object.fromEntries(
+      ['#adTalk .addon-price', '#adBackup90 .addon-price', '#adBackup365 .addon-price', '#adGrupo .addon-price', '#adExtraDom .addon-price',
+        '#skyOpt50 .sky-opt-price', '#skyOpt100 .sky-opt-price', '#skyOpt1tb .sky-opt-price']
+        .map(sel => [sel, document.querySelector(sel)?.textContent.trim()])));
+    expect(precos).toEqual({
+      '#adTalk .addon-price': 'R$ 4,70/conta/mês',
+      '#adBackup90 .addon-price': 'R$ 6,00/conta/mês',
+      '#adBackup365 .addon-price': 'R$ 19,00/conta/mês',
+      '#adGrupo .addon-price': 'R$ 2,00/conta/mês',
+      '#adExtraDom .addon-price': 'R$ 79,00/domínio/ano',
+      '#skyOpt50 .sky-opt-price': 'R$ 17,70/conta/mês',
+      '#skyOpt100 .sky-opt-price': 'R$ 28,70/conta/mês',
+      '#skyOpt1tb .sky-opt-price': 'R$ 319,00/conta/mês',
+    });
+  });
+
+  test('mensal: subtotais por linha, painel de selecionados, resumo e total com todos os add-ons', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 3);
+    await definirQtdAddon(page, 'Backup', 'aqBackup90', 2);
+    await definirQtdAddon(page, 'Backup', 'aqBackup365', 1);
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 2);
+    await page.locator('#skyOpt100').click();
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 2);
+    const grupo = page.locator('#aqGrupo');
+    await grupo.fill('4');
+    await grupo.press('Tab');
+
+    await expect(page.locator('#asTalk')).toHaveText('R$ 14,10');
+    await expect(page.locator('#asBackup90')).toHaveText('R$ 12,00');
+    await expect(page.locator('#asBackup365')).toHaveText('R$ 19,00');
+    await expect(page.locator('#asGrupo')).toHaveText('R$ 8,00');
+    await expect(page.locator('#asSkybox')).toHaveText('R$ 57,40');
+    await expect(page.locator('#asExtraDom')).toHaveText('R$ 158,00');
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
+
+    // Domínio extra (anual, via Pix) fica fora do subtotal mensal dos add-ons.
+    await expect(page.locator('#addonsSubtotalVal')).toHaveText('+ R$ 110,50/mês');
+    expect(await linhas(page, '#addonsSubtotalLines .addon-sub-line')).toEqual([
+      ['Talk', 'R$ 14,10/mês'],
+      ['Backup 90d', 'R$ 12,00/mês'],
+      ['Backup 365d', 'R$ 19,00/mês'],
+      ['Grupo E-mail', 'R$ 8,00/mês'],
+      ['Skybox 100GB', 'R$ 57,40/mês'],
+    ]);
+
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([
+      ['2× E-mail 5 GB', 'R$ 20,00'],
+      ['Talk ×3', 'R$ 14,10'],
+      ['Backup 90d ×2', 'R$ 12,00'],
+      ['Backup 365d ×1', 'R$ 19,00'],
+      ['Grupo E-mail ×4', 'R$ 8,00'],
+      ['Skybox 100GB ×2', 'R$ 57,40'],
+    ]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 130,50');
+    await expect(page.locator('#sumPeriod')).toHaveText('/mês');
+  });
+
+  test('anual: total mensal com add-ons e valor anual (total × 12)', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2&cycle=annual');
+    await page.evaluate(() => goStep(3));
+
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 1);
+    await definirQtdAddon(page, 'Backup', 'aqBackup365', 2);
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 1);
+    await page.locator('#skyOpt50').click();
+
+    // 2 × 8,00 (−20% anual) + 4,70 + 2 × 19,00 + 17,70 = 76,40
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 76,40');
+    await expect(page.locator('#sumPeriod')).toHaveText('/mês · R$ 916,80/ano');
+    await expect(page.locator('#addonsSubtotalVal')).toHaveText('+ R$ 60,40/mês');
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([
+      ['2× E-mail 5 GB', 'R$ 16,00'],
+      ['Talk ×1', 'R$ 4,70'],
+      ['Backup 365d ×2', 'R$ 38,00'],
+      ['Skybox 50GB ×1', 'R$ 17,70'],
+    ]);
+  });
+
+  test('Skybox 1 TB: preço por licença no subtotal, no painel e no resumo', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await abrirSecao(page, 'Armazenamento em nuvem');
+    await page.locator('#skyOpt1tb').click();
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 3);
+
+    await expect(page.locator('#asSkybox')).toHaveText('R$ 957,00');
+    await expect(page.locator('#addonsSubtotalVal')).toHaveText('+ R$ 957,00/mês');
+    expect(await linhas(page, '#addonsSubtotalLines .addon-sub-line')).toEqual([['Skybox 1TB', 'R$ 957,00/mês']]);
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([
+      ['2× E-mail 5 GB', 'R$ 20,00'],
+      ['Skybox 1TB ×3', 'R$ 957,00'],
+    ]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 977,00');
+  });
+
+  test('Skybox com quantidade e sem plano: R$ 0,00 e sem linha no painel nem no resumo', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 5);
+
+    await expect(page.locator('#asSkybox')).toHaveText('R$ 0,00');
+    await expect(page.locator('#addonsSubtotal')).toBeHidden();
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['2× E-mail 5 GB', 'R$ 20,00']]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 20,00');
+  });
+
+  test('domínio extra: 2 × R$ 79,00 no Pix anual, fora do total mensal e do resumo', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 2);
+
+    await expect(page.locator('#asExtraDom')).toHaveText('R$ 158,00');
+    await expect(page.locator('#extraDomPixPanel')).toBeVisible();
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
+    await expect(page.locator('#addonsSubtotal')).toBeHidden();
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['2× E-mail 5 GB', 'R$ 20,00']]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 20,00');
+  });
+});
+
+// Seções da sanfona do passo 3, na ordem da tela.
+const SECOES_ADDONS = ['Armazenamento em nuvem', 'Talk – Videoconferência', 'Backup', 'Domínio secundário'];
+// Nomes dos add-ons nos rótulos dos controles de quantidade (campo `nome` da tabela de preços).
+const NOMES_ADDONS = ['Talk', 'Backup 90 dias', 'Backup 365 dias', 'Skybox', 'Domínio extra', 'Grupo de E-mail'];
+
+/**
+ * Estado aberto/fechado de cada seção (aria-expanded do botão), na ordem da tela.
+ * @param {import('@playwright/test').Page} page
+ */
+async function estadoSecoes(page) {
+  return page.locator('#step3 .addon-sec-btn').evaluateAll(bs => bs.map(b => b.getAttribute('aria-expanded')));
+}
+
+/**
+ * Painel controlado pelo botão da seção (via aria-controls).
+ * @param {import('@playwright/test').Page} page
+ * @param {string} nome
+ */
+async function painelSecao(page, nome) {
+  const id = await botaoSecao(page, nome).getAttribute('aria-controls');
+  return page.locator(`#${id}`);
+}
+
+test.describe('checkout — add-ons: sanfona', { tag: '@CIT-21' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('título do passo é h2 e as seções são h3 com botão, nesta ordem e com estes nomes', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await expect(page.locator('#step3').getByRole('heading', { level: 2 })).toHaveText('Add-ons e Serviços Extras');
+    // innerText: o indicador sem valor (com o prefixo só para leitor de tela) fica hidden.
+    await expect(page.locator('#step3 h3')).toHaveText(SECOES_ADDONS, { useInnerText: true });
+    await expect(page.locator('#step3 h3 > button.addon-sec-btn')).toHaveCount(SECOES_ADDONS.length);
+
+    for (const nome of SECOES_ADDONS) {
+      const botao = botaoSecao(page, nome);
+      await expect(botao).toHaveCount(1);
+      await expect(botao).toHaveAccessibleName(nome);
+      const painel = await painelSecao(page, nome);
+      await expect(painel).toHaveAttribute('role', 'region');
+      await expect(painel).toHaveAttribute('aria-labelledby', await botao.getAttribute('id') ?? '');
+    }
+    // Conteúdo de cada seção.
+    await expect((await painelSecao(page, 'Armazenamento em nuvem')).locator('#adSkybox')).toHaveCount(1);
+    await expect((await painelSecao(page, 'Talk – Videoconferência')).locator('#adTalk')).toHaveCount(1);
+    await expect((await painelSecao(page, 'Backup')).locator('#adBackup90, #adBackup365')).toHaveCount(2);
+    await expect((await painelSecao(page, 'Domínio secundário')).locator('#adExtraDom, #extraDomPixPanel')).toHaveCount(2);
+  });
+
+  test('Grupo de E-mail fica fora das seções, sempre visível, e entra no subtotal, no resumo e no total', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await expect(page.locator('.addon-sec #adGrupo')).toHaveCount(0);
+    // Abaixo da última seção.
+    const depois = await page.evaluate(() => {
+      const secoes = document.querySelectorAll('#step3 .addon-sec');
+      return !!(secoes[secoes.length - 1].compareDocumentPosition(document.getElementById('adGrupo')) & Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+    expect(depois, '#adGrupo deveria vir depois das seções').toBe(true);
+
+    await botaoSecao(page, 'Armazenamento em nuvem').click();
+    expect(await estadoSecoes(page)).toEqual(['false', 'false', 'false', 'false']);
+    await expect(page.locator('#adGrupo')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Aumentar Grupo de E-mail', exact: true }).click();
+    await page.getByRole('button', { name: 'Aumentar Grupo de E-mail', exact: true }).click();
+    await expect(page.locator('#asGrupo')).toHaveText('R$ 4,00');
+    await expect(page.locator('#addonsSubtotalVal')).toHaveText('+ R$ 4,00/mês');
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['2× E-mail 5 GB', 'R$ 20,00'], ['Grupo E-mail ×2', 'R$ 4,00']]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 24,00');
+  });
+
+  test('seções são independentes: várias abertas ao mesmo tempo', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    expect(await estadoSecoes(page)).toEqual(['true', 'false', 'false', 'false']);
+
+    await botaoSecao(page, 'Talk – Videoconferência').click();
+    await botaoSecao(page, 'Backup').click();
+    await botaoSecao(page, 'Domínio secundário').click();
+    expect(await estadoSecoes(page)).toEqual(['true', 'true', 'true', 'true']);
+    for (const nome of SECOES_ADDONS) await expect(await painelSecao(page, nome)).toBeVisible();
+
+    await botaoSecao(page, 'Backup').click();
+    expect(await estadoSecoes(page)).toEqual(['true', 'true', 'false', 'true']);
+    await expect(await painelSecao(page, 'Backup')).toBeHidden();
+    await expect(await painelSecao(page, 'Talk – Videoconferência')).toBeVisible();
+  });
+
+  test('teclado: Enter e Espaço abrem e fecham a seção', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    const botao = botaoSecao(page, 'Talk – Videoconferência');
+    const painel = await painelSecao(page, 'Talk – Videoconferência');
+
+    await botao.focus();
+    await page.keyboard.press('Enter');
+    await expect(botao).toHaveAttribute('aria-expanded', 'true');
+    await expect(painel).toBeVisible();
+    await page.keyboard.press('Enter');
+    await expect(botao).toHaveAttribute('aria-expanded', 'false');
+    await expect(painel).toBeHidden();
+
+    await page.keyboard.press('Space');
+    await expect(botao).toHaveAttribute('aria-expanded', 'true');
+    await expect(painel).toBeVisible();
+    await page.keyboard.press('Space');
+    await expect(botao).toHaveAttribute('aria-expanded', 'false');
+    await expect(painel).toBeHidden();
+  });
+
+  test('estado inicial: sem seleção só Armazenamento aberta', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    expect(await estadoSecoes(page)).toEqual(['true', 'false', 'false', 'false']);
+    await expect(await painelSecao(page, 'Armazenamento em nuvem')).toBeVisible();
+    for (const nome of SECOES_ADDONS.slice(1)) await expect(await painelSecao(page, nome)).toBeHidden();
+  });
+
+  test('estado inicial: seções com seleção abrem ao entrar no passo 3 e ao voltar do passo 4', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await abrirSecao(page, 'Backup');
+    await page.getByRole('button', { name: 'Aumentar Backup 365 dias', exact: true }).click();
+    await abrirSecao(page, 'Domínio secundário');
+    await page.getByRole('button', { name: 'Aumentar Domínio extra', exact: true }).click();
+    // Fecha tudo antes de sair do passo.
+    for (const nome of SECOES_ADDONS) {
+      const b = botaoSecao(page, nome);
+      if (await b.getAttribute('aria-expanded') === 'true') await b.click();
+    }
+    expect(await estadoSecoes(page)).toEqual(['false', 'false', 'false', 'false']);
+
+    await page.locator('#step3 .btn-primary').click();
+    await expect(page.locator('#step4')).toHaveClass(/active/);
+    await page.locator('#step4 .btn-back-row').click();
+    await expect(page.locator('#step3')).toHaveClass(/active/);
+
+    // Armazenamento (padrão) + Backup e Domínio (com seleção); Talk fechada.
+    expect(await estadoSecoes(page)).toEqual(['true', 'false', 'true', 'true']);
+    await expect(page.getByRole('button', { name: 'Aumentar Backup 365 dias', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Aumentar Talk', exact: true })).toBeHidden();
+
+    // Entrada vinda do passo 2 (goStep) também reaplica o estado.
+    await botaoSecao(page, 'Armazenamento em nuvem').click();
+    await page.evaluate(() => goStep(2));
+    await page.evaluate(() => goStep(3));
+    expect(await estadoSecoes(page)).toEqual(['true', 'false', 'true', 'true']);
+  });
+
+  // A regra "Skybox com plano conta como seleção" não é observável hoje: Armazenamento já abre por padrão.
+  test('estado inicial: Talk com quantidade abre a seção; Armazenamento reabre mesmo fechada pelo usuário', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    await abrirSecao(page, 'Talk – Videoconferência');
+    await page.getByRole('button', { name: 'Aumentar Talk', exact: true }).click();
+    await botaoSecao(page, 'Talk – Videoconferência').click();
+    await botaoSecao(page, 'Armazenamento em nuvem').click();
+
+    await page.evaluate(() => { goStep(4); goStep(3); });
+    expect(await estadoSecoes(page)).toEqual(['true', 'true', 'false', 'false']);
+  });
+
+  test('entrar no passo 3 não move o foco para as seções', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(4));
+    await page.locator('#step4 .btn-back-row').click();
+    await expect(page.locator('#step3')).toHaveClass(/active/);
+    const focoNaSanfona = await page.evaluate(() => !!document.activeElement?.closest('.addon-list'));
+    expect(focoNaSanfona).toBe(false);
+  });
+
+  test('indicador: subtotal da seção só quando fechada e com valor', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    // Valor visível do indicador (o prefixo "subtotal" é só para leitor de tela).
+    const ind = (/** @type {string} */ nome) => botaoSecao(page, nome).locator('.addon-sec-ind-val');
+
+    // Sem seleção: vazio, aberta ou fechada.
+    for (const nome of SECOES_ADDONS) await expect(ind(nome)).toHaveText('');
+
+    // Talk ×3: vazio aberta, subtotal fechada (e no nome acessível do botão).
+    await abrirSecao(page, 'Talk – Videoconferência');
+    await page.getByRole('spinbutton', { name: 'Quantidade de Talk', exact: true }).fill('3');
+    await page.getByRole('spinbutton', { name: 'Quantidade de Talk', exact: true }).press('Tab');
+    await expect(ind('Talk – Videoconferência')).toHaveText('');
+    await expect(botaoSecao(page, 'Talk – Videoconferência')).toHaveAccessibleName('Talk – Videoconferência');
+    await botaoSecao(page, 'Talk – Videoconferência').click();
+    await expect(ind('Talk – Videoconferência')).toHaveText('R$ 14,10/mês');
+    await expect(page.getByRole('button', { name: 'Talk – Videoconferência subtotal R$ 14,10/mês', exact: true })).toHaveCount(1);
+    // "subtotal" não aparece na tela.
+    await expect(botaoSecao(page, 'Talk – Videoconferência').locator('.addon-sec-ind .sr-only')).toHaveCSS('position', 'absolute');
+    await botaoSecao(page, 'Talk – Videoconferência').click();
+    await expect(ind('Talk – Videoconferência')).toHaveText('');
+    await expect(botaoSecao(page, 'Talk – Videoconferência')).toHaveAccessibleName('Talk – Videoconferência');
+
+    // Backup: soma dos dois add-ons.
+    await abrirSecao(page, 'Backup');
+    await page.getByRole('button', { name: 'Aumentar Backup 90 dias', exact: true }).click();
+    await page.getByRole('button', { name: 'Aumentar Backup 365 dias', exact: true }).click();
+    await botaoSecao(page, 'Backup').click();
+    await expect(ind('Backup')).toHaveText('R$ 25,00/mês');
+
+    // Domínio: por ano.
+    await abrirSecao(page, 'Domínio secundário');
+    await page.getByRole('button', { name: 'Aumentar Domínio extra', exact: true }).click();
+    await page.getByRole('button', { name: 'Aumentar Domínio extra', exact: true }).click();
+    await botaoSecao(page, 'Domínio secundário').click();
+    await expect(ind('Domínio secundário')).toHaveText('R$ 158,00/ano');
+
+    // Skybox: só com plano e quantidade.
+    const arm = 'Armazenamento em nuvem';
+    await page.getByRole('button', { name: 'Aumentar Skybox', exact: true }).click();
+    await botaoSecao(page, arm).click();
+    await expect(ind(arm), 'Skybox com quantidade e sem plano').toHaveText('');
+    await abrirSecao(page, arm);
+    await page.getByRole('button', { name: 'Diminuir Skybox', exact: true }).click();
+    await page.locator('#skyOpt100').click();
+    await botaoSecao(page, arm).click();
+    await expect(ind(arm), 'Skybox com plano e sem quantidade').toHaveText('');
+    await abrirSecao(page, arm);
+    await page.getByRole('button', { name: 'Aumentar Skybox', exact: true }).click();
+    await botaoSecao(page, arm).click();
+    await expect(ind(arm), 'Skybox com plano e quantidade').toHaveText('R$ 28,70/mês');
+
+    // Indicador atualiza com a seção fechada quando o valor muda por fora (resumo segue igual).
+    await page.evaluate(() => addonChange('talk', 1));
+    await expect(ind('Talk – Videoconferência')).toHaveText('');
+    await botaoSecao(page, 'Talk – Videoconferência').click();
+    await expect(ind('Talk – Videoconferência')).toHaveText('R$ 18,80/mês');
+  });
+
+  test('controles de quantidade: nomes acessíveis únicos e campos rotulados', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    for (const nome of SECOES_ADDONS) await abrirSecao(page, nome);
+
+    for (const nome of NOMES_ADDONS) {
+      await expect(page.getByRole('button', { name: `Diminuir ${nome}`, exact: true }), `Diminuir ${nome}`).toHaveCount(1);
+      await expect(page.getByRole('button', { name: `Aumentar ${nome}`, exact: true }), `Aumentar ${nome}`).toHaveCount(1);
+      // Skybox tem rótulo visível "Quantidade de licenças:"; o nome acessível o contém (WCAG 2.5.3).
+      const rotulo = nome === 'Skybox' ? 'Quantidade de licenças de Skybox' : `Quantidade de ${nome}`;
+      await expect(page.getByRole('spinbutton', { name: rotulo, exact: true }), rotulo).toHaveCount(1);
+    }
+    const rotuloVisivelSkybox = (await page.locator('#adSkybox .sky-qty-label').textContent())?.replace(/:\s*$/, '').trim();
+    expect(rotuloVisivelSkybox).toBe('Quantidade de licenças');
+    await expect(page.locator('#aqSkybox')).toHaveAccessibleName(new RegExp(`^${rotuloVisivelSkybox}`));
+    // Todos os botões − e + do passo 3 têm nome próprio (nenhum fica só com "−"/"+").
+    const nomes = await page.locator('#step3 .mini-qty-btn').evaluateAll(bs => bs.map(b => b.getAttribute('aria-label')));
+    expect(nomes.length).toBe(NOMES_ADDONS.length * 2);
+    expect(new Set(nomes).size, 'aria-label repetido nos botões −/+').toBe(nomes.length);
+
+    await page.getByRole('button', { name: 'Aumentar Talk', exact: true }).click();
+    await expect(page.getByRole('spinbutton', { name: 'Quantidade de Talk', exact: true })).toHaveValue('1');
+    await page.getByRole('button', { name: 'Diminuir Talk', exact: true }).click();
+    await expect(page.getByRole('spinbutton', { name: 'Quantidade de Talk', exact: true })).toHaveValue('0');
+  });
+
+  test('campo de quantidade mostra o valor cobrado: negativo vira 0 e fracionário é truncado', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    await abrirSecao(page, 'Talk – Videoconferência');
+    const campo = page.getByRole('spinbutton', { name: 'Quantidade de Talk', exact: true });
+
+    await campo.fill('-3');
+    await campo.press('Tab');
+    await expect(campo).toHaveValue('0');
+    await expect(page.locator('#asTalk')).toHaveText('R$ 0,00');
+
+    await campo.fill('2.7');
+    await campo.press('Tab');
+    await expect(campo).toHaveValue('2');
+    await expect(page.locator('#asTalk')).toHaveText('R$ 9,40');
+    expect(await linhas(page, '#addonsSubtotalLines .addon-sub-line')).toEqual([['Talk', 'R$ 9,40/mês']]);
+  });
+
+  test('painel fechado: atributo hidden e controles ocultos', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    const painel = await painelSecao(page, 'Backup');
+    await expect(botaoSecao(page, 'Backup')).toHaveAttribute('aria-expanded', 'false');
+    await expect(painel).toHaveAttribute('hidden', '');
+    await expect(painel).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Aumentar Backup 90 dias', exact: true })).toBeHidden();
+    await expect(page.locator('#aqBackup365')).toBeHidden();
+
+    await botaoSecao(page, 'Backup').click();
+    await expect(painel).not.toHaveAttribute('hidden');
+    await expect(page.getByRole('button', { name: 'Aumentar Backup 90 dias', exact: true })).toBeVisible();
+
+    await botaoSecao(page, 'Armazenamento em nuvem').click();
+    await expect(page.locator('#skyOpt50')).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Aumentar Skybox', exact: true })).toBeHidden();
+  });
+
+  test('chevron gira 180° fechada; com movimento reduzido não há transição', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    const chevron = (/** @type {string} */ nome) => botaoSecao(page, nome).locator('.addon-sec-chevron');
+
+    await expect(chevron('Armazenamento em nuvem')).toHaveCSS('transform', 'none');
+    await expect(chevron('Backup')).toHaveCSS('transform', /^matrix\(-1, .*, -1, 0, 0\)$/);
+    await expect(chevron('Backup')).not.toHaveCSS('transition-duration', '0s');
+
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(chevron('Backup')).toHaveCSS('transition-duration', '0s');
+    await expect(chevron('Armazenamento em nuvem')).toHaveCSS('transition-duration', '0s');
+  });
+
+  for (const largura of [320, 412, 1280]) {
+    test(`largura ${largura}px: passo 3 sem transbordo com seções todas abertas e todas fechadas com indicador`, async ({ page, erros }) => {
+      await page.goto('checkout.html?qty5=2');
+      await page.evaluate(() => document.fonts.ready);
+      await preencherCheckoutPesado(page);
+      await page.setViewportSize({ width: largura, height: 900 });
+      await page.evaluate(() => goStep(3));
+
+      for (const estado of ['abertas', 'fechadas']) {
+        for (const nome of SECOES_ADDONS) {
+          const b = botaoSecao(page, nome);
+          if ((await b.getAttribute('aria-expanded') === 'true') !== (estado === 'abertas')) await b.click();
+        }
+        expect(await estadoSecoes(page)).toEqual(Array(4).fill(estado === 'abertas' ? 'true' : 'false'));
+
+        const m = await page.evaluate(() => {
+          const doc = document.documentElement;
+          const els = [...document.querySelectorAll('#step3 .addon-sec-btn, #step3 .addon-sec-painel, #step3 .addon-sec')]
+            .filter(e => e.getClientRects().length > 0);
+          return {
+            docOverflow: doc.scrollWidth - doc.clientWidth,
+            medidos: els.length,
+            transbordando: els.filter(e => e.scrollWidth > e.clientWidth)
+              .map(e => `${e.id || e.className}: ${e.scrollWidth}>${e.clientWidth}`),
+            // Filhos do botão (nome, indicador, chevron) dentro da caixa do botão.
+            foraDoBotao: [...document.querySelectorAll('#step3 .addon-sec-btn')].flatMap(b => {
+              const r = b.getBoundingClientRect();
+              return [...b.children].filter(c => {
+                const cr = c.getBoundingClientRect();
+                return cr.width > 0 && (cr.left < r.left - 0.5 || cr.right > r.right + 0.5);
+              }).map(c => `${b.id} > ${c.getAttribute('class')}`);
+            }),
+            indicadores: [...document.querySelectorAll('#step3 .addon-sec-ind-val')].map(i => i.textContent),
+          };
+        });
+        const ctx = `largura ${largura}px, seções ${estado}`;
+        expect(m.docOverflow, `${ctx}: rolagem horizontal do documento`).toBeLessThanOrEqual(0);
+        expect(m.medidos, `${ctx}: elementos medidos`).toBe(estado === 'abertas' ? 12 : 8);
+        expect(m.transbordando, `${ctx}: botão ou painel transbordando`).toEqual([]);
+        expect(m.foraDoBotao, `${ctx}: conteúdo fora do botão`).toEqual([]);
+        expect(m.indicadores, `${ctx}: indicadores`).toEqual(estado === 'abertas'
+          ? ['', '', '', '']
+          : ['R$ 12.760,00/mês', 'R$ 188,00/mês', 'R$ 1.000,00/mês', 'R$ 3.160,00/ano']);
+      }
+    });
+  }
+});
+
+test.describe('checkout — add-ons: aviso de desconto', { tag: '@CIT-21' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('aviso visível só no passo 3, entre a introdução e as seções', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    const aviso = page.locator('#avisoDescontoAddons');
+    await expect(aviso).toHaveCount(1);
+
+    for (const passo of [1, 2, 3, 4, 5, 6]) {
+      await page.evaluate(n => goStep(n), passo);
+      if (passo === 3) await expect(aviso, 'passo 3').toBeVisible();
+      else await expect(aviso, `passo ${passo}`).toBeHidden();
+    }
+
+    await page.evaluate(() => goStep(3));
+    const ordem = await page.evaluate(() => {
+      const aviso = document.getElementById('avisoDescontoAddons');
+      const intro = document.querySelector('#step3 .step-intro');
+      const lista = document.querySelector('#step3 .addon-list');
+      const segue = (/** @type {Node} */ a, /** @type {Node} */ b) => !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+      return segue(intro, aviso) && segue(aviso, lista);
+    });
+    expect(ordem, 'aviso deveria ficar entre a introdução e as seções').toBe(true);
+  });
+
+  test('texto exato, em maiúsculas no HTML e sem percentual', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    const aviso = page.locator('#avisoDescontoAddons');
+
+    await expect(aviso.locator('.aviso-desconto-titulo')).toHaveText('APROVEITE A OPORTUNIDADE PARA GARANTIR O DESCONTO');
+    // Maiúsculas vêm do próprio HTML (o texto acima), não de text-transform.
+    await expect(aviso.locator('.aviso-desconto-titulo')).toHaveCSS('text-transform', 'none');
+    await expect(aviso.locator('.aviso-desconto-texto')).toHaveText('Condição exclusiva desta contratação');
+    expect(await aviso.textContent()).not.toMatch(/\d+\s?%/);
+  });
+
+  test('contraste do título e do texto do aviso é de pelo menos 4,5:1', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    const contrastes = await page.evaluate(() => {
+      const rgba = (/** @type {string} */ c) => (c.match(/[\d.]+/g) || []).map(Number);
+      const lum = (/** @type {number[]} */ [r, g, b]) => {
+        const f = (/** @type {number} */ v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+        return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+      };
+      // Fundo efetivo: compõe os fundos dos ancestrais (com alfa) sobre branco.
+      const fundo = (/** @type {Element} */ el) => {
+        const camadas = [];
+        for (let e = el; e; e = e.parentElement) {
+          const c = rgba(getComputedStyle(e).backgroundColor);
+          const a = c.length > 3 ? c[3] : 1;
+          if (a > 0) camadas.push([c[0], c[1], c[2], a]);
+          if (a >= 1) break;
+        }
+        let cor = [255, 255, 255];
+        for (const [r, g, b, a] of camadas.reverse()) cor = [r * a + cor[0] * (1 - a), g * a + cor[1] * (1 - a), b * a + cor[2] * (1 - a)];
+        return cor;
+      };
+      const contraste = (/** @type {string} */ sel) => {
+        const el = /** @type {Element} */ (document.querySelector(sel));
+        const l1 = lum(rgba(getComputedStyle(el).color).slice(0, 3));
+        const l2 = lum(fundo(el));
+        return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+      };
+      return { titulo: contraste('#avisoDescontoAddons .aviso-desconto-titulo'), texto: contraste('#avisoDescontoAddons .aviso-desconto-texto') };
+    });
+    expect(contrastes.titulo, 'contraste do título').toBeGreaterThanOrEqual(4.5);
+    expect(contrastes.texto, 'contraste do texto').toBeGreaterThanOrEqual(4.5);
   });
 });
