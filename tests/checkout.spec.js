@@ -40,6 +40,79 @@ async function tamanhoToken(page, token) {
 }
 
 /**
+ * CIT-22: cor computada de um token de cor qualquer (ex.: '--cit-error', '--cit-success-strong'),
+ * lida de um elemento sonda, para os testes não fixarem o valor do token.
+ * @param {import('@playwright/test').Page} page
+ * @param {string} token
+ */
+async function corToken(page, token) {
+  return page.evaluate((tok) => {
+    const sonda = document.createElement('div');
+    sonda.style.backgroundColor = `var(${tok})`;
+    document.body.appendChild(sonda);
+    const cor = getComputedStyle(sonda).backgroundColor;
+    sonda.remove();
+    return cor;
+  }, token);
+}
+
+/**
+ * CIT-22: contraste (WCAG) entre a cor do texto e o fundo efetivo (compõe os fundos dos ancestrais
+ * com alfa até opacidade total), para uma lista de seletores, num único evaluate.
+ * @param {import('@playwright/test').Page} page
+ * @param {string[]} seletores
+ * @returns {Promise<Record<string, number>>}
+ */
+async function contrastes(page, seletores) {
+  return page.evaluate((sels) => {
+    const rgba = (/** @type {string} */ c) => (c.match(/[\d.]+/g) || []).map(Number);
+    const lum = (/** @type {number[]} */ [r, g, b]) => {
+      const f = (/** @type {number} */ v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+      return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+    };
+    const fundo = (/** @type {Element} */ el) => {
+      const camadas = [];
+      for (let e = el; e; e = e.parentElement) {
+        const c = rgba(getComputedStyle(e).backgroundColor);
+        const a = c.length > 3 ? c[3] : 1;
+        if (a > 0) camadas.push([c[0], c[1], c[2], a]);
+        if (a >= 1) break;
+      }
+      let cor = [255, 255, 255];
+      for (const [r, g, b, a] of camadas.reverse()) cor = [r * a + cor[0] * (1 - a), g * a + cor[1] * (1 - a), b * a + cor[2] * (1 - a)];
+      return cor;
+    };
+    const contraste = (/** @type {string} */ sel) => {
+      const el = /** @type {Element} */ (document.querySelector(sel));
+      const l1 = lum(rgba(getComputedStyle(el).color).slice(0, 3));
+      const l2 = lum(fundo(el));
+      return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+    };
+    return Object.fromEntries(sels.map(sel => [sel, contraste(sel)]));
+  }, seletores);
+}
+
+/**
+ * CIT-22: espera o scroll do documento estabilizar (3 frames seguidos com o mesmo scrollY) antes de
+ * medir `window.scrollY` como referência. `html { scroll-behavior: smooth }` (checkout.html) anima o
+ * scrollIntoView que o Playwright faz sozinho antes de cliques/preenchimentos; sem esperar, a leitura
+ * "antes" pode cair no meio dessa animação e a leitura "depois" já com ela terminada, sem relação com
+ * a rolagem do resumo que o teste está medindo.
+ * @param {import('@playwright/test').Page} page
+ */
+async function esperarScrollEstavel(page) {
+  await page.evaluate(() => new Promise((resolve) => {
+    let ultimo = -1, estavel = 0;
+    const checar = () => {
+      const y = window.scrollY;
+      if (y === ultimo) estavel++; else { estavel = 0; ultimo = y; }
+      if (estavel >= 3) resolve(undefined); else requestAnimationFrame(checar);
+    };
+    requestAnimationFrame(checar);
+  }));
+}
+
+/**
  * Mede a barra de etapas (#stepsBar) no passo indicado: transbordo do documento e da
  * própria barra, posição em relação ao resumo (duas colunas), rótulo ativo, rótulos
  * cortados/fora da .main-col e tamanho dos círculos. Mesma lógica dos scripts de
@@ -143,23 +216,23 @@ const CIRCULO_POR_LARGURA = /** @type {Record<number, number>} */ ({ 320: 32, 33
 // .sum-empty fica de fora: só existe com o checkout vazio (lido à parte).
 const SELETORES_TIPO_SMALL = [
   '.step-label', '.step-circle',
-  '.mini-row-price', '.mini-row-disc', '.cycle-toggle .left',
+  '.mini-row-price', '.mini-row-tabela', '.mini-row-disc', '.cycle-toggle .left',
   '.opt-desc', '.opt-price-note', '.domain-tld', '.domain-at',
   '.field label', '.field-hint', '.field-error', '.doc-type-btn', '.terms-check',
   '.payment-desc', '.pix-box-title', '.pix-box--sm .pix-box-title', '.pix-box-desc', '.pix-copy-label', '.pix-note', '.pix-copy', '.pix-timer', '.pix-status', '.asaas-notice',
   '.access-label', '.access-value', '.access-item', '.success-help',
   '.alert-box', '.btn-back-row',
-  '.summary-plan-cycle', '.sum-lines', '.sum-disc', '.summary-feature', '.secure-badge', '.summary-total .period',
+  '.summary-plan-cycle', '.sum-lines', '.sum-disc', '.sum-economia', '.summary-feature', '.secure-badge', '.summary-total .period',
 ];
 // Seletores cujo font-size deve ser var(--cit-text-body).
 const SELETORES_TIPO_BODY = [
-  '.mini-row-name', '.mini-qty-val', '.mini-row-sub',
+  '.mini-row-name', '.mini-qty-val', '.mini-row-sub', '.mini-row-sub-tabela',
   '.opt-name',
   '.field input', '.field select', '.installments-select',
 ];
 // Passo 3 (add-ons), incluindo o cabeçalho das seções da sanfona, o indicador de subtotal e o aviso de desconto (CIT-21).
 const SELETORES_TIPO_SMALL_PASSO3 = [
-  '.addon-desc', '.addon-price', '.addon-period', '.sky-opts-title', '.sky-opt-name', '.sky-opt-price', '.sky-qty-label', '.addon-sub-line', '.addons-subtotal-head',
+  '.addon-desc', '.addon-price', '.addon-price-tabela', '.addon-period', '.sky-opts-title', '.sky-opt-name', '.sky-opt-price', '.sky-opt-price-tabela', '.sky-qty-label', '.addon-sub-line', '.addons-subtotal-head',
   '.addon-sec-ind', '.aviso-desconto-texto',
 ];
 const SELETORES_TIPO_BODY_PASSO3 = ['.addon-name', '.addon-sub-val', '.addon-sec-nome', '.aviso-desconto-titulo'];
@@ -1117,16 +1190,17 @@ test.describe('checkout — add-ons: aviso de desconto', { tag: '@CIT-21' }, () 
     expect(ordem, 'aviso deveria ficar entre a introdução e as seções').toBe(true);
   });
 
-  test('texto exato, em maiúsculas no HTML e sem percentual', async ({ page, erros }) => {
+  test('texto exato, em maiúsculas no HTML e com 15%', async ({ page, erros }) => {
     await page.goto('checkout.html?qty5=2');
     await page.evaluate(() => goStep(3));
     const aviso = page.locator('#avisoDescontoAddons');
 
-    await expect(aviso.locator('.aviso-desconto-titulo')).toHaveText('APROVEITE A OPORTUNIDADE PARA GARANTIR O DESCONTO');
+    // CIT-22 (CA11, única exceção à CA1): título e regex invertidos de propósito — o aviso passa a citar o percentual.
+    await expect(aviso.locator('.aviso-desconto-titulo')).toHaveText('GARANTA 15% DE DESCONTO NESTA CONTRATAÇÃO');
     // Maiúsculas vêm do próprio HTML (o texto acima), não de text-transform.
     await expect(aviso.locator('.aviso-desconto-titulo')).toHaveCSS('text-transform', 'none');
     await expect(aviso.locator('.aviso-desconto-texto')).toHaveText('Condição exclusiva desta contratação');
-    expect(await aviso.textContent()).not.toMatch(/\d+\s?%/);
+    expect(await aviso.textContent()).toMatch(/15\s?%/);
   });
 
   test('contraste do título e do texto do aviso é de pelo menos 4,5:1', async ({ page, erros }) => {
@@ -1238,5 +1312,413 @@ test.describe('checkout — CIT-22: caracterização dos valores atuais', { tag:
     await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 2);
     await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
     await expect(page.locator('#extraDomPixCode')).toContainText('540000158');
+  });
+});
+
+// CIT-22, Passo 5: preço de tabela riscado, cascata, economia e checkout em centavos inteiros.
+// Termos do plano: "atual" = preço de lista de hoje; "tabela" = atual / 0,85, arredondado ao centavo;
+// "cobrado" = o que entra no total; "economia" = Σ por item de (tabela − cobrado).
+
+test.describe('checkout — CIT-22: preço de tabela por item (CA2)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('cada um dos 10 itens mostra a tabela riscada exata, lida dentro do próprio contêiner', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    for (const nome of SECOES_ADDONS) await abrirSecao(page, nome);
+
+    /** @type {[string, string, string][]} */
+    const casos = [
+      ['#ckCard5 .mini-row-tabela', '#ckCard5 [data-preco-tabela="conta:5gb"]', 'R$ 11,76'],
+      ['#ckCard25 .mini-row-tabela', '#ckCard25 [data-preco-tabela="conta:25gb"]', 'R$ 18,82'],
+      ['#ckCard50 .mini-row-tabela', '#ckCard50 [data-preco-tabela="conta:50gb"]', 'R$ 29,41'],
+      ['#adTalk .addon-price-tabela', '#adTalk [data-preco-tabela="talk"]', 'R$ 5,53'],
+      ['#adBackup90 .addon-price-tabela', '#adBackup90 [data-preco-tabela="backup90"]', 'R$ 7,06'],
+      ['#adBackup365 .addon-price-tabela', '#adBackup365 [data-preco-tabela="backup365"]', 'R$ 22,35'],
+      ['#adGrupo .addon-price-tabela', '#adGrupo [data-preco-tabela="grupoEmail"]', 'R$ 2,35'],
+      ['#skyOpt50 .sky-opt-price-tabela', '#skyOpt50 [data-preco-tabela="skybox:50gb"]', 'R$ 20,82'],
+      ['#skyOpt100 .sky-opt-price-tabela', '#skyOpt100 [data-preco-tabela="skybox:100gb"]', 'R$ 33,76'],
+      ['#skyOpt1tb .sky-opt-price-tabela', '#skyOpt1tb [data-preco-tabela="skybox:1tb"]', 'R$ 375,29'],
+    ];
+    for (const [contSel, sSel, texto] of casos) {
+      const s = page.locator(sSel);
+      await expect(s, sSel).toHaveCount(1);
+      await expect(s, sSel).toHaveText(texto);
+      // O "de" fica no irmão .sr-only, dentro do mesmo contêiner do item — leitura em ordem não junta os valores.
+      await expect(page.locator(contSel), contSel).toHaveText(`de ${texto}`);
+    }
+  });
+});
+
+test.describe('checkout — CIT-22: economia com volume no mensal (CA3)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('10×5GB mensal: tabela, −15% contratação, −5% volume e economia', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=10');
+    await expect(page.locator('#sumAccountLines .sum-disc')).toHaveText(
+      'de R$ 117,60 · −15% contratação −R$ 17,60 · −5% volume −R$ 5,00'
+    );
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 22,60/mês');
+  });
+
+  test('4×5GB mensal: sem volume, só a contratação', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=4');
+    await expect(page.locator('#sumAccountLines .sum-disc')).toHaveText('de R$ 47,04 · −15% contratação −R$ 7,04');
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 7,04/mês');
+  });
+
+  test('5×5GB mensal: "−15% contratação" é Σ(tabela − atual), não 15% da tabela (−R$ 8,80, não 8,82)', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=5');
+    await expect(page.locator('#sumAccountLines .sum-disc')).toContainText('−15% contratação −R$ 8,80');
+    await expect(page.locator('#sumAccountLines .sum-disc')).not.toContainText('8,82');
+  });
+});
+
+test.describe('checkout — CIT-22: rótulos com 15% e sem frases de urgência falsa (CA4)', { tag: '@CIT-22' }, () => {
+  const PROIBIDAS = [/volta ao preço/i, /voltará/i, /por tempo limitado/i, /oferta termina/i, /até o dia/i, /últimos dias/i, /preço original/i, /somente hoje/i];
+
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('aviso, cards de conta, add-ons e resumo não citam frases de urgência falsa (lista fechada)', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=5&cycle=annual');
+    await page.evaluate(() => goStep(3));
+    for (const nome of SECOES_ADDONS) await abrirSecao(page, nome);
+
+    const textos = await page.evaluate(() => {
+      const sels = ['#avisoDescontoAddons', '.mini-calc-row', '.addon-row', '.sky-opt', '#orderSummary'];
+      return sels.map(sel => /** @type {[string, string]} */ ([sel, [...document.querySelectorAll(sel)].map(e => e.textContent).join(' ')]));
+    });
+    for (const [sel, texto] of textos) {
+      for (const re of PROIBIDAS) expect(texto, `${sel} não deveria casar com ${re}`).not.toMatch(re);
+    }
+  });
+});
+
+test.describe('checkout — CIT-22: passo 1 com tabela riscada por tipo (CA8)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('anual, 2×5GB: unitário "de R$ 11,76" + #ckUnit5 "8,00"; subtotal "de R$ 23,52" + #ckSub5 "R$ 16,00"', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2&cycle=annual');
+    await expect(page.locator('#ckCard5 .mini-row-tabela')).toHaveText('de R$ 11,76');
+    await expect(page.locator('#ckUnit5')).toHaveText('8,00');
+    await expect(page.locator('#ckCard5 .mini-row-sub-tabela')).toHaveText('de R$ 23,52');
+    await expect(page.locator('#ckSub5')).toHaveText('R$ 16,00');
+  });
+
+  test('mensal, 5×25GB: tabela riscada e cobrado com volume', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty25=5');
+    await expect(page.locator('#ckCard25 .mini-row-tabela')).toHaveText('de R$ 18,82');
+    await expect(page.locator('#ckUnit25')).toHaveText('15,20');
+    await expect(page.locator('#ckCard25 .mini-row-sub-tabela')).toHaveText('de R$ 94,10');
+    await expect(page.locator('#ckSub25')).toHaveText('R$ 76,00');
+  });
+
+  test('sem quantidade: o subtotal riscado do tipo fica oculto', async ({ page, erros }) => {
+    await page.goto('checkout.html');
+    await expect(page.locator('#ckCard50 .mini-row-sub-tabela')).toBeHidden();
+  });
+});
+
+test.describe('checkout — CIT-22: passo 3 com tabela riscada em add-ons e Skybox (CA9)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('add-ons mensais e Skybox mostram a tabela riscada; [data-preco] mantém o texto de hoje; domínio extra sem riscado', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    for (const nome of SECOES_ADDONS) await abrirSecao(page, nome);
+
+    await expect(page.locator('#adTalk .addon-price')).toHaveText('R$ 4,70/conta/mês');
+    await expect(page.locator('#adTalk .addon-price-tabela')).toHaveText('de R$ 5,53');
+    await expect(page.locator('#adBackup90 .addon-price')).toHaveText('R$ 6,00/conta/mês');
+    await expect(page.locator('#adBackup90 .addon-price-tabela')).toHaveText('de R$ 7,06');
+    await expect(page.locator('#adBackup365 .addon-price')).toHaveText('R$ 19,00/conta/mês');
+    await expect(page.locator('#adBackup365 .addon-price-tabela')).toHaveText('de R$ 22,35');
+    await expect(page.locator('#adGrupo .addon-price')).toHaveText('R$ 2,00/conta/mês');
+    await expect(page.locator('#adGrupo .addon-price-tabela')).toHaveText('de R$ 2,35');
+    await expect(page.locator('#skyOpt50 .sky-opt-price')).toHaveText('R$ 17,70/conta/mês');
+    await expect(page.locator('#skyOpt50 .sky-opt-price-tabela')).toHaveText('de R$ 20,82');
+    await expect(page.locator('#skyOpt100 .sky-opt-price-tabela')).toHaveText('de R$ 33,76');
+    await expect(page.locator('#skyOpt1tb .sky-opt-price-tabela')).toHaveText('de R$ 375,29');
+
+    await expect(page.locator('#adExtraDom .addon-price')).toHaveText('R$ 79,00/domínio/ano');
+    await expect(page.locator('#adExtraDom [data-preco-tabela]')).toHaveCount(0);
+  });
+});
+
+test.describe('checkout — CIT-22: cascata e economia no resumo (CA10)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('2×5GB mensal', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['2× E-mail 5 GB', 'R$ 20,00']]);
+    await expect(page.locator('#sumAccountLines .sum-disc')).toHaveText('de R$ 23,52 · −15% contratação −R$ 3,52');
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 3,52/mês');
+  });
+
+  test('2×5GB anual', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2&cycle=annual');
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['2× E-mail 5 GB', 'R$ 16,00']]);
+    await expect(page.locator('#sumAccountLines .sum-disc')).toHaveText('de R$ 23,52 · −15% contratação −R$ 3,52 · −20% anual −R$ 4,00');
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 7,52/mês (R$ 90,24/ano)');
+  });
+
+  test('5×5GB anual', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=5&cycle=annual');
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['5× E-mail 5 GB', 'R$ 40,00']]);
+    await expect(page.locator('#sumAccountLines .sum-disc')).toHaveText('de R$ 58,80 · −15% contratação −R$ 8,80 · −20% anual −R$ 10,00');
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 18,80/mês (R$ 225,60/ano)');
+  });
+
+  test('5×25GB mensal', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty25=5');
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['5× E-mail 25 GB', 'R$ 76,00']]);
+    await expect(page.locator('#sumAccountLines .sum-disc')).toHaveText('de R$ 94,10 · −15% contratação −R$ 14,10 · −5% volume −R$ 4,00');
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 18,10/mês');
+  });
+
+  test('2×5GB anual + Talk ×3', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2&cycle=annual');
+    await page.evaluate(() => goStep(3));
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 3);
+
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([
+      ['2× E-mail 5 GB', 'R$ 16,00'],
+      ['Talk ×3', 'R$ 14,10'],
+    ]);
+    const discs = page.locator('#sumAccountLines .sum-disc');
+    await expect(discs).toHaveCount(2);
+    await expect(discs.nth(0)).toHaveText('de R$ 23,52 · −15% contratação −R$ 3,52 · −20% anual −R$ 4,00');
+    await expect(discs.nth(1)).toHaveText('de R$ 16,59 · −15% contratação −R$ 2,49');
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 10,01/mês (R$ 120,12/ano)');
+  });
+
+  test('caso do teste 664: 2×5GB anual + Talk ×1 + Backup 365 ×2 + Skybox 50 ×1', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2&cycle=annual');
+    await page.evaluate(() => goStep(3));
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 1);
+    await definirQtdAddon(page, 'Backup', 'aqBackup365', 2);
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 1);
+    await page.locator('#skyOpt50').click();
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 76,40'); // guarda: total não muda (CA1)
+
+    const discs = page.locator('#sumAccountLines .sum-disc');
+    await expect(discs).toHaveCount(4);
+    await expect(discs.nth(0)).toHaveText('de R$ 23,52 · −15% contratação −R$ 3,52 · −20% anual −R$ 4,00');
+    await expect(discs.nth(1)).toHaveText('de R$ 5,53 · −15% contratação −R$ 0,83');
+    await expect(discs.nth(2)).toHaveText('de R$ 44,70 · −15% contratação −R$ 6,70');
+    await expect(discs.nth(3)).toHaveText('de R$ 20,82 · −15% contratação −R$ 3,12');
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 18,17/mês (R$ 218,04/ano)');
+  });
+
+  test('pedido só com add-ons: cada um tem sua cascata; #sumEconomia soma; sem itens fica oculto', async ({ page, erros }) => {
+    await page.goto('checkout.html');
+    await expect(page.locator('#sumEconomia')).toBeHidden();
+
+    await page.evaluate(() => goStep(3));
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 2);
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['Talk ×2', 'R$ 9,40']]);
+    await expect(page.locator('#sumAccountLines .sum-disc')).toHaveText('de R$ 11,06 · −15% contratação −R$ 1,66');
+    await expect(page.locator('#sumEconomia')).toBeVisible();
+    await expect(page.locator('#sumEconomia')).toHaveText('Você economiza R$ 1,66/mês');
+  });
+});
+
+test.describe('checkout — CIT-22: cores dos riscados e dos preços cobrados (CA12)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('riscado usa --cit-error; cobrado de add-ons/Skybox e a economia usam --cit-success-strong, nunca --cit-success', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    const erro = await corToken(page, '--cit-error');
+    const sucessoForte = await corToken(page, '--cit-success-strong');
+    const sucesso = await corToken(page, '--cit-success');
+    expect(sucessoForte).not.toBe(sucesso);
+
+    await expect(page.locator('#ckCard5 [data-preco-tabela="conta:5gb"]')).toHaveCSS('color', erro);
+    await expect(page.locator('#sumAccountLines .sum-disc s').first()).toHaveCSS('color', erro);
+    await expect(page.locator('#adTalk .addon-price')).toHaveCSS('color', sucessoForte);
+    await expect(page.locator('#skyOpt50 .sky-opt-price')).toHaveCSS('color', sucessoForte);
+    await expect(page.locator('#sumEconomia')).toHaveCSS('color', sucessoForte);
+    await expect(page.locator('#adTalk .addon-price')).not.toHaveCSS('color', sucesso);
+    await expect(page.locator('#sumEconomia')).not.toHaveCSS('color', sucesso);
+  });
+});
+
+test.describe('checkout — CIT-22: contraste do riscado e do cobrado (CA13)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('tabela riscada e valores cobrados têm contraste de pelo menos 4,5:1 no card e no resumo', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    const c = await contrastes(page, [
+      '#ckCard5 [data-preco-tabela="conta:5gb"]',
+      '#adTalk .addon-price',
+      '#skyOpt50 .sky-opt-price',
+      '#sumEconomia',
+      '#sumAccountLines .sum-disc s',
+    ]);
+    for (const [sel, valor] of Object.entries(c)) expect(valor, `contraste de ${sel}`).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+test.describe('checkout — CIT-22: riscado e cobrado não dependem só de cor (CA14)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('o riscado é anunciado com "de" em texto e a cascata usa o sinal "−" (U+2212), não hífen', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2&cycle=annual');
+    await expect(page.locator('#ckCard5 .mini-row-tabela .sr-only')).toHaveText('de ');
+    const disc = /** @type {string} */ (await page.locator('#sumAccountLines .sum-disc').first().textContent());
+    expect(disc).toContain('−15% contratação −R$');
+    expect(disc.replace(/−/g, '')).not.toContain('-R$'); // nenhum hífen comum (U+002D) faz as vezes do sinal
+  });
+});
+
+test.describe('checkout — CIT-22: altura do resumo com cascata e economia (CA15)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  for (const largura of [1280, 961]) {
+    test(`${largura}x900 com pedido simples (qty5=2): resumo cabe sem barra de rolagem`, async ({ page, erros }) => {
+      await page.setViewportSize({ width: largura, height: 900 });
+      await page.goto('checkout.html?qty5=2');
+      await page.evaluate(() => document.fonts.ready);
+      const m = await page.evaluate(() => {
+        const el = document.getElementById('orderSummary');
+        return { scrollHeight: el.scrollHeight, clientHeight: el.clientHeight };
+      });
+      expect(m.scrollHeight, `${largura}x900: pedido simples não deveria ter rolagem interna no resumo`).toBeLessThanOrEqual(m.clientHeight);
+    });
+  }
+
+  for (const largura of [1280, 961]) {
+    test(`${largura}x900, caso do teste 664 (2×5GB anual + Talk + Backup 365×2 + Skybox 50): total e economia alcançáveis rolando só o resumo`, async ({ page, erros }) => {
+      await page.setViewportSize({ width: largura, height: 900 });
+      await page.goto('checkout.html?qty5=2&cycle=annual');
+      await page.evaluate(() => document.fonts.ready);
+      await page.evaluate(() => goStep(3));
+      await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 1);
+      await definirQtdAddon(page, 'Backup', 'aqBackup365', 2);
+      await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 1);
+      await page.locator('#skyOpt50').click();
+      await esperarScrollEstavel(page);
+
+      const scrollYAntes = await page.evaluate(() => window.scrollY);
+      await page.evaluate(() => { document.getElementById('orderSummary').scrollTop = document.getElementById('orderSummary').scrollHeight; });
+      await expect(page.locator('#sumTotal'), `${largura}x900: #sumTotal deveria ficar alcançável rolando só o resumo`).toBeInViewport();
+      await expect(page.locator('#sumEconomia'), `${largura}x900: #sumEconomia deveria ficar alcançável rolando só o resumo`).toBeInViewport();
+      const scrollYDepois = await page.evaluate(() => window.scrollY);
+      expect(scrollYDepois, `${largura}x900: rolar o resumo não deveria rolar a página`).toBe(scrollYAntes);
+    });
+  }
+
+  for (const largura of [320, 412, 961, 1280]) {
+    test(`largura ${largura}px: sem transbordo horizontal com 1000 contas (tabela R$ 11.760,00)`, async ({ page, erros }) => {
+      await page.goto('checkout.html?qty5=1000');
+      await page.evaluate(() => document.fonts.ready);
+      await page.setViewportSize({ width: largura, height: 900 });
+      await expect(page.locator('#sumAccountLines .sum-disc').first()).toContainText('R$ 11.760,00');
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow, `largura ${largura}px: rolagem horizontal do documento`).toBeLessThanOrEqual(0);
+    });
+  }
+});
+
+test.describe('checkout — CIT-22: fonte única de preços, sem valor fixo no HTML bruto (CA17)', { tag: '@CIT-22' }, () => {
+  test('contêineres certos, sem preço fixo fora de PRECOS, sem chaves antigas', async ({ page, baseURL, erros }) => {
+    await page.goto('checkout.html');
+
+    // HTML bruto, sem executar scripts: contagem de contêineres e regex de preço por dentro deles.
+    const resp = await page.request.get(new URL('checkout.html', baseURL).toString());
+    const html = await resp.text();
+    const resultado = await page.evaluate((rawHtml) => {
+      const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
+      const contadores = {
+        '.mini-calc-row': doc.querySelectorAll('.mini-calc-row').length,
+        '.addon-row': doc.querySelectorAll('.addon-row').length,
+        '.sky-opt': doc.querySelectorAll('.sky-opt').length,
+      };
+      const regex = /\d+,\d\d/g;
+      const achados = [];
+      for (const sel of ['.mini-calc-row', '.addon-row', '.sky-opt']) {
+        doc.querySelectorAll(sel).forEach(el => {
+          const casados = (el.textContent.match(regex) || []).filter(v => v !== '0,00');
+          if (casados.length) achados.push(`${sel}#${el.id || ''}: ${casados.join(',')}`);
+        });
+      }
+      return { contadores, achados };
+    }, html);
+
+    expect(resultado.contadores, 'contagem de contêineres do checkout').toEqual({ '.mini-calc-row': 3, '.addon-row': 6, '.sky-opt': 3 });
+    expect(resultado.achados, 'preço fixo no HTML bruto do checkout (sem executar JS)').toEqual([]);
+
+    // Chaves antigas removidas; domínio extra em ADDONS.extraDom.centavos.
+    const chaves = await page.evaluate(() => ({
+      accountDefsComBase: Object.values(ACCOUNT_DEFS).some(d => 'base' in d),
+      addonsComPreco: Object.values(ADDONS).some(a => 'preco' in a),
+      elementosComDataBase: document.querySelectorAll('[data-base]').length,
+      extraDomCentavos: ADDONS.extraDom.centavos,
+    }));
+    expect(chaves).toEqual({ accountDefsComBase: false, addonsComPreco: false, elementosComDataBase: 0, extraDomCentavos: 7900 });
+  });
+});
+
+test.describe('checkout — CIT-22: Pix e boleto em centavos inteiros (CA18)', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('caso obrigatório: anual de R$ 76,40 — Pix e boleto sem resto de ponto flutuante', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2&cycle=annual');
+    await page.evaluate(() => goStep(3));
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 1);
+    await definirQtdAddon(page, 'Backup', 'aqBackup365', 2);
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 1);
+    await page.locator('#skyOpt50').click();
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 76,40'); // guarda: total não muda (CA1)
+
+    await page.evaluate(() => goStep(5));
+    await expect(page.locator('#pixCode')).toContainText('5400076.40');
+    await expect(page.locator('#boletoCode')).toContainText('080076.40.000000');
+    const boleto = /** @type {string} */ (await page.locator('#boletoCode').textContent());
+    expect(boleto).toMatch(/00000000007640$/);
+    expect(boleto).not.toMatch(/000000000001/);
+  });
+
+  test('caso complementar: mensal de R$ 34,10 (2×5GB + Talk ×3)', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 3);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 34,10');
+
+    await page.evaluate(() => goStep(5));
+    await expect(page.locator('#pixCode')).toContainText('5400034.10');
+    const boleto = /** @type {string} */ (await page.locator('#boletoCode').textContent());
+    expect(boleto).toMatch(/00000000003410$/);
+  });
+
+  test('genFakePix do domínio principal não muda: recebe reais inteiros', async ({ page, erros }) => {
+    await page.goto('checkout.html');
+    await page.evaluate(() => selectDomainOpt('new-br'));
+    await expect(page.locator('#domPixCode')).toContainText('540000079');
   });
 });
