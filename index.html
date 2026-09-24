@@ -367,6 +367,7 @@
 
     @media (max-width: 900px) {
       .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero-grid > * { min-width: 0; }
       .hero-visual { order: -1; }
       .hero-mockup { max-width: 100%; }
       .hero-float-1 { top: -12px; right: 12px; }
@@ -527,12 +528,13 @@
     /* Calculadora layout */
     .calc-wrapper {
       display: grid;
-      grid-template-columns: 1fr 340px;
+      grid-template-columns: minmax(0, 1fr) 340px;
       gap: 24px;
       align-items: start;
     }
+    .calc-left, .calc-summary { min-width: 0; }
     @media (max-width: 960px) {
-      .calc-wrapper { grid-template-columns: 1fr; }
+      .calc-wrapper { grid-template-columns: minmax(0, 1fr); }
       .calc-summary { order: -1; }
     }
 
@@ -573,17 +575,17 @@
     .atc-icon.c5   { background: var(--cit-blue-50); }
     .atc-icon.c25  { background: var(--cit-turquoise-50); }
     .atc-icon.c50  { background: var(--cit-bg-muted); }
-    .atc-info { flex: 1; }
+    .atc-info { flex: 1; min-width: 0; }
     .atc-name {
       font-family: var(--font-title); font-weight: 600;
       font-size: 1rem; color: var(--cit-text-primary);
     }
     .atc-storage { font-size: .8125rem; color: var(--cit-text-secondary); }
     .atc-unit-price { text-align: right; }
-    .atc-unit-price .from { font-size: .8125rem; color: var(--cit-text-secondary); }
+    .atc-unit-price .atc-unit-tabela { font-size: .8125rem; }
     .atc-unit-price .price {
       font-family: var(--font-title); font-weight: 800;
-      font-size: 1.3rem; color: var(--cit-primary);
+      font-size: 1.3rem; color: var(--cit-success-strong);
     }
     .atc-unit-price .period { font-size: .8125rem; color: var(--cit-text-secondary); }
     .atc-ai-badge { margin-left: 6px; vertical-align: middle; height: 20px; font-size: .6875rem; }
@@ -601,12 +603,13 @@
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
       margin-bottom: 10px;
     }
-    .price-original {
-      font-size: .8125rem; color: var(--cit-text-muted); text-decoration: line-through;
-    }
+    /* Preço de tabela riscado (CA12): mesmo padrão do checkout.html
+       — cor e riscado no <s>, tamanho herdado do contêiner que o envolve. */
+    #pricing s[data-preco-tabela], .price-breakdown s, .cs-disc s, .cs-line .val s { color: var(--cit-error); text-decoration-line: line-through; font-weight: inherit; }
+    .price-breakdown s { font-size: .8125rem; }
     .price-final {
       font-family: var(--font-title); font-weight: 800;
-      font-size: 1.2rem; color: var(--cit-primary);
+      font-size: 1.2rem; color: var(--cit-success-strong);
     }
     .price-saving {
       font-size: .6875rem; font-weight: 600; color: var(--cit-green-700);
@@ -617,7 +620,10 @@
     /* Quantity control */
     .atc-bottom {
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap; row-gap: 10px;
     }
+    /* Grupo qty-control + subtotal: à direita mesmo quando a linha quebra (largura estreita, CA de transbordo). */
+    .atc-bottom > div:last-child { margin-left: auto; }
     .atc-discount-tag {
       font-size: .8125rem; font-weight: 600; min-height: 20px;
       color: var(--cit-green-700);
@@ -652,10 +658,21 @@
       font-size: .9rem; color: var(--cit-text-muted); min-width: 110px; text-align: right;
     }
     .atc-subtotal.has-value { color: var(--cit-primary); }
+    /* Abaixo de 360px o controle de quantidade e o subtotal não cabem lado a lado
+       com valores altos (ex.: 1000 contas, "R$ 9.500,00/mês"): empilha à direita. */
+    @media (max-width: 359px) {
+      .atc-bottom > div:last-child { flex-direction: column; align-items: flex-end; gap: 6px; }
+      .atc-subtotal { min-width: 0; }
+    }
 
     /* Summary panel */
     .calc-summary {
       position: sticky; top: 84px;
+    }
+    /* Abaixo de 960px o resumo sai do fluxo fixo e fica como o do checkout.html nessa largura
+       (checkout.html:484); order: -1 mantido (resumo acima dos cards no mobile). */
+    @media (max-width: 960px) {
+      .calc-summary { position: static; }
     }
     .calc-summary-card {
       background: var(--white);
@@ -677,6 +694,9 @@
     .cs-line .lbl { color: var(--cit-text-secondary); }
     .cs-line .val { font-weight: 600; color: var(--cit-text-primary); }
     .cs-line .val.discount { color: var(--cit-green-700); }
+    /* Cobrado do tipo, com a cascata (riscado) logo depois: cor de cobrado (CA12).
+       "Total de tabela" também casa, mas o texto dele está no <s>, que tem cor própria. */
+    #csSummaryLines .cs-line .val { color: var(--cit-success-strong); }
     .cs-line.total-line {
       border-top: 1px solid var(--cit-border-color); padding-top: 12px; margin-top: 4px;
     }
@@ -688,6 +708,10 @@
       font-family: var(--font-title); font-weight: 800;
       font-size: 1.5rem; color: var(--cit-primary); font-variant-numeric: tabular-nums;
     }
+    /* Cascata "de R$ tabela · −15% contratação −R$X[ · −20% anual/−5% volume −R$Y]" (CA6/CA10) */
+    .cs-disc { padding-left: 8px; font-size: var(--cit-text-small); color: var(--cit-green-700); font-weight: 600; }
+    .cs-disc-seg { white-space: nowrap; }
+    .cs-economia { margin-top: 10px; font-size: var(--cit-text-small); font-weight: 600; color: var(--cit-success-strong); }
     .cs-period { font-size: .8125rem; color: var(--cit-text-muted); text-align: right; margin-top: -4px; }
     .cs-annual-note {
       background: var(--cit-green-50); color: var(--cit-green-700);
@@ -1033,6 +1057,7 @@
 
     @media (max-width: 900px) {
       .painel-grid { grid-template-columns: 1fr; }
+      .painel-grid > * { min-width: 0; }
     }
     @media (max-width: 540px) {
       .painel-body { grid-template-columns: 1fr; }
@@ -1273,7 +1298,7 @@
       <div class="section-header text-center fade-in">
         <div class="tag"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calculator"></use></svg> Preços</div>
         <h2 style="margin-top:14px">Pague só pelas contas<br/>que sua equipe usa</h2>
-        <p>Escolha quantas contas de cada tipo contratar. A partir de 5 contas do mesmo tipo, o desconto entra automaticamente.</p>
+        <p>Escolha quantas contas de cada tipo contratar. Todos os preços já têm 15% de desconto nesta contratação e, no plano mensal, a partir de 5 contas do mesmo tipo entra mais 5%.</p>
       </div>
 
       <!-- Desconto info -->
@@ -1281,8 +1306,7 @@
         <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#info"></use></svg>
         <span>
           <strong>Mínimo de 2 contas no plano de 5 GB.</strong>
-          Contrate 5 ou mais contas do mesmo tipo e ganhe <strong>5% de desconto</strong> sobre todas as contas daquele tipo.
-          No plano anual, economize <strong>20% adicionais</strong> sobre o valor mensal.
+          Todos os preços já estão com <strong>15% de desconto</strong> sobre a tabela. No plano mensal, contrate 5 ou mais contas do mesmo tipo e ganhe mais <strong>5% de desconto</strong> sobre todas as contas daquele tipo. No plano anual, o desconto é de <strong>20%</strong> sobre o valor mensal, sem o desconto por volume.
         </span>
       </div>
 
@@ -1302,7 +1326,7 @@
         <div class="calc-left fade-in">
 
           <!-- 5 GB -->
-          <div class="account-type-card" id="card5" data-base="10" data-type="5gb">
+          <div class="account-type-card" id="card5" data-type="5gb">
             <div class="atc-top">
               <div class="atc-icon c5"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
               <div class="atc-info">
@@ -1310,13 +1334,13 @@
                 <div class="atc-storage">5 GB por caixa · IMAP/POP3/SMTP · Webmail · Mínimo 2 contas</div>
               </div>
               <div class="atc-unit-price">
-                <div class="from">a partir de</div>
-                <div class="price" id="unitPrice5">R$ 10,00</div>
+                <div class="atc-unit-tabela"><span class="sr-only">de </span><s data-preco-tabela="conta:5gb"></s></div>
+                <div class="price" id="unitPrice5"></div>
                 <div class="period">/conta/mês</div>
               </div>
             </div>
             <div class="price-breakdown" id="breakdown5" style="display:none">
-              <span class="price-original" id="origPrice5"></span>
+              <span class="sr-only">de </span><s id="origPrice5"></s>
               <span class="price-final" id="finalPrice5"></span>
               <span class="price-saving" id="saving5"></span>
             </div>
@@ -1334,7 +1358,7 @@
           </div>
 
           <!-- 25 GB -->
-          <div class="account-type-card" id="card25" data-base="16" data-type="25gb">
+          <div class="account-type-card" id="card25" data-type="25gb">
             <div class="atc-top">
               <div class="atc-icon c25"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#inbox"></use></svg></div>
               <div class="atc-info">
@@ -1342,13 +1366,13 @@
                 <div class="atc-storage">25 GB por caixa · IMAP/POP3/SMTP · Webmail</div>
               </div>
               <div class="atc-unit-price">
-                <div class="from">a partir de</div>
-                <div class="price" id="unitPrice25">R$ 16,00</div>
+                <div class="atc-unit-tabela"><span class="sr-only">de </span><s data-preco-tabela="conta:25gb"></s></div>
+                <div class="price" id="unitPrice25"></div>
                 <div class="period">/conta/mês</div>
               </div>
             </div>
             <div class="price-breakdown" id="breakdown25" style="display:none">
-              <span class="price-original" id="origPrice25"></span>
+              <span class="sr-only">de </span><s id="origPrice25"></s>
               <span class="price-final" id="finalPrice25"></span>
               <span class="price-saving" id="saving25"></span>
             </div>
@@ -1366,7 +1390,7 @@
           </div>
 
           <!-- 50 GB -->
-          <div class="account-type-card" id="card50" data-base="25" data-type="50gb">
+          <div class="account-type-card" id="card50" data-type="50gb">
             <div class="atc-top">
               <div class="atc-icon c50"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mails"></use></svg></div>
               <div class="atc-info">
@@ -1374,13 +1398,13 @@
                 <div class="atc-storage">50 GB por caixa · IA para escrita de e-mails · IMAP/POP3/SMTP · Webmail</div>
               </div>
               <div class="atc-unit-price">
-                <div class="from">a partir de</div>
-                <div class="price" id="unitPrice50">R$ 25,00</div>
+                <div class="atc-unit-tabela"><span class="sr-only">de </span><s data-preco-tabela="conta:50gb"></s></div>
+                <div class="price" id="unitPrice50"></div>
                 <div class="period">/conta/mês</div>
               </div>
             </div>
             <div class="price-breakdown" id="breakdown50" style="display:none">
-              <span class="price-original" id="origPrice50"></span>
+              <span class="sr-only">de </span><s id="origPrice50"></s>
               <span class="price-final" id="finalPrice50"></span>
               <span class="price-saving" id="saving50"></span>
             </div>
@@ -1443,6 +1467,7 @@
                 <span class="lbl">Total</span>
                 <span class="val" id="csTotal">R$ 0,00</span>
               </div>
+              <div class="cs-economia" id="csEconomia" hidden></div>
               <div class="cs-period" id="csPeriod">/mês</div>
             </div>
 
@@ -1850,7 +1875,16 @@
   <!-- ============================================================
        JAVASCRIPT
   ============================================================ -->
+  <script src="assets/precos.js?v=24"></script>
   <script>
+    // Guarda de carga: sem assets/precos.js não há preço a exibir; avisa no lugar da calculadora.
+    // Só as funções da calculadora saem cedo (precosOk); header, menu, FAQ, busca e fade-in seguem.
+    const precosOk = typeof PRECOS !== 'undefined';
+    if (!precosOk) {
+      document.querySelector('#pricing .calc-wrapper').innerHTML =
+        '<p class="discount-info" role="alert">Não foi possível carregar os preços. Recarregue a página.</p>';
+      document.querySelector('#pricing .billing-toggle').remove(); // sem preços, o ciclo não tem efeito
+    }
     // ---- HEADER scroll effect ----
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
@@ -1878,6 +1912,7 @@
       setBilling(billing === 'monthly' ? 'annual' : 'monthly');
     }
     function setBilling(mode) {
+      if (!precosOk) return;
       billing = mode;
       document.getElementById('billingToggle').classList.toggle('annual', mode === 'annual');
       document.getElementById('toggleMonthly').classList.toggle('active', mode === 'monthly');
@@ -1887,18 +1922,13 @@
     }
 
     // ---- CALCULADORA DE CONTAS ----
+    // Preços e descontos vêm de assets/precos.js (fonte única, mesma regra do checkout).
     const ACCOUNT_TYPES = {
-      '5gb':  { base:10, min:2, inputId:'qty5', subId:'sub5',  discTagId:'discTag5',  cardId:'card5',  unitId:'unitPrice5',  bdId:'breakdown5',  origId:'origPrice5',  finalId:'finalPrice5',  savId:'saving5'  },
-      '25gb': { base:16, min:1, inputId:'qty25', subId:'sub25', discTagId:'discTag25', cardId:'card25', unitId:'unitPrice25', bdId:'breakdown25', origId:'origPrice25', finalId:'finalPrice25', savId:'saving25' },
-      '50gb': { base:25, min:1, inputId:'qty50', subId:'sub50', discTagId:'discTag50', cardId:'card50', unitId:'unitPrice50', bdId:'breakdown50', origId:'origPrice50', finalId:'finalPrice50', savId:'saving50' },
+      '5gb':  { min:2, inputId:'qty5', subId:'sub5',  discTagId:'discTag5',  cardId:'card5',  unitId:'unitPrice5',  bdId:'breakdown5',  origId:'origPrice5',  finalId:'finalPrice5',  savId:'saving5'  },
+      '25gb': { min:1, inputId:'qty25', subId:'sub25', discTagId:'discTag25', cardId:'card25', unitId:'unitPrice25', bdId:'breakdown25', origId:'origPrice25', finalId:'finalPrice25', savId:'saving25' },
+      '50gb': { min:1, inputId:'qty50', subId:'sub50', discTagId:'discTag50', cardId:'card50', unitId:'unitPrice50', bdId:'breakdown50', origId:'origPrice50', finalId:'finalPrice50', savId:'saving50' },
     };
     const quantities = { '5gb': 0, '25gb': 0, '50gb': 0 };
-
-    function calcVolDisc(qty) { return qty >= 5 ? 5 : 0; }
-
-    function fmt(val) {
-      return val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
 
     // quantidade inteira ≥ 0; abaixo do mínimo do tipo sobe ao mínimo, ou zera ao diminuir
     // regra duplicada em ckNormalizeQty (checkout.html): manter as duas iguais
@@ -1910,6 +1940,7 @@
     }
 
     function changeQty(type, delta) {
+      if (!precosOk) return;
       const cfg  = ACCOUNT_TYPES[type];
       const next = normalizeQty(type, quantities[type] + delta, delta);
       quantities[type] = next;
@@ -1919,6 +1950,7 @@
     }
 
     function updateQty(type, raw) {
+      if (!precosOk) return;
       const cfg = ACCOUNT_TYPES[type];
       const val = normalizeQty(type, raw);
       quantities[type] = val;
@@ -1927,89 +1959,105 @@
       recalcSummary();
     }
 
+    // Valores do tipo, em centavos: unitários e a cascata do tipo (tabela, atual, cobrado e segmentos),
+    // anual sem volume; volume só no mensal (cascataCentavos, assets/precos.js).
+    function valoresTipo(type, qty) {
+      const anual = billing === 'annual';
+      const atual = PRECOS.contas[type];
+      return {
+        unit: unitarioCobradoCentavos(type, qty, anual),
+        tabelaUnit: tabelaCentavos(atual),
+        ...cascataCentavos(atual, qty, { conta: true, anual }),
+      };
+    }
+
     function recalcType(type) {
-      const cfg      = ACCOUNT_TYPES[type];
-      const qty      = quantities[type];
-      const baseUnit = cfg.base;
-      const annDisc  = billing === 'annual' ? 20 : 0;
-      const volDisc  = calcVolDisc(qty);
-      const totalDiscPct = annDisc + volDisc;
-      const unitFinal    = baseUnit * (1 - totalDiscPct / 100);
-      const subtotal     = qty * unitFinal;
-      const fullTotal    = qty * baseUnit;
+      if (!precosOk) return;
+      const cfg = ACCOUNT_TYPES[type];
+      const qty = quantities[type];
+      const v   = valoresTipo(type, qty);
 
       const subEl = document.getElementById(cfg.subId);
-      subEl.textContent = qty > 0 ? `R$ ${fmt(subtotal)}/mês` : 'R$ 0,00/mês';
+      subEl.textContent = `R$ ${fmtCentavos(v.cobrado)}/mês`;
       subEl.classList.toggle('has-value', qty > 0);
-      document.getElementById(cfg.unitId).textContent = qty > 0 ? `R$ ${fmt(unitFinal)}` : `R$ ${fmt(baseUnit)}`;
+      document.getElementById(cfg.cardId).querySelector(`[data-preco-tabela="conta:${type}"]`).textContent = `R$ ${fmtCentavos(v.tabelaUnit)}`;
+      document.getElementById(cfg.unitId).innerHTML = `<span class="sr-only">por </span>R$ ${fmtCentavos(v.unit)}`;
       document.getElementById(cfg.cardId).classList.toggle('has-qty', qty > 0);
 
       const bdEl = document.getElementById(cfg.bdId);
-      if (qty > 0 && totalDiscPct > 0) {
+      if (qty > 0) {
         bdEl.style.display = 'flex';
-        document.getElementById(cfg.origId).textContent  = `R$ ${fmt(fullTotal)}/mês`;
-        document.getElementById(cfg.finalId).textContent = `R$ ${fmt(subtotal)}/mês`;
-        const parts = [];
-        if (annDisc > 0) parts.push(`−${annDisc}% anual`);
-        if (volDisc > 0) parts.push(`−${volDisc}% volume`);
-        document.getElementById(cfg.savId).textContent = parts.join(' + ') + ` → economize R$ ${fmt(fullTotal - subtotal)}/mês`;
+        document.getElementById(cfg.origId).textContent = `R$ ${fmtCentavos(v.tabela)}`;
+        document.getElementById(cfg.finalId).innerHTML  = `<span class="sr-only">por </span>R$ ${fmtCentavos(v.cobrado)}/mês`;
+        document.getElementById(cfg.savId).textContent  = `economia −R$ ${fmtCentavos(v.tabela - v.cobrado)}/mês`;
       } else {
         bdEl.style.display = 'none';
       }
 
+      // Selo e dica de volume só no mensal (no anual não há desconto por volume).
       const discTagEl = document.getElementById(cfg.discTagId);
-      if (qty > 0) {
-        if (volDisc > 0) {
-          discTagEl.innerHTML = '<span class="vol-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> −5% por volume aplicado</span>';
+      if (qty > 0 && billing === 'monthly') {
+        if (percentualVolume(qty, false) > 0) {
+          discTagEl.innerHTML = `<span class="vol-badge"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> −${DESCONTO_VOLUME_PCT}% por volume aplicado</span>`;
         } else {
-          const need = 5 - qty;
-          discTagEl.textContent = need > 0 ? `Adicione mais ${need} conta(s) para −5% de volume` : '';
+          discTagEl.textContent = `Adicione mais ${VOLUME_MIN_QTD - qty} conta(s) para −${DESCONTO_VOLUME_PCT}% de volume`;
         }
       } else { discTagEl.textContent = ''; }
     }
 
     function recalcAll() {
+      if (!precosOk) return;
       Object.keys(ACCOUNT_TYPES).forEach(recalcType);
       recalcSummary();
     }
 
-    function recalcSummary() {
-      const csEmpty  = document.getElementById('csEmpty');
-      const csLines  = document.getElementById('csLines');
-      const linesEl  = document.getElementById('csSummaryLines');
-      const totalEl  = document.getElementById('csTotal');
-      const periodEl = document.getElementById('csPeriod');
-      const ctaBtn   = document.getElementById('calcCtaBtn');
-      const names    = { '5gb':'E-mail 5 GB', '25gb':'E-mail 25 GB', '50gb':'E-mail 50 GB' };
-      let grandTotal = 0, grandFull = 0, totalAccounts = 0, html = '';
+    // Cascata do tipo no resumo: "de R$ T · −15% contratação −R$ A[ · −20% anual −R$ B | · −5% volume −R$ B]".
+    // Mesmo formato da .sum-disc do checkout; só renderiza o resultado de cascataCentavos. Quebra só entre segmentos.
+    function htmlCsDisc(v) {
+      const seg = t => `<span class="cs-disc-seg">${t}</span>`;
+      const partes = [
+        seg(`de <s>R$ ${fmtCentavos(v.tabela)}</s>`),
+        ...v.segmentos.map(sg => seg(`${sg.rotulo} −R$ ${fmtCentavos(sg.valor)}`)),
+      ];
+      return `<div class="cs-disc"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> ${partes.join(' · ')}</div>`;
+    }
 
-      Object.entries(ACCOUNT_TYPES).forEach(([type, cfg]) => {
+    function recalcSummary() {
+      if (!precosOk) return;
+      const csEmpty    = document.getElementById('csEmpty');
+      const csLines    = document.getElementById('csLines');
+      const linesEl    = document.getElementById('csSummaryLines');
+      const totalEl    = document.getElementById('csTotal');
+      const periodEl   = document.getElementById('csPeriod');
+      const economiaEl = document.getElementById('csEconomia');
+      const ctaBtn     = document.getElementById('calcCtaBtn');
+      const names      = { '5gb':'E-mail 5 GB', '25gb':'E-mail 25 GB', '50gb':'E-mail 50 GB' };
+      let grandTotal = 0, grandTabela = 0, totalAccounts = 0, html = '';
+
+      Object.keys(ACCOUNT_TYPES).forEach(type => {
         const qty = quantities[type];
         if (qty === 0) return;
         totalAccounts += qty;
-        const annDisc = billing === 'annual' ? 20 : 0;
-        const volDisc = calcVolDisc(qty);
-        const unit    = cfg.base * (1 - (annDisc + volDisc) / 100);
-        const sub     = qty * unit;
-        const full    = qty * cfg.base;
-        grandTotal += sub; grandFull += full;
-        html += `<div class="cs-line"><span class="lbl">${qty}\u00d7 ${names[type]}</span><span class="val">R$ ${fmt(full)}</span></div>`;
-        if (annDisc + volDisc > 0) {
-          html += `<div class="cs-line" style="padding-left:8px"><span class="lbl" style="color:var(--cit-green-700)"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> Desc. \u2212${annDisc+volDisc}%</span><span class="val discount">\u2212R$ ${fmt(full-sub)}</span></div>`;
-        }
+        const v = valoresTipo(type, qty);
+        grandTotal += v.cobrado; grandTabela += v.tabela;
+        html += `<div class="cs-line"><span class="lbl">${qty}× ${names[type]}</span><span class="val">R$ ${fmtCentavos(v.cobrado)}</span></div>`;
+        html += htmlCsDisc(v);
       });
 
       const isEmpty = totalAccounts === 0;
       csEmpty.style.display = isEmpty ? 'block' : 'none';
       csLines.style.display = isEmpty ? 'none'  : 'block';
+      economiaEl.hidden = isEmpty;
 
       if (!isEmpty) {
-        if (grandFull > grandTotal) {
-          html += `<div class="cs-line" style="margin-top:6px;border-top:1px dashed var(--gray-200);padding-top:6px"><span class="lbl" style="font-weight:700">Subtotal s/ desc.</span><span class="val" style="text-decoration:line-through;color:var(--gray-400)">R$ ${fmt(grandFull)}</span></div>`;
-        }
+        html += `<div class="cs-line" style="margin-top:6px;border-top:1px dashed var(--gray-200);padding-top:6px"><span class="lbl" style="font-weight:700">Total de tabela</span><span class="val"><s>R$ ${fmtCentavos(grandTabela)}</s></span></div>`;
         linesEl.innerHTML = html;
-        totalEl.textContent = `R$ ${fmt(grandTotal)}`;
-        periodEl.textContent = billing === 'annual' ? `/m\u00eas \u00b7 R$ ${fmt(grandTotal*12)}/ano` : '/m\u00eas';
+        totalEl.textContent = `R$ ${fmtCentavos(grandTotal)}`;
+        periodEl.textContent = billing === 'annual' ? `/mês · R$ ${fmtCentavos(grandTotal*12)}/ano` : '/mês';
+        const economia = grandTabela - grandTotal;   // Σ por tipo de (tabela − cobrado)
+        economiaEl.textContent = `Você economiza R$ ${fmtCentavos(economia)}/mês` + (billing === 'annual' ? ` (R$ ${fmtCentavos(economia*12)}/ano)` : '');
+      } else {
+        economiaEl.textContent = '';
       }
 
       const params = new URLSearchParams({ qty5:quantities['5gb'], qty25:quantities['25gb'], qty50:quantities['50gb'], cycle:billing });
@@ -2072,6 +2120,9 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Cards e resumo dependem do JS (preços vêm de assets/precos.js): calcula na carga.
+    recalcAll();
   </script>
 </body>
 </html>
