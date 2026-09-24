@@ -67,11 +67,11 @@ O PO cria até o nível de história; tasks nascem na etapa 2 do fluxo abaixo. H
 
 Executar com a skill **`/iniciar-historia <URL da história | #ref>`**, que conduz os passos abaixo, retoma de onde a história parou e aplica as regras deste arquivo. Sem a skill, seguir o resumo:
 
-1. **Contexto**: `analyst` + `planner`; critérios de aceite (propor, se faltarem) e pontuação proposta.
-2. **Plano**: `architect` + `critic`; tarefas no Taiga só para subtarefas reais. ⏸ Aprovação do responsável; aprovado → comentário "Plano aprovado" e pontuação gravada. Nada de branch antes disso.
-3. **Implementação**: branch `feature/CIT-<nº>-<slug>`, commits `CIT-<nº>: ...`.
-4. **Testes**: specs Playwright para cada critério (`npm test`, 3x estável; provar que falham com o defeito).
-5. **Revisão**: `code-reviewer` + `security-reviewer` (+ `architect`/`critic` se ≥ 3 pontos, sem pontuação ou auth/pagamento/dados). Críticos e altos bloqueiam; máx. 2 ciclos de correção, depois reportar. Revisores não encerram processos que não iniciaram.
+1. **Contexto**: `analyst` (dispensável se a história já tem critérios verificáveis e toca uma página ou um componente, sem auth/pagamento/dados) + `planner` em modo direto; plano em `.omc/plans/CIT-<nº>.md` com critérios de aceite (propor, se faltarem), tarefas e pontuação propostas.
+2. **Plano**: `critic`; porte grande (≥ 3 pontos, sem pontuação, mais de uma página ou auth/pagamento/dados) → `architect` antes, em sequência. Ajustes sintetizados pelo `planner`, máx. 2 reescritas. Tarefas no Taiga só para subtarefas reais. ⏸ Aprovação do responsável; aprovado → comentário "Plano aprovado" e pontuação gravada. Nada de branch antes disso.
+3. **Implementação**: branch `feature/CIT-<nº>-<slug>`; `designer` (marcação/estilo, só tokens do Brandbook) e `executor` (JS), sem commitar; commits `CIT-<nº>: ...` pelo orquestrador.
+4. **Testes**: `test-engineer` escreve specs Playwright para cada critério (`npm test`, 3x estável; prova por mutação que falham com o defeito); `verifier` independente dá o veredito por critério.
+5. **Revisão**: `code-reviewer` + `security-reviewer` (se o diff toca formulário, dados, auth, pagamento, HTML montado por script, terceiros ou armazenamento no navegador) + `architect` se porte grande. Críticos e altos bloqueiam; correções pelo `executor`; máx. 2 ciclos de correção, depois reportar. Revisores não encerram processos que não iniciaram.
 6. ⏸ Confirmação → push e PR para `develop` (`CIT-<nº>` no título). Merge só pelo responsável.
 
 Status no Taiga:
