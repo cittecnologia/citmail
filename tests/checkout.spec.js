@@ -1164,3 +1164,79 @@ test.describe('checkout — add-ons: aviso de desconto', { tag: '@CIT-21' }, () 
     expect(contrastes.texto, 'contraste do texto').toBeGreaterThanOrEqual(4.5);
   });
 });
+
+// CIT-22, Passo 1: caracterização dos valores ATUAIS do checkout (antes do refactor de preços em
+// centavos e do riscado). Não são testes de comportamento novo — travam o que a develop já faz hoje,
+// para os passos seguintes provarem que os preços cobrados não mudaram (CA1). Valores conferidos no
+// código de `checkout.html` (ACCOUNT_DEFS, calcDiscount, unitPrice) antes de escrever.
+test.describe('checkout — CIT-22: caracterização dos valores atuais', { tag: '@CIT-22' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  /** @type {{ label: string, qs: string, total: string, period: string, unit: Record<'5'|'25'|'50', string>, sub: Record<'5'|'25'|'50', string> }[]} */
+  const CASOS = [
+    { label: '5× E-mail 5 GB, mensal', qs: 'qty5=5', total: 'R$ 47,50', period: '/mês',
+      unit: { '5': '9,50', '25': '16,00', '50': '25,00' }, sub: { '5': 'R$ 47,50', '25': 'R$ 0,00', '50': 'R$ 0,00' } },
+    { label: '5× E-mail 5 GB, anual', qs: 'qty5=5&cycle=annual', total: 'R$ 40,00', period: '/mês · R$ 480,00/ano',
+      unit: { '5': '8,00', '25': '12,80', '50': '20,00' }, sub: { '5': 'R$ 40,00', '25': 'R$ 0,00', '50': 'R$ 0,00' } },
+    { label: '5× E-mail 25 GB, mensal', qs: 'qty25=5', total: 'R$ 76,00', period: '/mês',
+      unit: { '5': '10,00', '25': '15,20', '50': '25,00' }, sub: { '5': 'R$ 0,00', '25': 'R$ 76,00', '50': 'R$ 0,00' } },
+    { label: '5× E-mail 25 GB, anual', qs: 'qty25=5&cycle=annual', total: 'R$ 64,00', period: '/mês · R$ 768,00/ano',
+      unit: { '5': '8,00', '25': '12,80', '50': '20,00' }, sub: { '5': 'R$ 0,00', '25': 'R$ 64,00', '50': 'R$ 0,00' } },
+    { label: '5× E-mail 50 GB, mensal', qs: 'qty50=5', total: 'R$ 118,75', period: '/mês',
+      unit: { '5': '10,00', '25': '16,00', '50': '23,75' }, sub: { '5': 'R$ 0,00', '25': 'R$ 0,00', '50': 'R$ 118,75' } },
+    { label: '5× E-mail 50 GB, anual', qs: 'qty50=5&cycle=annual', total: 'R$ 100,00', period: '/mês · R$ 1.200,00/ano',
+      unit: { '5': '8,00', '25': '12,80', '50': '20,00' }, sub: { '5': 'R$ 0,00', '25': 'R$ 0,00', '50': 'R$ 100,00' } },
+    { label: '1× E-mail 25 GB, anual', qs: 'qty25=1&cycle=annual', total: 'R$ 12,80', period: '/mês · R$ 153,60/ano',
+      unit: { '5': '8,00', '25': '12,80', '50': '20,00' }, sub: { '5': 'R$ 0,00', '25': 'R$ 12,80', '50': 'R$ 0,00' } },
+    { label: '1× E-mail 50 GB, anual', qs: 'qty50=1&cycle=annual', total: 'R$ 20,00', period: '/mês · R$ 240,00/ano',
+      unit: { '5': '8,00', '25': '12,80', '50': '20,00' }, sub: { '5': 'R$ 0,00', '25': 'R$ 0,00', '50': 'R$ 20,00' } },
+  ];
+
+  for (const c of CASOS) {
+    test(`${c.label}: #sumTotal, #sumPeriod, #ckUnit* e #ckSub* atuais`, async ({ page, erros }) => {
+      await page.goto(`checkout.html?${c.qs}`);
+      await expect(page.locator('#sumTotal')).toHaveText(c.total);
+      await expect(page.locator('#sumPeriod')).toHaveText(c.period);
+      for (const tipo of /** @type {const} */ (['5', '25', '50'])) {
+        await expect(page.locator(`#ckUnit${tipo}`), `#ckUnit${tipo}`).toHaveText(c.unit[tipo]);
+        await expect(page.locator(`#ckSub${tipo}`), `#ckSub${tipo}`).toHaveText(c.sub[tipo]);
+      }
+    });
+  }
+
+  test('opções de #fInstallments no mensal (5× E-mail 5 GB, R$ 47,50)', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=5');
+    await expect(page.locator('#fInstallments option')).toHaveText([
+      '1× de R$ 47,50 (sem juros)',
+      '2× de R$ 23,75 (sem juros)',
+      '3× de R$ 15,83 (sem juros)',
+    ]);
+  });
+
+  test('opções de #fInstallments no anual (5× E-mail 5 GB, R$ 40,00)', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=5&cycle=annual');
+    await expect(page.locator('#fInstallments option')).toHaveText([
+      '1× de R$ 40,00 (sem juros)',
+      '2× de R$ 20,00 (sem juros)',
+      '3× de R$ 13,33 (sem juros)',
+      '6× de R$ 6,67 (sem juros)',
+      '12× de R$ 3,33 (sem juros)',
+    ]);
+  });
+
+  test('Pix do domínio principal: #domPixCode contém 540000079', async ({ page, erros }) => {
+    await page.goto('checkout.html');
+    await page.evaluate(() => selectDomainOpt('new-br'));
+    await expect(page.locator('#domPixCode')).toContainText('540000079');
+  });
+
+  test('Pix de domínio extra (2×): #extraDomPixTotal e #extraDomPixCode', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 2);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
+    await expect(page.locator('#extraDomPixCode')).toContainText('540000158');
+  });
+});
