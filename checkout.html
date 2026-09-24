@@ -503,7 +503,11 @@
     .sum-line span:first-child { color: var(--cit-text-secondary); }
     .sum-line span:last-child { font-weight: 600; white-space: nowrap; }
     .sum-disc { padding-left: 8px; font-size: var(--cit-text-small); color: var(--cit-green-700); font-weight: 600; }
+    .sum-disc-seg { white-space: nowrap; }
     .sum-empty { color: var(--cit-text-muted); font-size: var(--cit-text-small); text-align: center; padding: 8px 0; }
+    .sum-economia { margin-top: 10px; font-size: var(--cit-text-small); font-weight: 600; color: var(--cit-success-strong); }
+    /* Preço de tabela (riscado): sempre em <s data-preco-tabela>, em qualquer contêiner, inclusive dentro da cascata do resumo. */
+    s[data-preco-tabela], .sum-disc s { color: var(--cit-error); text-decoration-line: line-through; font-weight: inherit; }
     .summary-divider { height: 1px; background: var(--cit-divider); margin: 12px 0; }
     .summary-total {
       display: flex; justify-content: space-between; align-items: baseline;
@@ -548,6 +552,7 @@
     .mini-row-icon { font-size: 1.3rem; flex-shrink: 0; }
     .mini-row-info { flex: 1; min-width: 0; }
     .mini-row-name { font-family: var(--font-title); font-weight: 600; font-size: var(--cit-text-body); color: var(--cit-text-primary); }
+    .mini-row-tabela { font-size: var(--cit-text-small); }
     .mini-row-price { font-size: var(--cit-text-small); color: var(--cit-text-muted); }
     .mini-row-disc { font-size: var(--cit-text-small); color: var(--cit-green-700); font-weight: 600; min-height: 14px; }
     .mini-qty-ctrl {
@@ -570,6 +575,8 @@
     }
     .mini-qty-val::-webkit-inner-spin-button,
     .mini-qty-val::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .mini-row-sub-col { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+    .mini-row-sub-tabela { font-family: var(--font-title); font-weight: 700; font-size: var(--cit-text-body); text-align: right; }
     .mini-row-sub { font-family: var(--font-title); font-weight: 700; font-size: var(--cit-text-body); color: var(--cit-primary); min-width: 90px; text-align: right; }
 
     /* Ciclo anual */
@@ -618,7 +625,8 @@
     .addon-info { flex: 1; min-width: 0; }
     .addon-name { font-family: var(--font-title); font-weight: 600; font-size: var(--cit-text-body); }
     .addon-desc { font-size: var(--cit-text-small); color: var(--cit-text-muted); }
-    .addon-price { font-size: var(--cit-text-small); color: var(--cit-primary); font-weight: 600; margin-top: 2px; }
+    .addon-price-tabela { font-size: var(--cit-text-small); font-weight: 600; margin-top: 2px; }
+    .addon-price { font-size: var(--cit-text-small); color: var(--cit-success-strong); font-weight: 600; margin-top: 2px; }
     .addon-ctrl { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .addon-sub { min-width: 80px; text-align: right; flex-shrink: 0; }
     .addon-sub-val { font-family: var(--font-title); font-weight: 800; font-size: var(--cit-text-body); color: var(--cit-primary); }
@@ -628,7 +636,9 @@
     .sky-opts-title { font-size: var(--cit-text-small); font-weight: 600; color: var(--cit-text-secondary); margin-bottom: 2px; }
     .sky-opt { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border-radius: var(--cit-radius-sm); }
     .sky-opt-name { flex: 1; font-size: var(--cit-text-small); font-weight: 600; }
-    .sky-opt-price { font-weight: 600; font-size: var(--cit-text-small); color: var(--cit-primary); white-space: nowrap; }
+    .sky-opt-price-col { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+    .sky-opt-price-tabela { font-weight: 600; font-size: var(--cit-text-small); white-space: nowrap; }
+    .sky-opt-price { font-weight: 600; font-size: var(--cit-text-small); color: var(--cit-success-strong); white-space: nowrap; }
     .sky-qty { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
     .sky-qty-label { font-size: var(--cit-text-small); font-weight: 600; color: var(--cit-text-secondary); }
 
@@ -761,7 +771,7 @@
       .mini-calc-row { flex-wrap: wrap; }
       .mini-row-info { flex-basis: calc(100% - 44px); }
       .mini-calc-row .mini-qty-ctrl { margin-left: 34px; }
-      .mini-row-sub { margin-left: auto; }
+      .mini-row-sub-col { margin-left: auto; }
       .addon-row:not(.addon-row--stack), .addon-head { flex-wrap: wrap; }
       .addon-row:not(.addon-row--stack) > .addon-info, .addon-head > .addon-info { flex-basis: calc(100% - 44px); }
       .addon-row .addon-ctrl { margin-left: auto; flex-shrink: 1; flex-wrap: wrap; justify-content: flex-end; max-width: 100%; }
@@ -770,7 +780,7 @@
       .addon-sec-painel { padding: 0 8px 8px; }
       .sky-opts { padding-left: 0; }
       .sky-opt { flex-wrap: wrap; }
-      .sky-opt-price { margin-left: auto; }
+      .sky-opt-price-col { margin-left: auto; }
       .domain-opt-card { flex-wrap: wrap; }
       .domain-opt-card .opt-info { flex-basis: calc(100% - 44px); }
       .domain-opt-card .opt-price-col { margin-left: 34px; text-align: left; }
@@ -855,6 +865,7 @@
           <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 5 GB</div>
+            <div class="mini-row-tabela"><span class="sr-only">de </span><s data-preco-tabela="conta:5gb"></s></div>
             <div class="mini-row-price">R$ <span id="ckUnit5"></span>/conta/mês</div>
             <div class="mini-row-disc" id="ckDisc5"></div>
           </div>
@@ -863,7 +874,10 @@
             <input class="mini-qty-val" id="ckQty5" type="number" value="0" min="0" onchange="ckUpdateQty('5gb',this.value)" />
             <button class="mini-qty-btn" onclick="ckChangeQty('5gb', 1)">+</button>
           </div>
-          <div class="mini-row-sub" id="ckSub5">R$ 0,00</div>
+          <div class="mini-row-sub-col">
+            <div class="mini-row-sub-tabela"><span class="sr-only">de </span><s data-preco-tabela="sub:5gb"></s></div>
+            <div class="mini-row-sub" id="ckSub5">R$ 0,00</div>
+          </div>
         </div>
 
         <!-- E-mail 25 GB -->
@@ -871,6 +885,7 @@
           <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#inbox"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 25 GB</div>
+            <div class="mini-row-tabela"><span class="sr-only">de </span><s data-preco-tabela="conta:25gb"></s></div>
             <div class="mini-row-price">R$ <span id="ckUnit25"></span>/conta/mês</div>
             <div class="mini-row-disc" id="ckDisc25"></div>
           </div>
@@ -879,7 +894,10 @@
             <input class="mini-qty-val" id="ckQty25" type="number" value="0" min="0" onchange="ckUpdateQty('25gb',this.value)" />
             <button class="mini-qty-btn" onclick="ckChangeQty('25gb', 1)">+</button>
           </div>
-          <div class="mini-row-sub" id="ckSub25">R$ 0,00</div>
+          <div class="mini-row-sub-col">
+            <div class="mini-row-sub-tabela"><span class="sr-only">de </span><s data-preco-tabela="sub:25gb"></s></div>
+            <div class="mini-row-sub" id="ckSub25">R$ 0,00</div>
+          </div>
         </div>
 
         <!-- E-mail 50 GB -->
@@ -887,6 +905,7 @@
           <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mails"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 50 GB</div>
+            <div class="mini-row-tabela"><span class="sr-only">de </span><s data-preco-tabela="conta:50gb"></s></div>
             <div class="mini-row-price">R$ <span id="ckUnit50"></span>/conta/mês</div>
             <div class="mini-row-disc" id="ckDisc50"></div>
           </div>
@@ -895,7 +914,10 @@
             <input class="mini-qty-val" id="ckQty50" type="number" value="0" min="0" onchange="ckUpdateQty('50gb',this.value)" />
             <button class="mini-qty-btn" onclick="ckChangeQty('50gb', 1)">+</button>
           </div>
-          <div class="mini-row-sub" id="ckSub50">R$ 0,00</div>
+          <div class="mini-row-sub-col">
+            <div class="mini-row-sub-tabela"><span class="sr-only">de </span><s data-preco-tabela="sub:50gb"></s></div>
+            <div class="mini-row-sub" id="ckSub50">R$ 0,00</div>
+          </div>
         </div>
 
         <div class="cycle-toggle" id="cycleToggle" onclick="toggleCycle()">
@@ -1028,7 +1050,7 @@
         <div class="aviso-desconto" id="avisoDescontoAddons">
           <svg class="icon aviso-desconto-icone" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg>
           <div class="aviso-desconto-corpo">
-            <p class="aviso-desconto-titulo">APROVEITE A OPORTUNIDADE PARA GARANTIR O DESCONTO</p>
+            <p class="aviso-desconto-titulo">GARANTA 15% DE DESCONTO NESTA CONTRATAÇÃO</p>
             <p class="aviso-desconto-texto">Condição exclusiva desta contratação</p>
           </div>
         </div>
@@ -1064,17 +1086,26 @@
                   <label class="sky-opt" id="skyOpt50" onclick="selectSkybox('50gb')">
                     <input type="radio" name="skybox" value="50gb" />
                     <div class="sky-opt-name">50 GB / conta</div>
-                    <div class="sky-opt-price" data-preco="skybox:50gb"></div>
+                    <div class="sky-opt-price-col">
+                      <div class="sky-opt-price-tabela"><span class="sr-only">de </span><s data-preco-tabela="skybox:50gb"></s></div>
+                      <div class="sky-opt-price" data-preco="skybox:50gb"></div>
+                    </div>
                   </label>
                   <label class="sky-opt" id="skyOpt100" onclick="selectSkybox('100gb')">
                     <input type="radio" name="skybox" value="100gb" />
                     <div class="sky-opt-name">100 GB / conta</div>
-                    <div class="sky-opt-price" data-preco="skybox:100gb"></div>
+                    <div class="sky-opt-price-col">
+                      <div class="sky-opt-price-tabela"><span class="sr-only">de </span><s data-preco-tabela="skybox:100gb"></s></div>
+                      <div class="sky-opt-price" data-preco="skybox:100gb"></div>
+                    </div>
                   </label>
                   <label class="sky-opt" id="skyOpt1tb" onclick="selectSkybox('1tb')">
                     <input type="radio" name="skybox" value="1tb" />
                     <div class="sky-opt-name">1 TB / conta</div>
-                    <div class="sky-opt-price" data-preco="skybox:1tb"></div>
+                    <div class="sky-opt-price-col">
+                      <div class="sky-opt-price-tabela"><span class="sr-only">de </span><s data-preco-tabela="skybox:1tb"></s></div>
+                      <div class="sky-opt-price" data-preco="skybox:1tb"></div>
+                    </div>
                   </label>
                   <!-- Skybox qty -->
                   <div class="sky-qty">
@@ -1105,6 +1136,7 @@
                 <div class="addon-info">
                   <div class="addon-name">Talk – Videoconferência</div>
                   <div class="addon-desc">Reuniões, chamadas e webinars integrados ao e-mail</div>
+                  <div class="addon-price-tabela"><span class="sr-only">de </span><s data-preco-tabela="talk"></s></div>
                   <div class="addon-price" data-preco="talk"></div>
                 </div>
                 <div class="addon-ctrl">
@@ -1137,6 +1169,7 @@
                 <div class="addon-info">
                   <div class="addon-name">Backup 90 dias</div>
                   <div class="addon-desc">Retenção e restauração de e-mails por 90 dias</div>
+                  <div class="addon-price-tabela"><span class="sr-only">de </span><s data-preco-tabela="backup90"></s></div>
                   <div class="addon-price" data-preco="backup90"></div>
                 </div>
                 <div class="addon-ctrl">
@@ -1158,6 +1191,7 @@
                 <div class="addon-info">
                   <div class="addon-name">Backup 365 dias</div>
                   <div class="addon-desc">Retenção e restauração de e-mails por 1 ano</div>
+                  <div class="addon-price-tabela"><span class="sr-only">de </span><s data-preco-tabela="backup365"></s></div>
                   <div class="addon-price" data-preco="backup365"></div>
                 </div>
                 <div class="addon-ctrl">
@@ -1229,6 +1263,7 @@
             <div class="addon-info">
               <div class="addon-name">Grupo de E-mail</div>
               <div class="addon-desc">Listas de distribuição para equipes e departamentos</div>
+              <div class="addon-price-tabela"><span class="sr-only">de </span><s data-preco-tabela="grupoEmail"></s></div>
               <div class="addon-price" data-preco="grupoEmail"></div>
             </div>
             <div class="addon-ctrl">
@@ -1628,6 +1663,8 @@
           </div>
         </div>
 
+        <div class="sum-economia" id="sumEconomia" hidden></div>
+
         <div class="summary-features" style="margin-top:14px">
           <div class="summary-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Webmail + IMAP/POP3/SMTP</div>
           <div class="summary-feature"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check"></use></svg> Antispam e antivírus</div>
@@ -1776,6 +1813,9 @@
         const preco = plano ? a?.planos?.[plano]?.centavos : a?.centavos;
         if (preco === undefined) { console.warn(`data-preco desconhecido: ${el.dataset.preco}`); return; }
         el.textContent = `R$ ${fmtCentavos(preco)}/${a.unidade}/${a.periodo}`;
+        // Riscado irmão com a mesma chave (só add-ons mensais e Skybox; domínio extra não tem)
+        const tabelaEl = el.parentElement.querySelector(`[data-preco-tabela="${el.dataset.preco}"]`);
+        if (tabelaEl) tabelaEl.textContent = `R$ ${fmtCentavos(tabelaCentavos(preco))}`;
       });
       Object.values(ADDONS).forEach(a => {
         const inp = document.getElementById(a.qtd);
@@ -1959,6 +1999,13 @@
         const annualDisc = annualBilling ? 20 : 0;
         document.getElementById(d.unitId).textContent = fmtCentavos(unit);
         document.getElementById(d.subId).textContent  = qty > 0 ? `R$ ${fmtCentavos(sub)}` : 'R$ 0,00';
+        // Riscados irmãos: tabela mensal cheia (também no anual) no unitário e qtd × tabela no subtotal
+        const card = document.getElementById(d.cardId);
+        const tabela = tabelaCentavos(PRECOS.contas[type]);
+        card.querySelector(`[data-preco-tabela="conta:${type}"]`).textContent = `R$ ${fmtCentavos(tabela)}`;
+        const subTabelaEl = card.querySelector(`[data-preco-tabela="sub:${type}"]`);
+        subTabelaEl.textContent = `R$ ${fmtCentavos(qty * tabela)}`;
+        subTabelaEl.parentElement.hidden = qty === 0;
         document.getElementById(d.cardId).classList.toggle('has-qty', qty > 0);
         const discEl = document.getElementById(d.discId);
         if (qty > 0 && (disc > 0 || annualDisc > 0)) {
@@ -2031,6 +2078,20 @@
     /* ================================================================
        SUMMARY & INSTALLMENTS (account-based)
     ================================================================ */
+    // Cascata de um item do resumo: "de R$ T · −15% contratação −R$ A[ · −20% anual −R$ B | · −5% volume −R$ B]".
+    // T = tabela do item (qtd × tabela unitária), A = T − qtd × atual, B = qtd × atual − cobrado. Segmentos não quebram por dentro.
+    function htmlSumDisc(tabelaItem, atualItem, cobradoItem, rotuloExtra) {
+      const seg = t => `<span class="sum-disc-seg">${t}</span>`;
+      const partes = [
+        seg(`de <s>R$ ${fmtCentavos(tabelaItem)}</s>`),
+        seg(`−15% contratação −R$ ${fmtCentavos(tabelaItem - atualItem)}`),
+      ];
+      if (rotuloExtra) partes.push(seg(`${rotuloExtra} −R$ ${fmtCentavos(atualItem - cobradoItem)}`));
+      return `<div class="sum-disc">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> ${partes.join(' · ')}
+          </div>`;
+    }
+
     function updateSummary() {
       const total = grandTotalCentavos();
       const linesEl = document.getElementById('sumAccountLines');
@@ -2043,6 +2104,7 @@
       const names = {'5gb':'E-mail 5 GB','25gb':'E-mail 25 GB','50gb':'E-mail 50 GB'};
       let html = '';
       let hasAny = false;
+      let economia = 0;   // Σ por item de (tabela − cobrado), em centavos
       Object.entries(ACCOUNT_DEFS).forEach(([type, d]) => {
         const qty = ckQtys[type];
         if (qty === 0) return;
@@ -2050,30 +2112,35 @@
         const unit = unitPriceCentavos(type);
         const sub  = qty * unit;
         const disc = calcDiscount(qty);
+        const atualItem  = qty * PRECOS.contas[type];
+        const tabelaItem = qty * tabelaCentavos(PRECOS.contas[type]);
+        economia += tabelaItem - sub;
         html += `<div class="sum-line">
           <span>${qty}× ${names[type]}</span>
           <span>R$ ${fmtCentavos(sub)}</span>
         </div>`;
-        if (disc > 0 || annualBilling) {
-          const parts = [];
-          if (annualBilling) parts.push('−20% anual');
-          if (disc > 0)      parts.push(`−${disc}% vol.`);
-          html += `<div class="sum-disc">
-            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> ${parts.join(' + ')}
-          </div>`;
-        }
+        const rotuloExtra = annualBilling ? `−${DESCONTO_ANUAL_PCT}% anual` : disc > 0 ? `−${disc}% volume` : '';
+        html += htmlSumDisc(tabelaItem, atualItem, sub, rotuloExtra);
       });
-      // Add-ons lines
-      const totalQ = totalAccounts();
+      // Add-ons lines (sem desconto anual nem de volume: cobrado = atual)
       linhasAddonsMensais().forEach(l => {
         hasAny = true;
+        const tabelaItem = l.qtd * tabelaCentavos(precoUnitario(l.key));
+        economia += tabelaItem - l.valor;
         html += `<div class="sum-line">
           <span>${l.rotulo} ×${l.qtd}</span>
           <span>R$ ${fmtCentavos(l.valor)}</span>
         </div>`;
+        html += htmlSumDisc(tabelaItem, l.valor, l.valor, '');
       });
       linesEl.innerHTML = hasAny ? html
         : '<div class="sum-empty">Nenhuma conta selecionada</div>';
+
+      const economiaEl = document.getElementById('sumEconomia');
+      economiaEl.hidden = !hasAny;
+      economiaEl.textContent = hasAny
+        ? `Você economiza R$ ${fmtCentavos(economia)}/mês` + (annualBilling ? ` (R$ ${fmtCentavos(economia * 12)}/ano)` : '')
+        : '';
     }
 
     function updateInstallments() {
