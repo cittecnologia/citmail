@@ -542,3 +542,174 @@ test.describe('checkout — CIT-19', { tag: '@CIT-19' }, () => {
     }
   });
 });
+
+// CIT-21: add-ons do passo 3 (tabela única de preços, sanfona e aviso de desconto).
+
+/**
+ * Abre a seção de add-ons indicada no passo 3, se estiver fechada.
+ * @param {import('@playwright/test').Page} page
+ * @param {string} nome nome visível da seção, ex.: 'Backup'
+ */
+async function abrirSecao(page, nome) {
+  // Sem sanfona ainda: todas as linhas de add-on estão sempre visíveis.
+  void page; void nome;
+}
+
+/**
+ * Digita a quantidade de um add-on no campo do passo 3 (dispara o onchange com Tab).
+ * @param {import('@playwright/test').Page} page
+ * @param {string} secao nome da seção que contém o add-on
+ * @param {string} inputId id do campo de quantidade, ex.: 'aqTalk'
+ * @param {number} qtd
+ */
+async function definirQtdAddon(page, secao, inputId, qtd) {
+  await abrirSecao(page, secao);
+  const input = page.locator(`#${inputId}`);
+  await input.fill(String(qtd));
+  await input.press('Tab');
+}
+
+/**
+ * Textos das linhas (cada filho da linha, sem espaços extras) de um contêiner de linhas.
+ * @param {import('@playwright/test').Page} page
+ * @param {string} seletor seletor das linhas, ex.: '#sumAccountLines .sum-line'
+ */
+async function linhas(page, seletor) {
+  return page.evaluate(sel => [...document.querySelectorAll(sel)]
+    .map(l => [...l.children].map(s => s.textContent.replace(/\s+/g, ' ').trim())), seletor);
+}
+
+test.describe('checkout — add-ons: preços (não regressão)', { tag: '@CIT-21' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('preços exibidos em cada add-on do passo 3', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    const precos = await page.evaluate(() => Object.fromEntries(
+      ['#adTalk .addon-price', '#adBackup90 .addon-price', '#adBackup365 .addon-price', '#adGrupo .addon-price', '#adExtraDom .addon-price',
+        '#skyOpt50 .sky-opt-price', '#skyOpt100 .sky-opt-price', '#skyOpt1tb .sky-opt-price']
+        .map(sel => [sel, document.querySelector(sel)?.textContent.trim()])));
+    expect(precos).toEqual({
+      '#adTalk .addon-price': 'R$ 4,70/conta/mês',
+      '#adBackup90 .addon-price': 'R$ 6,00/conta/mês',
+      '#adBackup365 .addon-price': 'R$ 19,00/conta/mês',
+      '#adGrupo .addon-price': 'R$ 2,00/conta/mês',
+      '#adExtraDom .addon-price': 'R$ 79,00/domínio/ano',
+      '#skyOpt50 .sky-opt-price': 'R$ 17,70/conta/mês',
+      '#skyOpt100 .sky-opt-price': 'R$ 28,70/conta/mês',
+      '#skyOpt1tb .sky-opt-price': 'R$ 319,00/conta/mês',
+    });
+  });
+
+  test('mensal: subtotais por linha, painel de selecionados, resumo e total com todos os add-ons', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 3);
+    await definirQtdAddon(page, 'Backup', 'aqBackup90', 2);
+    await definirQtdAddon(page, 'Backup', 'aqBackup365', 1);
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 2);
+    await page.locator('#skyOpt100').click();
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 2);
+    const grupo = page.locator('#aqGrupo');
+    await grupo.fill('4');
+    await grupo.press('Tab');
+
+    await expect(page.locator('#asTalk')).toHaveText('R$ 14,10');
+    await expect(page.locator('#asBackup90')).toHaveText('R$ 12,00');
+    await expect(page.locator('#asBackup365')).toHaveText('R$ 19,00');
+    await expect(page.locator('#asGrupo')).toHaveText('R$ 8,00');
+    await expect(page.locator('#asSkybox')).toHaveText('R$ 57,40');
+    await expect(page.locator('#asExtraDom')).toHaveText('R$ 158,00');
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
+
+    // Domínio extra (anual, via Pix) fica fora do subtotal mensal dos add-ons.
+    await expect(page.locator('#addonsSubtotalVal')).toHaveText('+ R$ 110,50/mês');
+    expect(await linhas(page, '#addonsSubtotalLines .addon-sub-line')).toEqual([
+      ['Talk', 'R$ 14,10/mês'],
+      ['Backup 90d', 'R$ 12,00/mês'],
+      ['Backup 365d', 'R$ 19,00/mês'],
+      ['Grupo E-mail', 'R$ 8,00/mês'],
+      ['Skybox 100GB', 'R$ 57,40/mês'],
+    ]);
+
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([
+      ['2× E-mail 5 GB', 'R$ 20,00'],
+      ['Talk ×3', 'R$ 14,10'],
+      ['Backup 90d ×2', 'R$ 12,00'],
+      ['Backup 365d ×1', 'R$ 19,00'],
+      ['Grupo E-mail ×4', 'R$ 8,00'],
+      ['Skybox 100GB ×2', 'R$ 57,40'],
+    ]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 130,50');
+    await expect(page.locator('#sumPeriod')).toHaveText('/mês');
+  });
+
+  test('anual: total mensal com add-ons e valor anual (total × 12)', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2&cycle=annual');
+    await page.evaluate(() => goStep(3));
+
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 1);
+    await definirQtdAddon(page, 'Backup', 'aqBackup365', 2);
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 1);
+    await page.locator('#skyOpt50').click();
+
+    // 2 × 8,00 (−20% anual) + 4,70 + 2 × 19,00 + 17,70 = 76,40
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 76,40');
+    await expect(page.locator('#sumPeriod')).toHaveText('/mês · R$ 916,80/ano');
+    await expect(page.locator('#addonsSubtotalVal')).toHaveText('+ R$ 60,40/mês');
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([
+      ['2× E-mail 5 GB', 'R$ 16,00'],
+      ['Talk ×1', 'R$ 4,70'],
+      ['Backup 365d ×2', 'R$ 38,00'],
+      ['Skybox 50GB ×1', 'R$ 17,70'],
+    ]);
+  });
+
+  test('Skybox 1 TB: preço por licença no subtotal, no painel e no resumo', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await abrirSecao(page, 'Armazenamento em nuvem');
+    await page.locator('#skyOpt1tb').click();
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 3);
+
+    await expect(page.locator('#asSkybox')).toHaveText('R$ 957,00');
+    await expect(page.locator('#addonsSubtotalVal')).toHaveText('+ R$ 957,00/mês');
+    expect(await linhas(page, '#addonsSubtotalLines .addon-sub-line')).toEqual([['Skybox 1TB', 'R$ 957,00/mês']]);
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([
+      ['2× E-mail 5 GB', 'R$ 20,00'],
+      ['Skybox 1TB ×3', 'R$ 957,00'],
+    ]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 977,00');
+  });
+
+  test('Skybox com quantidade e sem plano: R$ 0,00 e sem linha no painel nem no resumo', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await definirQtdAddon(page, 'Armazenamento em nuvem', 'aqSkybox', 5);
+
+    await expect(page.locator('#asSkybox')).toHaveText('R$ 0,00');
+    await expect(page.locator('#addonsSubtotal')).toBeHidden();
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['2× E-mail 5 GB', 'R$ 20,00']]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 20,00');
+  });
+
+  test('domínio extra: 2 × R$ 79,00 no Pix anual, fora do total mensal e do resumo', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(3));
+
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 2);
+
+    await expect(page.locator('#asExtraDom')).toHaveText('R$ 158,00');
+    await expect(page.locator('#extraDomPixPanel')).toBeVisible();
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
+    await expect(page.locator('#addonsSubtotal')).toBeHidden();
+    expect(await linhas(page, '#sumAccountLines .sum-line')).toEqual([['2× E-mail 5 GB', 'R$ 20,00']]);
+    await expect(page.locator('#sumTotal')).toHaveText('R$ 20,00');
+  });
+});
