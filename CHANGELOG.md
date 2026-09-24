@@ -32,6 +32,8 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Checkout: add-ons em seções recolhíveis (Armazenamento em nuvem, Talk, Backup e Domínio secundário), com subtotal no cabeçalho da seção fechada; Grupo de E-mail fica fora das seções (CIT-21).
 - Checkout: botões − e + e campos de quantidade dos add-ons com nome acessível próprio (CIT-21).
 - Checkout: preços dos add-ons numa tabela única, usada no passo 3, no subtotal e no resumo (CIT-21).
+- Checkout: linhas de add-ons sem cursor de clique nem destaque ao passar o mouse (CIT-21).
+- Checkout: título do passo de add-ons como `h2` (CIT-21).
 
 ### Removido
 - `serve.py`, substituído pelo Vite.
