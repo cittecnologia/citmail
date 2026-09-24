@@ -737,4 +737,35 @@ testSemErros.describe('landing — CIT-22: guarda quando assets/precos.js não c
       'Não foi possível carregar os preços. Recarregue a página.'
     );
   });
+
+  // CIT-22, revisão 2º ciclo: só a calculadora (precosOk) sai cedo; header, menu, FAQ e fade-in continuam
+  // funcionando sem assets/precos.js. Erros de rede/console do recurso abortado são esperados (por isso
+  // testSemErros, sem a fixture `erros`); o que este teste garante é que não há pageerror (script não
+  // capturado) além do aviso — sinal de que a guarda não deixou nenhuma outra função sem proteção.
+  testSemErros('sem assets/precos.js, o resto da página (fade-in, FAQ e menu mobile) continua funcionando, sem pageerror', async ({ page }) => {
+    const pageerrors = [];
+    page.on('pageerror', err => pageerrors.push(err.message));
+    await page.route('**/assets/precos.js*', route => route.abort());
+    await page.setViewportSize({ width: 412, height: 839 }); // largura mobile: exibe o nav-toggle (@media max-width: 900px)
+    await page.goto('index.html');
+    await expect(page.locator('#pricing .calc-wrapper .discount-info[role="alert"]')).toHaveText(
+      'Não foi possível carregar os preços. Recarregue a página.'
+    );
+
+    // fade-in: rolar até #features aplica "visible" (IntersectionObserver, independente de precosOk)
+    const featuresHeader = page.locator('#features .section-header');
+    await featuresHeader.scrollIntoViewIfNeeded();
+    await expect(featuresHeader).toHaveClass(/visible/);
+
+    // FAQ: clicar numa pergunta abre a resposta (toggleFaq não depende de precosOk)
+    const primeiroFaq = page.locator('.faq-item').first();
+    await primeiroFaq.locator('.faq-question').click();
+    await expect(primeiroFaq).toHaveClass(/open/);
+
+    // menu mobile: abre ao clicar no botão (setNavOpen não depende de precosOk)
+    await page.locator('#navToggle').click();
+    await expect(page.locator('#header')).toHaveClass(/nav-mobile-open/);
+
+    expect(pageerrors, 'não deveria haver pageerror com a guarda de carga').toEqual([]);
+  });
 });

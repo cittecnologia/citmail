@@ -1574,6 +1574,22 @@ test.describe('checkout — CIT-22: cores dos riscados e dos preços cobrados (C
     await expect(page.locator('#sumTotal')).toHaveCSS('color', primaria);
     await expect(page.locator('#sumTotal')).not.toHaveCSS('color', sucessoForte);
   });
+
+  test('#ckSub5 sem quantidade (sem riscado ao lado) usa --cit-primary; com quantidade usa --cit-success-strong', async ({ page, erros }) => {
+    await page.goto('checkout.html');
+    const sucessoForte = await corToken(page, '--cit-success-strong');
+    const primaria = await corToken(page, '--cit-primary');
+
+    await expect(page.locator('#ckCard5 .mini-row-sub-tabela')).toBeHidden();
+    await expect(page.locator('#ckSub5')).toHaveCSS('color', primaria);
+    await expect(page.locator('#ckSub5')).not.toHaveCSS('color', sucessoForte);
+
+    await page.evaluate(() => ckChangeQty('5gb', 1));
+
+    await expect(page.locator('#ckCard5 .mini-row-sub-tabela')).toBeVisible();
+    await expect(page.locator('#ckSub5')).toHaveCSS('color', sucessoForte);
+    await expect(page.locator('#ckSub5')).not.toHaveCSS('color', primaria);
+  });
 });
 
 test.describe('checkout — CIT-22: contraste do riscado e do cobrado (CA13)', { tag: '@CIT-22' }, () => {
