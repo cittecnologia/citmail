@@ -1,0 +1,53 @@
+/* Fonte única de preços do CITMail (checkout e landing).
+ * Só dados e funções puras, sem DOM. Todos os valores em centavos inteiros.
+ * "atual" = preço de lista de hoje, antes do desconto anual ou por volume;
+ * "tabela" = preço de tabela exibido riscado, derivado do atual (atual = tabela − 15%). */
+
+const PRECOS = {
+  contas: { '5gb': 1000, '25gb': 1600, '50gb': 2500 },
+  addons: {
+    talk: 470,
+    backup90: 600,
+    backup365: 1900,
+    grupoEmail: 200,
+    skybox: { '50gb': 1770, '100gb': 2870, '1tb': 31900 },
+    extraDom: 7900,
+  },
+};
+
+// Descontos sobre o atual das contas: anual sem volume; volume só no mensal.
+const DESCONTO_ANUAL_PCT = 20;
+const DESCONTO_VOLUME_PCT = 5;
+const VOLUME_MIN_QTD = 5;
+
+// Tabela = atual / 0,85, arredondada ao centavo. Com centavos inteiros, atual × 20 / 17
+// nunca termina em ,5 (17 é ímpar e não divide 10), então o Math.round não empata.
+function tabelaCentavos(atual) {
+  return Math.round(atual * 20 / 17);
+}
+
+// Percentual de volume da conta: 5% a partir de 5 contas do tipo, só no mensal.
+function percentualVolume(qtd, anual) {
+  return (!anual && qtd >= VOLUME_MIN_QTD) ? DESCONTO_VOLUME_PCT : 0;
+}
+
+// Unitário cobrado da conta (regra do checkout): anual = atual × 0,80, sem volume;
+// mensal = atual × 0,95 a partir de 5 contas. O Math.round protege preços futuros.
+function unitarioCobradoCentavos(tipo, qtd, anual) {
+  const atual = PRECOS.contas[tipo];
+  const pct = anual ? DESCONTO_ANUAL_PCT : percentualVolume(qtd, anual);
+  return Math.round(atual * (100 - pct) / 100);
+}
+
+// "1.234,56" com aritmética inteira (sem ponto flutuante nem locale).
+function fmtCentavos(c) {
+  const sinal = c < 0 ? '-' : '';
+  const abs = Math.abs(Math.round(c));
+  const reais = String(Math.trunc(abs / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return `${sinal}${reais},${String(abs % 100).padStart(2, '0')}`;
+}
+
+// Reais com ponto e duas casas ("76.40"), para Pix e boleto.
+function reaisTxt(c) {
+  return Math.trunc(c / 100) + '.' + String(c % 100).padStart(2, '0');
+}

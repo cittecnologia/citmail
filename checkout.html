@@ -855,7 +855,7 @@
           <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mail"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 5 GB</div>
-            <div class="mini-row-price">R$ <span id="ckUnit5">10,00</span>/conta/mês</div>
+            <div class="mini-row-price">R$ <span id="ckUnit5"></span>/conta/mês</div>
             <div class="mini-row-disc" id="ckDisc5"></div>
           </div>
           <div class="mini-qty-ctrl">
@@ -871,7 +871,7 @@
           <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#inbox"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 25 GB</div>
-            <div class="mini-row-price">R$ <span id="ckUnit25">16,00</span>/conta/mês</div>
+            <div class="mini-row-price">R$ <span id="ckUnit25"></span>/conta/mês</div>
             <div class="mini-row-disc" id="ckDisc25"></div>
           </div>
           <div class="mini-qty-ctrl">
@@ -887,7 +887,7 @@
           <div class="mini-row-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mails"></use></svg></div>
           <div class="mini-row-info">
             <div class="mini-row-name">E-mail 50 GB</div>
-            <div class="mini-row-price">R$ <span id="ckUnit50">25,00</span>/conta/mês</div>
+            <div class="mini-row-price">R$ <span id="ckUnit50"></span>/conta/mês</div>
             <div class="mini-row-disc" id="ckDisc50"></div>
           </div>
           <div class="mini-qty-ctrl">
@@ -1647,6 +1647,7 @@
 
   </div><!-- /checkout-wrapper -->
 
+  <script src="assets/precos.js?v=22"></script>
   <script>
     /* ================================================================
        DOMAIN & ADD-ONS STATE
@@ -1724,31 +1725,31 @@
     }
 
     /* ---- ADD-ONS STEP ---- */
-    // Tabela única de preços dos add-ons: valores, nomes e rótulos usados no passo 3, no painel de
+    // Tabela dos add-ons: nomes e rótulos (valores em centavos vêm de PRECOS, assets/precos.js) usados no passo 3, no painel de
     // selecionados e no resumo. `unidade` e `periodo` formam o texto do preço exibido ("/conta/mês").
     // Domínio extra é cobrado por ano via Pix separado e fica fora do total mensal.
     const ADDONS = {
-      talk:       { nome: 'Talk',            rotuloCurto: 'Talk',         preco: 4.70,  unidade: 'conta',   periodo: 'mês', linha: 'adTalk',      sub: 'asTalk',      qtd: 'aqTalk' },
-      backup90:   { nome: 'Backup 90 dias',  rotuloCurto: 'Backup 90d',   preco: 6.00,  unidade: 'conta',   periodo: 'mês', linha: 'adBackup90',  sub: 'asBackup90',  qtd: 'aqBackup90' },
-      backup365:  { nome: 'Backup 365 dias', rotuloCurto: 'Backup 365d',  preco: 19.00, unidade: 'conta',   periodo: 'mês', linha: 'adBackup365', sub: 'asBackup365', qtd: 'aqBackup365' },
-      grupoEmail: { nome: 'Grupo de E-mail', rotuloCurto: 'Grupo E-mail', preco: 2.00,  unidade: 'conta',   periodo: 'mês', linha: 'adGrupo',     sub: 'asGrupo',     qtd: 'aqGrupo' },
+      talk:       { nome: 'Talk',            rotuloCurto: 'Talk',         centavos: PRECOS.addons.talk,       unidade: 'conta',   periodo: 'mês', linha: 'adTalk',      sub: 'asTalk',      qtd: 'aqTalk' },
+      backup90:   { nome: 'Backup 90 dias',  rotuloCurto: 'Backup 90d',   centavos: PRECOS.addons.backup90,   unidade: 'conta',   periodo: 'mês', linha: 'adBackup90',  sub: 'asBackup90',  qtd: 'aqBackup90' },
+      backup365:  { nome: 'Backup 365 dias', rotuloCurto: 'Backup 365d',  centavos: PRECOS.addons.backup365,  unidade: 'conta',   periodo: 'mês', linha: 'adBackup365', sub: 'asBackup365', qtd: 'aqBackup365' },
+      grupoEmail: { nome: 'Grupo de E-mail', rotuloCurto: 'Grupo E-mail', centavos: PRECOS.addons.grupoEmail, unidade: 'conta',   periodo: 'mês', linha: 'adGrupo',     sub: 'asGrupo',     qtd: 'aqGrupo' },
       skybox:     { nome: 'Skybox',          rotuloCurto: 'Skybox',                     unidade: 'conta',   periodo: 'mês', linha: 'adSkybox',    sub: 'asSkybox',    qtd: 'aqSkybox',
         // Nome acessível do campo contém o texto visível "Quantidade de licenças" (WCAG 2.5.3).
         rotuloQtd: 'Quantidade de licenças de Skybox',
         planos: {
-          '50gb':  { preco: 17.70,  rotuloCurto: '50GB',  opcao: 'skyOpt50' },
-          '100gb': { preco: 28.70,  rotuloCurto: '100GB', opcao: 'skyOpt100' },
-          '1tb':   { preco: 319.00, rotuloCurto: '1TB',   opcao: 'skyOpt1tb' },
+          '50gb':  { centavos: PRECOS.addons.skybox['50gb'],  rotuloCurto: '50GB',  opcao: 'skyOpt50' },
+          '100gb': { centavos: PRECOS.addons.skybox['100gb'], rotuloCurto: '100GB', opcao: 'skyOpt100' },
+          '1tb':   { centavos: PRECOS.addons.skybox['1tb'],   rotuloCurto: '1TB',   opcao: 'skyOpt1tb' },
         } },
-      extraDom:   { nome: 'Domínio extra',   rotuloCurto: 'Domínio extra', preco: 79.00, unidade: 'domínio', periodo: 'ano', linha: 'adExtraDom',  sub: 'asExtraDom',  qtd: 'aqExtraDom' },
+      extraDom:   { nome: 'Domínio extra',   rotuloCurto: 'Domínio extra', centavos: PRECOS.addons.extraDom, unidade: 'domínio', periodo: 'ano', linha: 'adExtraDom',  sub: 'asExtraDom',  qtd: 'aqExtraDom' },
     };
     // Add-ons cobrados na mensalidade, na ordem do painel de selecionados e do resumo.
     const ADDONS_MENSAIS = ['talk', 'backup90', 'backup365', 'grupoEmail', 'skybox'];
 
-    // Ponto único do cálculo: preço unitário (Skybox pelo plano escolhido; sem plano, 0) e valor = qtd × preço.
+    // Ponto único do cálculo, em centavos: preço unitário (Skybox pelo plano escolhido; sem plano, 0) e valor = qtd × preço.
     function precoUnitario(key) {
-      if (key === 'skybox') return skyboxPlan ? (ADDONS.skybox.planos[skyboxPlan]?.preco || 0) : 0;
-      return ADDONS[key].preco;
+      if (key === 'skybox') return skyboxPlan ? (ADDONS.skybox.planos[skyboxPlan]?.centavos || 0) : 0;
+      return ADDONS[key].centavos;
     }
     function valorAddon(key) {
       return (addonQtys[key] || 0) * precoUnitario(key);
@@ -1772,9 +1773,9 @@
       document.querySelectorAll('[data-preco]').forEach(el => {
         const [key, plano] = el.dataset.preco.split(':');
         const a = ADDONS[key];
-        const preco = plano ? a?.planos?.[plano]?.preco : a?.preco;
+        const preco = plano ? a?.planos?.[plano]?.centavos : a?.centavos;
         if (preco === undefined) { console.warn(`data-preco desconhecido: ${el.dataset.preco}`); return; }
-        el.textContent = `R$ ${fmtR(preco)}/${a.unidade}/${a.periodo}`;
+        el.textContent = `R$ ${fmtCentavos(preco)}/${a.unidade}/${a.periodo}`;
       });
       Object.values(ADDONS).forEach(a => {
         const inp = document.getElementById(a.qtd);
@@ -1818,7 +1819,7 @@
       Object.entries(SECOES_ADDONS).forEach(([id, sec]) => {
         const aberta = document.getElementById('sec' + id).getAttribute('aria-expanded') === 'true';
         const valor = sec.addons.reduce((s, key) => s + valorAddon(key), 0);
-        const texto = !aberta && valor > 0 ? `R$ ${fmtR(valor)}/${ADDONS[sec.addons[0]].periodo}` : '';
+        const texto = !aberta && valor > 0 ? `R$ ${fmtCentavos(valor)}/${ADDONS[sec.addons[0]].periodo}` : '';
         const ind = document.getElementById('sec' + id + 'Ind');
         ind.querySelector('.addon-sec-ind-val').textContent = texto;
         ind.hidden = !texto;
@@ -1859,7 +1860,7 @@
       Object.entries(ADDONS).forEach(([key, cfg]) => {
         const val = valorAddon(key);
         const subEl = document.getElementById(cfg.sub);
-        if (subEl) subEl.textContent = `R$ ${fmtR(val)}`;
+        if (subEl) subEl.textContent = `R$ ${fmtCentavos(val)}`;
         document.getElementById(cfg.linha)?.classList.toggle('active', val > 0);
       });
 
@@ -1870,8 +1871,8 @@
       if (pixPanel) {
         pixPanel.style.display = domQ > 0 ? 'block' : 'none';
         if (domQ > 0) {
-          document.getElementById('extraDomPixTotal').textContent = `R$ ${fmtR(domVal)}`;
-          document.getElementById('extraDomPixCode').textContent  = genFakePix(domVal);
+          document.getElementById('extraDomPixTotal').textContent = `R$ ${fmtCentavos(domVal)}`;
+          document.getElementById('extraDomPixCode').textContent  = genFakePix(domVal / 100);
         }
       }
 
@@ -1881,10 +1882,10 @@
       const box = document.getElementById('addonsSubtotal');
       if (lines.length) {
         const total = lines.reduce((s,l) => s + l.valor, 0);
-        document.getElementById('addonsSubtotalVal').textContent = `+ R$ ${fmtR(total)}/mês`;
+        document.getElementById('addonsSubtotalVal').textContent = `+ R$ ${fmtCentavos(total)}/mês`;
         document.getElementById('addonsSubtotalLines').innerHTML = lines.map(l =>
           `<div class="addon-sub-line">
-            <span>${l.rotulo}</span><span>R$ ${fmtR(l.valor)}/mês</span>
+            <span>${l.rotulo}</span><span>R$ ${fmtCentavos(l.valor)}/mês</span>
           </div>`).join('');
         box.style.display = 'block';
       } else {
@@ -1907,9 +1908,9 @@
        ACCOUNT TYPES DATA
     ================================================================ */
     const ACCOUNT_DEFS = {
-      '5gb':  { base: 10, min: 2, label: 'E-mail 5 GB', unitId:'ckUnit5',  qtyId:'ckQty5',  subId:'ckSub5',  discId:'ckDisc5',  cardId:'ckCard5'  },
-      '25gb': { base: 16, min: 1, label: 'E-mail 25 GB', unitId:'ckUnit25', qtyId:'ckQty25', subId:'ckSub25', discId:'ckDisc25', cardId:'ckCard25' },
-      '50gb': { base: 25, min: 1, label: 'E-mail 50 GB', unitId:'ckUnit50', qtyId:'ckQty50', subId:'ckSub50', discId:'ckDisc50', cardId:'ckCard50' },
+      '5gb':  { min: 2, label: 'E-mail 5 GB', unitId:'ckUnit5',  qtyId:'ckQty5',  subId:'ckSub5',  discId:'ckDisc5',  cardId:'ckCard5'  },
+      '25gb': { min: 1, label: 'E-mail 25 GB', unitId:'ckUnit25', qtyId:'ckQty25', subId:'ckSub25', discId:'ckDisc25', cardId:'ckCard25' },
+      '50gb': { min: 1, label: 'E-mail 50 GB', unitId:'ckUnit50', qtyId:'ckQty50', subId:'ckSub50', discId:'ckDisc50', cardId:'ckCard50' },
     };
     const ckQtys      = { '5gb': 0, '25gb': 0, '50gb': 0 };
     let annualBilling = false;
@@ -1918,11 +1919,12 @@
     let pixInterval   = null;
 
     /* ---- calc helpers ---- */
-    function calcDiscount(qty)   { return (!annualBilling && qty >= 5) ? 5 : 0; }
+    // Valores em centavos inteiros (PRECOS e funções em assets/precos.js); fmtR só nas parcelas.
+    function calcDiscount(qty)   { return percentualVolume(qty, annualBilling); }
     function fmtR(v)             { return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-    function unitPrice(type)     { const d = ACCOUNT_DEFS[type]; const b = annualBilling ? d.base*0.80 : d.base; const disc = calcDiscount(ckQtys[type]); return b*(1-disc/100); }
+    function unitPriceCentavos(type) { return unitarioCobradoCentavos(type, ckQtys[type], annualBilling); }
     function addonsMonthly()     { return linhasAddonsMensais().reduce((s, l) => s + l.valor, 0); }
-    function grandTotal()        { return Object.keys(ACCOUNT_DEFS).reduce((s,t) => s + ckQtys[t]*unitPrice(t), 0) + addonsMonthly(); }
+    function grandTotalCentavos() { return Object.keys(ACCOUNT_DEFS).reduce((s,t) => s + ckQtys[t]*unitPriceCentavos(t), 0) + addonsMonthly(); }
     function totalAccounts()     { return Object.values(ckQtys).reduce((a,b) => a+b, 0); }
 
     // quantidade inteira ≥ 0; abaixo do mínimo do tipo sobe ao mínimo, ou zera ao diminuir
@@ -1951,12 +1953,12 @@
     function ckRefresh() {
       Object.entries(ACCOUNT_DEFS).forEach(([type, d]) => {
         const qty  = ckQtys[type];
-        const unit = unitPrice(type);
+        const unit = unitPriceCentavos(type);
         const sub  = qty * unit;
         const disc = calcDiscount(qty);
         const annualDisc = annualBilling ? 20 : 0;
-        document.getElementById(d.unitId).textContent = fmtR(unit);
-        document.getElementById(d.subId).textContent  = qty > 0 ? `R$ ${fmtR(sub)}` : 'R$ 0,00';
+        document.getElementById(d.unitId).textContent = fmtCentavos(unit);
+        document.getElementById(d.subId).textContent  = qty > 0 ? `R$ ${fmtCentavos(sub)}` : 'R$ 0,00';
         document.getElementById(d.cardId).classList.toggle('has-qty', qty > 0);
         const discEl = document.getElementById(d.discId);
         if (qty > 0 && (disc > 0 || annualDisc > 0)) {
@@ -2030,12 +2032,12 @@
        SUMMARY & INSTALLMENTS (account-based)
     ================================================================ */
     function updateSummary() {
-      const total = grandTotal();
+      const total = grandTotalCentavos();
       const linesEl = document.getElementById('sumAccountLines');
       document.getElementById('sumCycle').textContent = annualBilling ? 'Cobrança Anual' : 'Cobrança Mensal';
-      document.getElementById('sumTotal').textContent = `R$ ${fmtR(total)}`;
+      document.getElementById('sumTotal').textContent = `R$ ${fmtCentavos(total)}`;
       document.getElementById('sumPeriod').textContent = annualBilling
-        ? `/mês · R$ ${fmtR(total*12)}/ano`
+        ? `/mês · R$ ${fmtCentavos(total*12)}/ano`
         : '/mês';
 
       const names = {'5gb':'E-mail 5 GB','25gb':'E-mail 25 GB','50gb':'E-mail 50 GB'};
@@ -2045,12 +2047,12 @@
         const qty = ckQtys[type];
         if (qty === 0) return;
         hasAny = true;
-        const unit = unitPrice(type);
+        const unit = unitPriceCentavos(type);
         const sub  = qty * unit;
         const disc = calcDiscount(qty);
         html += `<div class="sum-line">
           <span>${qty}× ${names[type]}</span>
-          <span>R$ ${fmtR(sub)}</span>
+          <span>R$ ${fmtCentavos(sub)}</span>
         </div>`;
         if (disc > 0 || annualBilling) {
           const parts = [];
@@ -2067,7 +2069,7 @@
         hasAny = true;
         html += `<div class="sum-line">
           <span>${l.rotulo} ×${l.qtd}</span>
-          <span>R$ ${fmtR(l.valor)}</span>
+          <span>R$ ${fmtCentavos(l.valor)}</span>
         </div>`;
       });
       linesEl.innerHTML = hasAny ? html
@@ -2075,7 +2077,7 @@
     }
 
     function updateInstallments() {
-      const total = grandTotal();
+      const total = grandTotalCentavos() / 100;
       const sel   = document.getElementById('fInstallments');
       if (!sel) return;
       sel.innerHTML = '';
@@ -2245,15 +2247,15 @@
        */
 
       // Demo: populate with mock data
-      const price = grandTotal();
+      const price = grandTotalCentavos();
 
       document.getElementById('pixCode').textContent =
         '00020126580014br.gov.bcb.pix0136a1b2c3d4-e5f6-7890-abcd-ef1234567890' +
-        '520400005303986540' + String(price).padStart(7,'0') +
+        '520400005303986540' + reaisTxt(price).padStart(7,'0') +
         '5802BR5912CITMail Ltda6009Sao Paulo62070503***6304ABCD';
 
       document.getElementById('boletoCode').textContent =
-        '34191.09008 05487.010103 0800' + price + '.000000 5 0000' + (price * 100).toString().padStart(14,'0');
+        '34191.09008 05487.010103 0800' + reaisTxt(price) + '.000000 5 0000' + String(price).padStart(14,'0');
 
       startPixTimer();
     }
