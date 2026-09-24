@@ -1875,13 +1875,14 @@
   <!-- ============================================================
        JAVASCRIPT
   ============================================================ -->
-  <script src="assets/precos.js?v=23"></script>
+  <script src="assets/precos.js?v=24"></script>
   <script>
-    // Guarda de carga: sem assets/precos.js não há preço a exibir; avisa no lugar da calculadora e para aqui.
-    if (typeof PRECOS === 'undefined') {
+    // Guarda de carga: sem assets/precos.js não há preço a exibir; avisa no lugar da calculadora.
+    // Só as funções da calculadora saem cedo (precosOk); header, menu, FAQ, busca e fade-in seguem.
+    const precosOk = typeof PRECOS !== 'undefined';
+    if (!precosOk) {
       document.querySelector('#pricing .calc-wrapper').innerHTML =
         '<p class="discount-info" role="alert">Não foi possível carregar os preços. Recarregue a página.</p>';
-      throw new Error('assets/precos.js não carregou: script da página interrompido.');
     }
     // ---- HEADER scroll effect ----
     const header = document.getElementById('header');
@@ -1910,6 +1911,7 @@
       setBilling(billing === 'monthly' ? 'annual' : 'monthly');
     }
     function setBilling(mode) {
+      if (!precosOk) return;
       billing = mode;
       document.getElementById('billingToggle').classList.toggle('annual', mode === 'annual');
       document.getElementById('toggleMonthly').classList.toggle('active', mode === 'monthly');
@@ -1937,6 +1939,7 @@
     }
 
     function changeQty(type, delta) {
+      if (!precosOk) return;
       const cfg  = ACCOUNT_TYPES[type];
       const next = normalizeQty(type, quantities[type] + delta, delta);
       quantities[type] = next;
@@ -1946,6 +1949,7 @@
     }
 
     function updateQty(type, raw) {
+      if (!precosOk) return;
       const cfg = ACCOUNT_TYPES[type];
       const val = normalizeQty(type, raw);
       quantities[type] = val;
@@ -1967,6 +1971,7 @@
     }
 
     function recalcType(type) {
+      if (!precosOk) return;
       const cfg = ACCOUNT_TYPES[type];
       const qty = quantities[type];
       const v   = valoresTipo(type, qty);
@@ -2000,6 +2005,7 @@
     }
 
     function recalcAll() {
+      if (!precosOk) return;
       Object.keys(ACCOUNT_TYPES).forEach(recalcType);
       recalcSummary();
     }
@@ -2016,6 +2022,7 @@
     }
 
     function recalcSummary() {
+      if (!precosOk) return;
       const csEmpty    = document.getElementById('csEmpty');
       const csLines    = document.getElementById('csLines');
       const linesEl    = document.getElementById('csSummaryLines');
