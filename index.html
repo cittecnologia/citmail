@@ -367,6 +367,7 @@
 
     @media (max-width: 900px) {
       .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero-grid > * { min-width: 0; }
       .hero-visual { order: -1; }
       .hero-mockup { max-width: 100%; }
       .hero-float-1 { top: -12px; right: 12px; }
@@ -1052,6 +1053,7 @@
 
     @media (max-width: 900px) {
       .painel-grid { grid-template-columns: 1fr; }
+      .painel-grid > * { min-width: 0; }
     }
     @media (max-width: 540px) {
       .painel-body { grid-template-columns: 1fr; }
