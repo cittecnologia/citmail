@@ -585,7 +585,7 @@
     .atc-unit-price .atc-unit-tabela { font-size: .8125rem; }
     .atc-unit-price .price {
       font-family: var(--font-title); font-weight: 800;
-      font-size: 1.3rem; color: var(--cit-primary);
+      font-size: 1.3rem; color: var(--cit-success-strong);
     }
     .atc-unit-price .period { font-size: .8125rem; color: var(--cit-text-secondary); }
     .atc-ai-badge { margin-left: 6px; vertical-align: middle; height: 20px; font-size: .6875rem; }
@@ -605,7 +605,7 @@
     }
     /* Preço de tabela riscado (CA12): mesmo padrão do checkout.html
        — cor e riscado no <s>, tamanho herdado do contêiner que o envolve. */
-    #pricing s { color: var(--cit-error); text-decoration-line: line-through; font-weight: inherit; }
+    #pricing s[data-preco-tabela], .price-breakdown s, .cs-disc s, .cs-line .val s { color: var(--cit-error); text-decoration-line: line-through; font-weight: inherit; }
     .price-breakdown s { font-size: .8125rem; }
     .price-final {
       font-family: var(--font-title); font-weight: 800;
@@ -694,6 +694,9 @@
     .cs-line .lbl { color: var(--cit-text-secondary); }
     .cs-line .val { font-weight: 600; color: var(--cit-text-primary); }
     .cs-line .val.discount { color: var(--cit-green-700); }
+    /* Cobrado do tipo, com a cascata (riscado) logo depois: cor de cobrado (CA12).
+       "Total de tabela" também casa, mas o texto dele está no <s>, que tem cor própria. */
+    #csSummaryLines .cs-line .val { color: var(--cit-success-strong); }
     .cs-line.total-line {
       border-top: 1px solid var(--cit-border-color); padding-top: 12px; margin-top: 4px;
     }
@@ -707,6 +710,7 @@
     }
     /* Cascata "de R$ tabela · −15% contratação −R$X[ · −20% anual/−5% volume −R$Y]" (CA6/CA10) */
     .cs-disc { padding-left: 8px; font-size: var(--cit-text-small); color: var(--cit-green-700); font-weight: 600; }
+    .cs-disc-seg { white-space: nowrap; }
     .cs-economia { margin-top: 10px; font-size: var(--cit-text-small); font-weight: 600; color: var(--cit-success-strong); }
     .cs-period { font-size: .8125rem; color: var(--cit-text-muted); text-align: right; margin-top: -4px; }
     .cs-annual-note {
@@ -1871,8 +1875,14 @@
   <!-- ============================================================
        JAVASCRIPT
   ============================================================ -->
-  <script src="assets/precos.js?v=22"></script>
+  <script src="assets/precos.js?v=23"></script>
   <script>
+    // Guarda de carga: sem assets/precos.js não há preço a exibir; avisa no lugar da calculadora e para aqui.
+    if (typeof PRECOS === 'undefined') {
+      document.querySelector('#pricing .calc-wrapper').innerHTML =
+        '<p class="discount-info" role="alert">Não foi possível carregar os preços. Recarregue a página.</p>';
+      throw new Error('assets/precos.js não carregou: script da página interrompido.');
+    }
     // ---- HEADER scroll effect ----
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
@@ -1944,19 +1954,15 @@
       recalcSummary();
     }
 
-    // Valores do tipo, em centavos: tabela, atual e cobrado (anual sem volume; volume só no mensal).
+    // Valores do tipo, em centavos: unitários e a cascata do tipo (tabela, atual, cobrado e segmentos),
+    // anual sem volume; volume só no mensal (cascataCentavos, assets/precos.js).
     function valoresTipo(type, qty) {
-      const anual  = billing === 'annual';
-      const atual  = PRECOS.contas[type];
-      const unit   = unitarioCobradoCentavos(type, qty, anual);
-      const volPct = percentualVolume(qty, anual);
+      const anual = billing === 'annual';
+      const atual = PRECOS.contas[type];
       return {
-        unit,
+        unit: unitarioCobradoCentavos(type, qty, anual),
         tabelaUnit: tabelaCentavos(atual),
-        tabela:  qty * tabelaCentavos(atual),
-        atual:   qty * atual,
-        cobrado: qty * unit,
-        rotuloExtra: anual ? `−${DESCONTO_ANUAL_PCT}% anual` : volPct > 0 ? `−${volPct}% volume` : '',
+        ...cascataCentavos(atual, qty, { conta: true, anual }),
       };
     }
 
@@ -1999,14 +2005,13 @@
     }
 
     // Cascata do tipo no resumo: "de R$ T · −15% contratação −R$ A[ · −20% anual −R$ B | · −5% volume −R$ B]".
-    // Mesmo formato da .sum-disc do checkout; quebra só entre segmentos.
+    // Mesmo formato da .sum-disc do checkout; só renderiza o resultado de cascataCentavos. Quebra só entre segmentos.
     function htmlCsDisc(v) {
-      const seg = t => `<span style="white-space:nowrap">${t}</span>`;
+      const seg = t => `<span class="cs-disc-seg">${t}</span>`;
       const partes = [
         seg(`de <s>R$ ${fmtCentavos(v.tabela)}</s>`),
-        seg(`−15% contratação −R$ ${fmtCentavos(v.tabela - v.atual)}`),
+        ...v.segmentos.map(sg => seg(`${sg.rotulo} −R$ ${fmtCentavos(sg.valor)}`)),
       ];
-      if (v.rotuloExtra) partes.push(seg(`${v.rotuloExtra} −R$ ${fmtCentavos(v.atual - v.cobrado)}`));
       return `<div class="cs-disc"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> ${partes.join(' · ')}</div>`;
     }
 

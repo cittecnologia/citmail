@@ -502,6 +502,8 @@
     .sum-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
     .sum-line span:first-child { color: var(--cit-text-secondary); }
     .sum-line span:last-child { font-weight: 600; white-space: nowrap; }
+    /* Valor cobrado de linha com cascata (riscado na .sum-disc logo depois): cor de cobrado (CA12). */
+    #sumAccountLines .sum-line span:last-child { color: var(--cit-success-strong); }
     .sum-disc { padding-left: 8px; font-size: var(--cit-text-small); color: var(--cit-green-700); font-weight: 600; }
     .sum-disc-seg { white-space: nowrap; }
     .sum-empty { color: var(--cit-text-muted); font-size: var(--cit-text-small); text-align: center; padding: 8px 0; }
@@ -553,7 +555,7 @@
     .mini-row-info { flex: 1; min-width: 0; }
     .mini-row-name { font-family: var(--font-title); font-weight: 600; font-size: var(--cit-text-body); color: var(--cit-text-primary); }
     .mini-row-tabela { font-size: var(--cit-text-small); }
-    .mini-row-price { font-size: var(--cit-text-small); color: var(--cit-text-muted); }
+    .mini-row-price { font-size: var(--cit-text-small); color: var(--cit-success-strong); }
     .mini-row-disc { font-size: var(--cit-text-small); color: var(--cit-green-700); font-weight: 600; min-height: 14px; }
     .mini-qty-ctrl {
       display: flex; align-items: center; gap: 0;
@@ -577,7 +579,7 @@
     .mini-qty-val::-webkit-outer-spin-button { -webkit-appearance: none; }
     .mini-row-sub-col { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
     .mini-row-sub-tabela { font-family: var(--font-title); font-weight: 700; font-size: var(--cit-text-body); text-align: right; }
-    .mini-row-sub { font-family: var(--font-title); font-weight: 700; font-size: var(--cit-text-body); color: var(--cit-primary); min-width: 90px; text-align: right; }
+    .mini-row-sub { font-family: var(--font-title); font-weight: 700; font-size: var(--cit-text-body); color: var(--cit-success-strong); min-width: 90px; text-align: right; }
 
     /* Ciclo anual */
     .cycle-toggle {
@@ -1684,8 +1686,16 @@
 
   </div><!-- /checkout-wrapper -->
 
-  <script src="assets/precos.js?v=22"></script>
+  <script src="assets/precos.js?v=23"></script>
   <script>
+    // Guarda de carga: sem assets/precos.js não há preço a exibir; avisa no lugar dos preços e do resumo e para aqui.
+    if (typeof PRECOS === 'undefined') {
+      const avisoPrecos = '<div class="sum-empty" role="alert">Não foi possível carregar os preços. Recarregue a página.</div>';
+      document.getElementById('step1').innerHTML = avisoPrecos;
+      document.getElementById('sumAccountLines').innerHTML = avisoPrecos;
+      document.querySelector('.summary-total').hidden = true;
+      throw new Error('assets/precos.js não carregou: checkout interrompido.');
+    }
     /* ================================================================
        DOMAIN & ADD-ONS STATE
     ================================================================ */
@@ -1996,7 +2006,7 @@
         const unit = unitPriceCentavos(type);
         const sub  = qty * unit;
         const disc = calcDiscount(qty);
-        const annualDisc = annualBilling ? 20 : 0;
+        const annualDisc = annualBilling ? DESCONTO_ANUAL_PCT : 0;
         document.getElementById(d.unitId).textContent = fmtCentavos(unit);
         document.getElementById(d.subId).textContent  = qty > 0 ? `R$ ${fmtCentavos(sub)}` : 'R$ 0,00';
         // Riscados irmãos: tabela mensal cheia (também no anual) no unitário e qtd × tabela no subtotal
@@ -2014,8 +2024,8 @@
           if (disc > 0)       parts.push(`−${disc}% volume`);
           discEl.textContent = parts.join(' + ');
         } else if (qty > 0 && !annualBilling) {
-          const need = 5 - qty;
-          discEl.textContent = need > 0 ? `Adicione mais ${need} conta(s) para −5% volume` : '';
+          const need = VOLUME_MIN_QTD - qty;
+          discEl.textContent = need > 0 ? `Adicione mais ${need} conta(s) para −${DESCONTO_VOLUME_PCT}% volume` : '';
         } else {
           discEl.textContent = '';
         }
@@ -2079,14 +2089,13 @@
        SUMMARY & INSTALLMENTS (account-based)
     ================================================================ */
     // Cascata de um item do resumo: "de R$ T · −15% contratação −R$ A[ · −20% anual −R$ B | · −5% volume −R$ B]".
-    // T = tabela do item (qtd × tabela unitária), A = T − qtd × atual, B = qtd × atual − cobrado. Segmentos não quebram por dentro.
-    function htmlSumDisc(tabelaItem, atualItem, cobradoItem, rotuloExtra) {
+    // Só renderiza o resultado de cascataCentavos (assets/precos.js). Segmentos não quebram por dentro.
+    function htmlSumDisc(c) {
       const seg = t => `<span class="sum-disc-seg">${t}</span>`;
       const partes = [
-        seg(`de <s>R$ ${fmtCentavos(tabelaItem)}</s>`),
-        seg(`−15% contratação −R$ ${fmtCentavos(tabelaItem - atualItem)}`),
+        seg(`de <s>R$ ${fmtCentavos(c.tabela)}</s>`),
+        ...c.segmentos.map(sg => seg(`${sg.rotulo} −R$ ${fmtCentavos(sg.valor)}`)),
       ];
-      if (rotuloExtra) partes.push(seg(`${rotuloExtra} −R$ ${fmtCentavos(atualItem - cobradoItem)}`));
       return `<div class="sum-disc">
             <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#tag"></use></svg> ${partes.join(' · ')}
           </div>`;
@@ -2111,27 +2120,24 @@
         hasAny = true;
         const unit = unitPriceCentavos(type);
         const sub  = qty * unit;
-        const disc = calcDiscount(qty);
-        const atualItem  = qty * PRECOS.contas[type];
-        const tabelaItem = qty * tabelaCentavos(PRECOS.contas[type]);
-        economia += tabelaItem - sub;
+        const cascata = cascataCentavos(PRECOS.contas[type], qty, { conta: true, anual: annualBilling });
+        economia += cascata.tabela - sub;
         html += `<div class="sum-line">
           <span>${qty}× ${names[type]}</span>
           <span>R$ ${fmtCentavos(sub)}</span>
         </div>`;
-        const rotuloExtra = annualBilling ? `−${DESCONTO_ANUAL_PCT}% anual` : disc > 0 ? `−${disc}% volume` : '';
-        html += htmlSumDisc(tabelaItem, atualItem, sub, rotuloExtra);
+        html += htmlSumDisc(cascata);
       });
       // Add-ons lines (sem desconto anual nem de volume: cobrado = atual)
       linhasAddonsMensais().forEach(l => {
         hasAny = true;
-        const tabelaItem = l.qtd * tabelaCentavos(precoUnitario(l.key));
-        economia += tabelaItem - l.valor;
+        const cascata = cascataCentavos(precoUnitario(l.key), l.qtd);
+        economia += cascata.tabela - l.valor;
         html += `<div class="sum-line">
           <span>${l.rotulo} ×${l.qtd}</span>
           <span>R$ ${fmtCentavos(l.valor)}</span>
         </div>`;
-        html += htmlSumDisc(tabelaItem, l.valor, l.valor, '');
+        html += htmlSumDisc(cascata);
       });
       linesEl.innerHTML = hasAny ? html
         : '<div class="sum-empty">Nenhuma conta selecionada</div>';

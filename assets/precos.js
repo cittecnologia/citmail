@@ -15,13 +15,16 @@ const PRECOS = {
   },
 };
 
+// Desconto de contratação já embutido no atual de todos os itens (atual = tabela − 15%).
+const DESCONTO_CONTRATACAO_PCT = 15;
 // Descontos sobre o atual das contas: anual sem volume; volume só no mensal.
 const DESCONTO_ANUAL_PCT = 20;
 const DESCONTO_VOLUME_PCT = 5;
 const VOLUME_MIN_QTD = 5;
 
-// Tabela = atual / 0,85, arredondada ao centavo. Com centavos inteiros, atual × 20 / 17
-// nunca termina em ,5 (17 é ímpar e não divide 10), então o Math.round não empata.
+// Tabela = atual / 0,85, arredondada ao centavo: 20 / 17 = 100 / (100 − DESCONTO_CONTRATACAO_PCT).
+// Com centavos inteiros, atual × 20 / 17 nunca termina em ,5 (17 é ímpar e não divide 10),
+// então o Math.round não empata. Se DESCONTO_CONTRATACAO_PCT mudar, a fração muda junto.
 function tabelaCentavos(atual) {
   return Math.round(atual * 20 / 17);
 }
@@ -39,6 +42,23 @@ function unitarioCobradoCentavos(tipo, qtd, anual) {
   return Math.round(atual * (100 - pct) / 100);
 }
 
+// Cascata de um item (qtd × atualUnit), do preço de tabela ao cobrado, em centavos:
+//   tabela  = qtd × tabelaCentavos(atualUnit);
+//   atual   = qtd × atualUnit;  segmento "−15% contratação" = tabela − atual;
+//   cobrado = conta ? qtd × unitário com −20% anual ou −5% volume : atual;
+//   segmento extra "−20% anual" ou "−5% volume" = atual − cobrado (só em conta, só se houver).
+// Add-ons: conta = false (sem anual nem volume), só o segmento de contratação.
+// segmentos: [{ rotulo, valor }] na ordem de exibição; a página só renderiza.
+function cascataCentavos(atualUnit, qtd, { conta = false, anual = false } = {}) {
+  const pct = !conta ? 0 : anual ? DESCONTO_ANUAL_PCT : percentualVolume(qtd, anual);
+  const tabela  = qtd * tabelaCentavos(atualUnit);
+  const atual   = qtd * atualUnit;
+  const cobrado = qtd * Math.round(atualUnit * (100 - pct) / 100);
+  const segmentos = [{ rotulo: `−${DESCONTO_CONTRATACAO_PCT}% contratação`, valor: tabela - atual }];
+  if (pct > 0) segmentos.push({ rotulo: anual ? `−${pct}% anual` : `−${pct}% volume`, valor: atual - cobrado });
+  return { tabela, atual, cobrado, segmentos };
+}
+
 // "1.234,56" com aritmética inteira (sem ponto flutuante nem locale).
 function fmtCentavos(c) {
   const sinal = c < 0 ? '-' : '';
@@ -48,6 +68,7 @@ function fmtCentavos(c) {
 }
 
 // Reais com ponto e duas casas ("76.40"), para Pix e boleto.
+// Recebe centavos inteiros não negativos (valores a cobrar); não trata sinal nem fração.
 function reaisTxt(c) {
   return Math.trunc(c / 100) + '.' + String(c % 100).padStart(2, '0');
 }
