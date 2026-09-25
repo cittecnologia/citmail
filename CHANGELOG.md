@@ -44,6 +44,7 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Checkout e landing: valor cobrado em verde sempre que aparece ao lado do preço de tabela; aviso visível se os preços não carregarem, com o restante da página funcionando e sem o seletor Mensal/Anual na landing (CIT-22).
 - Checkout: aviso dos add-ons passa a "GARANTA 15% DE DESCONTO NESTA CONTRATAÇÃO" (CIT-22).
 - Checkout: valores calculados em centavos inteiros; Pix e boleto de demonstração sem erro de ponto flutuante (CIT-22).
+- Checkout: o preço do registro do domínio principal (passo 2) e do domínio extra vem da mesma constante `PRECOS.dominio` em `assets/precos.js`, sem valor escrito à mão; os valores exibidos e cobrados não mudam (CIT-31).
 
 ### Removido
 - `serve.py`, substituído pelo Vite.

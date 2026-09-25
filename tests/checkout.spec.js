@@ -1,4 +1,5 @@
 // @ts-check
+import { readFileSync } from 'node:fs';
 import { test, expect } from './fixtures.js';
 // CIT-22: guarda de carga (assets/precos.js não carrega) — espera erro de propósito, por isso usa o
 // `test` puro do Playwright em vez da fixture `erros` (que falharia com qualquer erro registrado).
@@ -1710,7 +1711,7 @@ test.describe('checkout — CIT-22: fonte única de preços, sem valor fixo no H
       };
       const regex = /\d+,\d\d/g;
       const achados = [];
-      for (const sel of ['.mini-calc-row', '.addon-row', '.sky-opt']) {
+      for (const sel of ['.mini-calc-row', '.addon-row', '.sky-opt', '#doptBr', '#domPixDesc']) {
         doc.querySelectorAll(sel).forEach(el => {
           const casados = (el.textContent.match(regex) || []).filter(v => v !== '0,00');
           if (casados.length) achados.push(`${sel}#${el.id || ''}: ${casados.join(',')}`);
@@ -1722,14 +1723,123 @@ test.describe('checkout — CIT-22: fonte única de preços, sem valor fixo no H
     expect(resultado.contadores, 'contagem de contêineres do checkout').toEqual({ '.mini-calc-row': 3, '.addon-row': 6, '.sky-opt': 3 });
     expect(resultado.achados, 'preço fixo no HTML bruto do checkout (sem executar JS)').toEqual([]);
 
-    // Chaves antigas removidas; domínio extra em ADDONS.extraDom.centavos.
+    // Chaves antigas removidas; domínio principal e extra derivam da mesma PRECOS.dominio (CIT-31).
     const chaves = await page.evaluate(() => ({
       accountDefsComBase: Object.values(ACCOUNT_DEFS).some(d => 'base' in d),
       addonsComPreco: Object.values(ADDONS).some(a => 'preco' in a),
       elementosComDataBase: document.querySelectorAll('[data-base]').length,
+      extraDomIgualDominio: ADDONS.extraDom.centavos === PRECOS.dominio,
+      addonsTemExtraDom: 'extraDom' in PRECOS.addons,
+    }));
+    expect(chaves).toEqual({ accountDefsComBase: false, addonsComPreco: false, elementosComDataBase: 0, extraDomIgualDominio: true, addonsTemExtraDom: false });
+  });
+});
+
+test.describe('checkout — domínio: preço de PRECOS.dominio', { tag: '@CIT-31' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('CIT-31 CA1 — texto inicial de #domPixDesc e chaves sem duplicar o preço do domínio', async ({ page, baseURL, erros }) => {
+    await page.goto('checkout.html');
+
+    // Texto inicial de #domPixDesc no HTML bruto, sem executar JS; o scan de preço fixo por
+    // contêiner (inclusive #doptBr e #domPixDesc) já é feito pelo CA17 (@CIT-22).
+    const resp = await page.request.get(new URL('checkout.html', baseURL).toString());
+    const html = await resp.text();
+    const domPixDescBruto = await page.evaluate((rawHtml) => {
+      const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
+      return doc.getElementById('domPixDesc')?.textContent.trim();
+    }, html);
+    expect(domPixDescBruto).toBe('Registrar domínio .com.br');
+
+    const chaves = await page.evaluate(() => ({
+      dominio: PRECOS.dominio,
+      temExtraDom: 'extraDom' in PRECOS.addons,
       extraDomCentavos: ADDONS.extraDom.centavos,
     }));
-    expect(chaves).toEqual({ accountDefsComBase: false, addonsComPreco: false, elementosComDataBase: 0, extraDomCentavos: 7900 });
+    expect(chaves).toEqual({ dominio: 7900, temExtraDom: false, extraDomCentavos: 7900 });
+  });
+
+  test('CIT-31 CA2 — valores exibidos e cobrados não mudam (principal e extra)', async ({ page, erros }) => {
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(2));
+    await expect(page.locator('#doptBr .opt-price')).toHaveText('R$ 79,00');
+
+    await page.locator('#doptBr').click();
+    await expect(page.locator('#domPixDesc')).toHaveText('Registrar domínio .com.br — R$ 79,00/ano');
+    await expect(page.locator('#domPixCode')).toContainText('540000079');
+
+    await page.evaluate(() => goStep(3));
+    await expect(page.locator('#adExtraDom .addon-price')).toHaveText('R$ 79,00/domínio/ano');
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 2);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
+    await expect(page.locator('#extraDomPixCode')).toContainText('540000158');
+  });
+
+  test('CIT-31 CA3 — principal e extra derivam da mesma constante PRECOS.dominio', async ({ page, erros }) => {
+    await page.goto('checkout.html');
+    const ckUnit5Ref = await page.locator('#ckUnit5').textContent();
+
+    const fonte = readFileSync(new URL('../assets/precos.js', import.meta.url), 'utf8');
+    const body = fonte.replace('dominio: 7900', 'dominio: 8900');
+    expect(body).toContain('dominio: 8900');
+    await page.route('**/assets/precos.js*', route => route.fulfill({ contentType: 'application/javascript', body }));
+    await page.goto('checkout.html');
+
+    await expect(page.locator('#ckUnit5'), 'controle: preço das contas não deveria mudar').toHaveText(/** @type {string} */ (ckUnit5Ref));
+    await expect(page.locator('#doptBr .opt-price')).toHaveText('R$ 89,00');
+
+    await page.evaluate(() => selectDomainOpt('new-br'));
+    await expect(page.locator('#domPixDesc')).toHaveText('Registrar domínio .com.br — R$ 89,00/ano');
+    await expect(page.locator('#domPixCode')).toContainText('540000089');
+
+    await page.evaluate(() => goStep(3));
+    await expect(page.locator('#adExtraDom .addon-price')).toHaveText('R$ 89,00/domínio/ano');
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 1);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 89,00');
+    await expect(page.locator('#extraDomPixCode')).toContainText('540000089');
+  });
+
+  test('CIT-31 CA4 — mobile 320px: preço do domínio sem corte nem rolagem horizontal', async ({ page, erros }) => {
+    await page.goto('checkout.html');
+    await page.evaluate(() => document.fonts.ready);
+    await page.setViewportSize({ width: 320, height: 700 });
+    await page.evaluate(() => goStep(2));
+    await page.evaluate(() => selectDomainOpt('new-br'));
+    await page.locator('#fDomNew').fill('empresateste');
+    await expect(page.locator('#doptBr .opt-price'), 'preço do domínio deveria carregar antes de medir').toHaveText('R$ 79,00');
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, '320px: rolagem horizontal do documento').toBeLessThanOrEqual(0);
+
+    const caixa = await page.evaluate(() => {
+      const el = document.getElementById('doptBr');
+      return { scrollWidth: el.scrollWidth, clientWidth: el.clientWidth };
+    });
+    expect(caixa.scrollWidth, '#doptBr: preço cortado dentro da caixa').toBeLessThanOrEqual(caixa.clientWidth + 1);
+  });
+});
+
+// CIT-31 CA6: precos.js antigo (sem PRECOS.dominio) aciona a mesma guarda de carga do CIT-22 — a
+// guarda lança erro de propósito, por isso usa o `test` puro do Playwright (testSemErros), como a
+// guarda "sem assets/precos.js" (~:1875), em vez da fixture `erros`.
+testSemErros.describe('checkout — CIT-31: precos.js antigo sem PRECOS.dominio (CA6)', { tag: '@CIT-31' }, () => {
+  testSemErros('mostra o aviso "Não foi possível carregar os preços. Recarregue a página." e nenhum NaN', async ({ page }) => {
+    const fonte = readFileSync(new URL('../assets/precos.js', import.meta.url), 'utf8');
+    const body = fonte.replace('dominio: 7900,', '');
+    expect(body).not.toContain('dominio:');
+    await page.route('**/assets/precos.js*', route => route.fulfill({ contentType: 'application/javascript', body }));
+    await page.goto('checkout.html');
+
+    await expect(page.locator('#step1 .sum-empty[role="alert"]')).toHaveText(
+      'Não foi possível carregar os preços. Recarregue a página.'
+    );
+    await expect(page.locator('#sumAccountLines .sum-empty[role="alert"]')).toHaveText(
+      'Não foi possível carregar os preços. Recarregue a página.'
+    );
+    await expect(page.locator('.summary-total')).toBeHidden();
+    await expect(page.locator('body')).not.toContainText('NaN');
   });
 });
 

@@ -963,7 +963,7 @@
               <div class="opt-desc">Extensão brasileira, para empresas que atendem no Brasil</div>
             </div>
             <div class="opt-price-col">
-              <div class="opt-price">R$ 79,00</div>
+              <div class="opt-price" id="doptBrPreco"></div>
               <div class="opt-price-note">/ano · pagamento via Pix</div>
             </div>
           </label>
@@ -999,7 +999,7 @@
             <div class="pix-box-title">
               <svg class="icon icon-pix" style="margin-right:6px" aria-hidden="true"><use href="assets/icons.svg#pix"></use></svg>Pagamento anual do domínio via Pix
             </div>
-            <div class="pix-box-desc" id="domPixDesc">Registrar domínio — R$ 79,00/ano</div>
+            <div class="pix-box-desc" id="domPixDesc">Registrar domínio .com.br</div>
             <div class="pix-qr">
               <span class="pix-qr-placeholder"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#qr-code"></use></svg></span>
             </div>
@@ -1688,10 +1688,10 @@
 
   </div><!-- /checkout-wrapper -->
 
-  <script src="assets/precos.js?v=24"></script>
+  <script src="assets/precos.js?v=25"></script>
   <script>
-    // Guarda de carga: sem assets/precos.js não há preço a exibir; avisa no lugar dos preços e do resumo e para aqui.
-    if (typeof PRECOS === 'undefined') {
+    // Guarda de carga: sem assets/precos.js (ou com uma versão antiga, sem PRECOS.dominio) não há preço a exibir; avisa no lugar dos preços e do resumo e para aqui.
+    if (typeof PRECOS === 'undefined' || !Number.isInteger(PRECOS.dominio)) {
       const avisoPrecos = '<div class="sum-empty" role="alert">Não foi possível carregar os preços. Recarregue a página.</div>';
       document.getElementById('step1').innerHTML = avisoPrecos;
       document.getElementById('sumAccountLines').innerHTML = avisoPrecos;
@@ -1719,8 +1719,8 @@
       document.getElementById('step2Error').style.display = 'none';
       if (choice === 'new-br') {
         document.getElementById('domNewTld').textContent = '.com.br';
-        document.getElementById('domPixDesc').textContent = 'Registrar domínio .com.br — R$ 79,00/ano';
-        document.getElementById('domPixCode').textContent = genFakePix(79);
+        document.getElementById('domPixDesc').textContent = `Registrar domínio .com.br — R$ ${fmtCentavos(PRECOS.dominio)}/ano`;
+        document.getElementById('domPixCode').textContent = genFakePix(PRECOS.dominio / 100);
         startDomPixTimer();
       } else {
         clearInterval(domPixIntvl);
@@ -1790,7 +1790,7 @@
           '100gb': { centavos: PRECOS.addons.skybox['100gb'], rotuloCurto: '100GB', opcao: 'skyOpt100' },
           '1tb':   { centavos: PRECOS.addons.skybox['1tb'],   rotuloCurto: '1TB',   opcao: 'skyOpt1tb' },
         } },
-      extraDom:   { nome: 'Domínio extra',   rotuloCurto: 'Domínio extra', centavos: PRECOS.addons.extraDom, unidade: 'domínio', periodo: 'ano', linha: 'adExtraDom',  sub: 'asExtraDom',  qtd: 'aqExtraDom' },
+      extraDom:   { nome: 'Domínio extra',   rotuloCurto: 'Domínio extra', centavos: PRECOS.dominio, unidade: 'domínio', periodo: 'ano', linha: 'adExtraDom',  sub: 'asExtraDom',  qtd: 'aqExtraDom' },
     };
     // Add-ons cobrados na mensalidade, na ordem do painel de selecionados e do resumo.
     const ADDONS_MENSAIS = ['talk', 'backup90', 'backup365', 'grupoEmail', 'skybox'];
@@ -2455,6 +2455,7 @@
       }
 
       preencherTextosAddons();
+      document.getElementById('doptBrPreco').textContent = `R$ ${fmtCentavos(PRECOS.dominio)}`;
       abrirSecoesIniciais();
       ckRefresh();
       updateStepBar(1);

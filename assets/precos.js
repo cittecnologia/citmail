@@ -11,8 +11,8 @@ const PRECOS = {
     backup365: 1900,
     grupoEmail: 200,
     skybox: { '50gb': 1770, '100gb': 2870, '1tb': 31900 },
-    extraDom: 7900,
   },
+  dominio: 7900, // .com.br por ano (principal e extra)
 };
 
 // Desconto de contratação já embutido no atual de todos os itens (atual = tabela − 15%).
