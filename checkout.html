@@ -1690,8 +1690,8 @@
 
   <script src="assets/precos.js?v=25"></script>
   <script>
-    // Guarda de carga: sem assets/precos.js não há preço a exibir; avisa no lugar dos preços e do resumo e para aqui.
-    if (typeof PRECOS === 'undefined') {
+    // Guarda de carga: sem assets/precos.js (ou com uma versão antiga, sem PRECOS.dominio) não há preço a exibir; avisa no lugar dos preços e do resumo e para aqui.
+    if (typeof PRECOS === 'undefined' || !Number.isInteger(PRECOS.dominio)) {
       const avisoPrecos = '<div class="sum-empty" role="alert">Não foi possível carregar os preços. Recarregue a página.</div>';
       document.getElementById('step1').innerHTML = avisoPrecos;
       document.getElementById('sumAccountLines').innerHTML = avisoPrecos;
