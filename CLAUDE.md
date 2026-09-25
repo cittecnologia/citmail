@@ -25,7 +25,7 @@ Git Flow (AVH) já inicializado no repositório. Nunca commitar direto em `main`
 | `main` | — | — | Produção (GitHub Pages). Só recebe PR de `release/*` e `hotfix/*`; tag `vX.Y.Z` após o merge. |
 | `develop` | `main` | — | Integração da próxima versão. |
 | `feature/CIT-<nº história>-<slug>` | `develop` (ou a branch da história de que depende) | `develop` | **Uma branch por história** do Taiga; tarefas viram commits. Ex.: `feature/CIT-12-migrar-login`. |
-| `bugfix/CIT-<nº issue>-<slug>` | `develop` | `develop` | Correção de algo ainda não lançado (issue do Taiga). |
+| `bugfix/CIT-<nº issue>-<slug>` | `develop` | `develop` | Correção de issue do Taiga que não exige hotfix (ainda não lançada, ou em produção sem urgência). |
 | `release/X.Y.Z` | `develop` | `main` + `develop` | Estabilização e QA da versão. |
 | `hotfix/X.Y.Z` | `main` | `main` + `develop` | Correção urgente em produção. |
 
@@ -80,8 +80,8 @@ Status no Taiga:
 |---|---|---|---|
 | Branch criada / tarefa iniciada | In progress | In progress | In progress |
 | Testes verdes (vale durante a revisão) | Ready for test | — | Ready for test |
-| PR aberto | In review | — | — |
+| PR aberto | In review | — | In review |
 | Tarefa concluída | — | Closed | — |
 | Merge verificado (`gh pr view <n> --json state` = `MERGED`) | Done | — | Closed |
 
-Bugfix e hotfix seguem os passos 3–6 (1–2 opcionais, a critério do responsável).
+Issues (bugfix e hotfix): executar com a skill **`/iniciar-issue <URL da issue | #ref>`**. A triagem é obrigatória (reprodução, duplicidade, bugfix ou hotfix); o plano tem o tamanho do porte (direto, leve ou grande), e em bug o teste de regressão vem antes da correção.
