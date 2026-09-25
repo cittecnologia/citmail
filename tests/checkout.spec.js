@@ -1740,40 +1740,33 @@ test.describe('checkout — domínio: preço de PRECOS.dominio', { tag: '@CIT-31
     await page.route('https://viacep.com.br/**', route => route.abort());
   });
 
-  test('CIT-31 CA1 — constante única, sem valor fixo no HTML bruto do domínio principal', async ({ page, baseURL, erros }) => {
+  test('CIT-31 CA1 — texto inicial de #domPixDesc e chaves sem duplicar o preço do domínio', async ({ page, baseURL, erros }) => {
     await page.goto('checkout.html');
 
-    // HTML bruto do domínio principal, sem executar scripts (mesmo padrão do CA17).
+    // Texto inicial de #domPixDesc no HTML bruto, sem executar JS; o scan de preço fixo por
+    // contêiner (inclusive #doptBr e #domPixDesc) já é feito pelo CA17 (@CIT-22).
     const resp = await page.request.get(new URL('checkout.html', baseURL).toString());
     const html = await resp.text();
-    const resultado = await page.evaluate((rawHtml) => {
+    const domPixDescBruto = await page.evaluate((rawHtml) => {
       const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
-      const regex = /\d+,\d\d/g;
-      const achados = [];
-      for (const sel of ['#doptBr', '#domPixDesc']) {
-        doc.querySelectorAll(sel).forEach(el => {
-          const casados = (el.textContent.match(regex) || []).filter(v => v !== '0,00');
-          if (casados.length) achados.push(`${sel}#${el.id || ''}: ${casados.join(',')}`);
-        });
-      }
-      return { achados, domPixDescBruto: doc.getElementById('domPixDesc')?.textContent.trim() };
+      return doc.getElementById('domPixDesc')?.textContent.trim();
     }, html);
-    expect(resultado.achados, 'preço fixo no HTML bruto do domínio principal (sem executar JS)').toEqual([]);
-    expect(resultado.domPixDescBruto).toBe('Registrar domínio .com.br');
+    expect(domPixDescBruto).toBe('Registrar domínio .com.br');
 
     const chaves = await page.evaluate(() => ({
       dominio: PRECOS.dominio,
       temExtraDom: 'extraDom' in PRECOS.addons,
-      extraIgual: ADDONS.extraDom.centavos === PRECOS.dominio,
+      extraDomCentavos: ADDONS.extraDom.centavos,
     }));
-    expect(chaves).toEqual({ dominio: 7900, temExtraDom: false, extraIgual: true });
+    expect(chaves).toEqual({ dominio: 7900, temExtraDom: false, extraDomCentavos: 7900 });
   });
 
   test('CIT-31 CA2 — valores exibidos e cobrados não mudam (principal e extra)', async ({ page, erros }) => {
-    await page.goto('checkout.html');
+    await page.goto('checkout.html?qty5=2');
+    await page.evaluate(() => goStep(2));
     await expect(page.locator('#doptBr .opt-price')).toHaveText('R$ 79,00');
 
-    await page.evaluate(() => selectDomainOpt('new-br'));
+    await page.locator('#doptBr').click();
     await expect(page.locator('#domPixDesc')).toHaveText('Registrar domínio .com.br — R$ 79,00/ano');
     await expect(page.locator('#domPixCode')).toContainText('540000079');
 
@@ -1825,6 +1818,28 @@ test.describe('checkout — domínio: preço de PRECOS.dominio', { tag: '@CIT-31
       return { scrollWidth: el.scrollWidth, clientWidth: el.clientWidth };
     });
     expect(caixa.scrollWidth, '#doptBr: preço cortado dentro da caixa').toBeLessThanOrEqual(caixa.clientWidth + 1);
+  });
+});
+
+// CIT-31 CA6: precos.js antigo (sem PRECOS.dominio) aciona a mesma guarda de carga do CIT-22 — a
+// guarda lança erro de propósito, por isso usa o `test` puro do Playwright (testSemErros), como a
+// guarda "sem assets/precos.js" (~:1875), em vez da fixture `erros`.
+testSemErros.describe('checkout — CIT-31: precos.js antigo sem PRECOS.dominio (CA6)', { tag: '@CIT-31' }, () => {
+  testSemErros('mostra o aviso "Não foi possível carregar os preços. Recarregue a página." e nenhum NaN', async ({ page }) => {
+    const fonte = readFileSync(new URL('../assets/precos.js', import.meta.url), 'utf8');
+    const body = fonte.replace('dominio: 7900,', '');
+    expect(body).not.toContain('dominio:');
+    await page.route('**/assets/precos.js*', route => route.fulfill({ contentType: 'application/javascript', body }));
+    await page.goto('checkout.html');
+
+    await expect(page.locator('#step1 .sum-empty[role="alert"]')).toHaveText(
+      'Não foi possível carregar os preços. Recarregue a página.'
+    );
+    await expect(page.locator('#sumAccountLines .sum-empty[role="alert"]')).toHaveText(
+      'Não foi possível carregar os preços. Recarregue a página.'
+    );
+    await expect(page.locator('.summary-total')).toBeHidden();
+    await expect(page.locator('body')).not.toContainText('NaN');
   });
 });
 
