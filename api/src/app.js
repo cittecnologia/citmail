@@ -1,0 +1,97 @@
+import { randomUUID } from 'node:crypto'
+import Fastify from 'fastify'
+import cors from '@fastify/cors'
+import AjvCompiler from '@fastify/ajv-compiler'
+import { criarPool } from './banco.js'
+import { registrarErros } from './erros.js'
+import rotasSaude from './saude/rotas.js'
+import rotasExemplo from './exemplo/rotas.js'
+
+// Campos mascarados no log (ADR 0013, item 8): raiz, um e dois níveis.
+const sensiveis = ['senha', 'token', 'email', 'telefone', 'nome', 'cpf', 'cnpj', 'documento']
+const caminhosMascarados = [
+  ...sensiveis,
+  ...sensiveis.map((campo) => `*.${campo}`),
+  ...sensiveis.map((campo) => `*.*.${campo}`),
+  'req.headers.cookie',
+  'req.headers.authorization',
+  'req.headers["asaas-access-token"]',
+  'res.headers["set-cookie"]',
+  // Campos de erro do `pg` que repetem valores da linha (ex.: violação de unicidade).
+  ...['detail', 'where', 'parameters', 'hint', 'internalQuery', 'query'].map((campo) => `err.${campo}`)
+]
+
+// ADR 0003: toda rota que recebe corpo declara `schema.body`. Exceções, se
+// houver, entram aqui como 'MÉTODO /caminho' com o motivo ao lado.
+const metodosComCorpo = ['POST', 'PUT', 'PATCH']
+const rotasSemSchemaDeCorpo = new Set([])
+
+// Corpo JSON sem coerção de tipo ("2" não vira 2); querystring e params mantêm
+// a coerção padrão do Fastify, porque chegam sempre como texto.
+const fabricaAjv = AjvCompiler()
+function construirValidador(externos, opcoesAjv) {
+  const comCoercao = fabricaAjv(externos, opcoesAjv)
+  const semCoercao = fabricaAjv(externos, {
+    ...opcoesAjv,
+    customOptions: { ...opcoesAjv.customOptions, coerceTypes: false }
+  })
+  return (rota) => (rota.httpPart === 'body' ? semCoercao : comCoercao)(rota)
+}
+
+export function construirApp(config, { pool, logStream } = {}) {
+  const origens = config?.corsOrigens
+  if (!Array.isArray(origens) || origens.length === 0 || origens.some((o) => !o || o.includes('*'))) {
+    throw new Error('CORS_ORIGENS inválida: informe a lista exata de origens permitidas')
+  }
+
+  const app = Fastify({
+    logger: {
+      level: config.logLevel ?? 'info',
+      redact: { paths: caminhosMascarados, censor: '[mascarado]' },
+      ...(logStream ? { stream: logStream } : {})
+    },
+    genReqId: () => randomUUID(),
+    requestIdHeader: false,
+    trustProxy: ['127.0.0.1', '::1'],
+    bodyLimit: 65536,
+    ajv: { customOptions: { allErrors: true, removeAdditional: false } },
+    schemaController: { compilersFactory: { buildValidator: construirValidador } }
+  })
+
+  app.addHook('onRoute', (rota) => {
+    for (const metodo of [rota.method].flat()) {
+      if (metodosComCorpo.includes(metodo) && !rota.schema?.body && !rotasSemSchemaDeCorpo.has(`${metodo} ${rota.url}`)) {
+        throw new Error(`Rota ${metodo} ${rota.url} sem schema.body (ADR 0003)`)
+      }
+    }
+  })
+
+  // O app só fecha o pool que ele mesmo criou; pool injetado é de quem o criou.
+  const poolProprio = !pool
+  const poolBanco = pool ?? criarPool(config.databaseUrl, app.log)
+  app.decorate('banco', poolBanco)
+  if (poolProprio) {
+    app.addHook('onClose', async () => {
+      await poolBanco.end()
+    })
+  }
+
+  app.addHook('onSend', async (request, reply) => {
+    reply.header('x-request-id', request.id)
+  })
+
+  app.register(cors, {
+    origin: origens,
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+    credentials: false
+  })
+
+  registrarErros(app)
+  app.register(rotasSaude, { prefix: '/api' })
+  if (config.nodeEnv !== 'production') {
+    app.register(rotasExemplo, { prefix: '/api' })
+  }
+
+  return app
+}

@@ -1,0 +1,45 @@
+# PostgreSQL local da API. Portas publicadas só no loopback.
+# Desenvolvimento: docker compose up -d --wait banco
+# Testes:          docker compose --profile teste up -d --wait banco-teste
+name: citmail-api
+
+services:
+  banco:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: citmail
+      # Sem `:?`: o compose interpola o arquivo inteiro e o perfil `teste` falharia sem .env.
+      # A imagem do postgres recusa subir sem senha, o que mantém a exigência aqui.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - banco-dados:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d citmail"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  banco-teste:
+    image: postgres:17-alpine
+    profiles: ["teste"]
+    # Descartável e só no loopback: sem senha no repositório.
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command: ["postgres", "-c", "shared_buffers=32MB", "-c", "fsync=off", "-c", "max_connections=30"]
+    ports:
+      - "127.0.0.1:55433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  banco-dados:

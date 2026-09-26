@@ -1,0 +1,26 @@
+{
+  "name": "citmail-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "API do CITMail (Fastify e PostgreSQL)",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "node --env-file=.env --watch src/servidor.js",
+    "start": "node src/servidor.js",
+    "migrar": "node --env-file-if-exists=.env node_modules/node-pg-migrate/bin/node-pg-migrate.js up -m migrations",
+    "migrar:reverter": "node --env-file-if-exists=.env node_modules/node-pg-migrate/bin/node-pg-migrate.js down -m migrations",
+    "nova-migracao": "node-pg-migrate create -m migrations --migration-file-language sql",
+    "banco:teste": "docker compose --profile teste up -d --wait banco-teste",
+    "test": "node --import ./test/sem-rede.js --test --test-concurrency=1"
+  },
+  "dependencies": {
+    "@fastify/ajv-compiler": "^4.0.6",
+    "@fastify/cors": "^11.3.0",
+    "fastify": "^5.12.5",
+    "node-pg-migrate": "^9.0.0",
+    "pg": "^8.23.0"
+  }
+}
