@@ -1,6 +1,6 @@
 # 0005. Fila de jobs e eventos de domínio
 
-Status: proposto
+Status: aceito
 Data: 2026-09-25
 
 ## Contexto
@@ -70,3 +70,4 @@ COMMIT;
 - 2026-09-25: criação (CIT-47).
 - 2026-09-25: ajustes da revisão (CIT-47).
 - Revisão prevista pela #48 (PoC Skymail): eventos e payloads ligados a add-ons e provisionamento.
+- 2026-09-26: aceito pelo responsável (CIT-47). Itens em "Decisões em aberto" do README e revisões previstas pela #48 continuam valendo.

@@ -50,19 +50,19 @@ Data: 2026-09-25
 
 | Nº | Arquivo | Título | Status | Data |
 |---|---|---|---|---|
-| 0001 | [0001-registrar-decisoes-em-adr.md](0001-registrar-decisoes-em-adr.md) | Registrar decisões de arquitetura em ADRs (MADR) em `docs/adr` | proposto | 2026-09-25 |
-| 0002 | [0002-organizacao-do-codigo-da-api.md](0002-organizacao-do-codigo-da-api.md) | Organização do código da API | proposto | 2026-09-25 |
-| 0003 | [0003-framework-http.md](0003-framework-http.md) | Framework HTTP | proposto | 2026-09-25 |
-| 0004 | [0004-banco-e-migracoes.md](0004-banco-e-migracoes.md) | PostgreSQL, acesso ao banco e migrações | proposto | 2026-09-25 |
-| 0005 | [0005-fila-e-eventos-de-dominio.md](0005-fila-e-eventos-de-dominio.md) | Fila de jobs e eventos de domínio | proposto | 2026-09-25 |
-| 0006 | [0006-execucao-na-vps-proxy-e-backup.md](0006-execucao-na-vps-proxy-e-backup.md) | Execução na VPS, proxy reverso com HTTPS e backup | proposto | 2026-09-25 |
-| 0007 | [0007-dominios-cors-e-cookies-por-ambiente.md](0007-dominios-cors-e-cookies-por-ambiente.md) | Domínios, CORS e cookies por ambiente | proposto | 2026-09-25 |
-| 0008 | [0008-sessao-do-painel-e-senhas.md](0008-sessao-do-painel-e-senhas.md) | Sessão do painel e armazenamento de senhas | proposto | 2026-09-25 |
-| 0009 | [0009-consulta-de-dominio-e-tlds.md](0009-consulta-de-dominio-e-tlds.md) | Fonte da consulta de domínio e TLDs aceitos | proposto | 2026-09-25 |
-| 0010 | [0010-email-transacional.md](0010-email-transacional.md) | Canal do e-mail transacional | proposto | 2026-09-25 |
-| 0011 | [0011-alertas-da-equipe.md](0011-alertas-da-equipe.md) | Canal de alerta da equipe | proposto | 2026-09-25 |
-| 0012 | [0012-fonte-unica-de-precos.md](0012-fonte-unica-de-precos.md) | Fonte única de preços com o servidor como autoridade | proposto | 2026-09-25 |
-| 0013 | [0013-seguranca-transversal-e-observabilidade.md](0013-seguranca-transversal-e-observabilidade.md) | Segurança transversal e observabilidade | proposto | 2026-09-25 |
+| 0001 | [0001-registrar-decisoes-em-adr.md](0001-registrar-decisoes-em-adr.md) | Registrar decisões de arquitetura em ADRs (MADR) em `docs/adr` | aceito | 2026-09-25 |
+| 0002 | [0002-organizacao-do-codigo-da-api.md](0002-organizacao-do-codigo-da-api.md) | Organização do código da API | aceito | 2026-09-25 |
+| 0003 | [0003-framework-http.md](0003-framework-http.md) | Framework HTTP | aceito | 2026-09-25 |
+| 0004 | [0004-banco-e-migracoes.md](0004-banco-e-migracoes.md) | PostgreSQL, acesso ao banco e migrações | aceito | 2026-09-25 |
+| 0005 | [0005-fila-e-eventos-de-dominio.md](0005-fila-e-eventos-de-dominio.md) | Fila de jobs e eventos de domínio | aceito | 2026-09-25 |
+| 0006 | [0006-execucao-na-vps-proxy-e-backup.md](0006-execucao-na-vps-proxy-e-backup.md) | Execução na VPS, proxy reverso com HTTPS e backup | aceito | 2026-09-25 |
+| 0007 | [0007-dominios-cors-e-cookies-por-ambiente.md](0007-dominios-cors-e-cookies-por-ambiente.md) | Domínios, CORS e cookies por ambiente | aceito | 2026-09-25 |
+| 0008 | [0008-sessao-do-painel-e-senhas.md](0008-sessao-do-painel-e-senhas.md) | Sessão do painel e armazenamento de senhas | aceito | 2026-09-25 |
+| 0009 | [0009-consulta-de-dominio-e-tlds.md](0009-consulta-de-dominio-e-tlds.md) | Fonte da consulta de domínio e TLDs aceitos | aceito | 2026-09-25 |
+| 0010 | [0010-email-transacional.md](0010-email-transacional.md) | Canal do e-mail transacional | aceito | 2026-09-25 |
+| 0011 | [0011-alertas-da-equipe.md](0011-alertas-da-equipe.md) | Canal de alerta da equipe | aceito | 2026-09-25 |
+| 0012 | [0012-fonte-unica-de-precos.md](0012-fonte-unica-de-precos.md) | Fonte única de preços com o servidor como autoridade | aceito | 2026-09-25 |
+| 0013 | [0013-seguranca-transversal-e-observabilidade.md](0013-seguranca-transversal-e-observabilidade.md) | Segurança transversal e observabilidade | aceito | 2026-09-25 |
 
 Hoje nenhum ADR está `aceito`: todos têm alguma parte proposta. Passam a `aceito` quando o responsável confirmar o que falta.
 

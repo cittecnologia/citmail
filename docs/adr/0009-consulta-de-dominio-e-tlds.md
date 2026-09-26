@@ -1,6 +1,6 @@
 # 0009. Fonte da consulta de domínio e TLDs aceitos
 
-Status: proposto
+Status: aceito
 Data: 2026-09-25
 
 ## Contexto
@@ -67,3 +67,4 @@ outro código, erro de rede ou > 5 s -> indisponível
 - 2026-09-25: ajustes da revisão (CIT-47).
 - Revisão prevista pela #48 (PoC Skymail): trocar para a Opção 3 se a Skymail ou um revendedor oferecer consulta e registro.
 - Revisão prevista pela #90: regras de nome, limite de taxa e duração do cache.
+- 2026-09-26: aceito pelo responsável (CIT-47). Itens em "Decisões em aberto" do README e revisões previstas pela #48 continuam valendo.
