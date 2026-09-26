@@ -1821,6 +1821,90 @@ test.describe('checkout — domínio: preço de PRECOS.dominio', { tag: '@CIT-31
   });
 });
 
+/**
+ * Abre o passo 3 com 2 contas de 5 GB, define o domínio extra = 1 e devolve o texto do
+ * código Pix gerado (para comparar com toHaveText nos passos seguintes).
+ * @param {import('@playwright/test').Page} page
+ */
+async function configurarExtraDom1(page) {
+  await page.goto('checkout.html?qty5=2');
+  await page.evaluate(() => goStep(3));
+  await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 1);
+  return /** @type {string} */ (await page.locator('#extraDomPixCode').textContent());
+}
+
+test.describe('checkout — domínio extra: Pix estável', { tag: '@CIT-30' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('https://viacep.com.br/**', route => route.abort());
+  });
+
+  test('CA1 — regressão: código Pix do domínio extra não muda com Talk, Backup, Skybox nem evento repetido; sem rolagem horizontal', async ({ page, erros }, testInfo) => {
+    const c1 = await configurarExtraDom1(page);
+    const loc = page.locator('#extraDomPixCode');
+    expect(c1).toContain('540000079');
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 79,00');
+
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 1);
+    await expect(loc).toHaveText(c1);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 79,00');
+
+    await definirQtdAddon(page, 'Backup', 'aqBackup90', 1);
+    await expect(loc).toHaveText(c1);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 79,00');
+
+    await abrirSecao(page, 'Armazenamento em nuvem');
+    await page.locator('#skyOpt50').click();
+    await expect(loc).toHaveText(c1);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 79,00');
+
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 0);
+    await expect(loc).toHaveText(c1);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 79,00');
+
+    // dispatchEvent('change') com o mesmo valor 1: fill() com valor igual não dispara onchange sozinho.
+    await page.locator('#aqExtraDom').dispatchEvent('change');
+    await expect(loc).toHaveText(c1);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 79,00');
+
+    // Rolagem horizontal incondicional (não é específica do mobile); com o painel do Pix visível.
+    await expect(loc).toBeVisible();
+    const [scrollWidth, innerWidth] = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
+    expect(scrollWidth, `${testInfo.project.name}: rolagem horizontal com o painel do Pix visível`).toBeLessThanOrEqual(innerWidth);
+  });
+
+  test('CA2 — mudar o valor regenera com o valor certo (1 → 2 → 1)', async ({ page, erros }) => {
+    const c1 = await configurarExtraDom1(page);
+    const loc = page.locator('#extraDomPixCode');
+
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 2);
+    const c2 = /** @type {string} */ (await loc.textContent());
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
+    await expect(loc).toContainText('540000158');
+    expect(c2, 'código de 2× deveria diferir do código de 1×').not.toBe(c1);
+
+    await definirQtdAddon(page, 'Talk – Videoconferência', 'aqTalk', 1);
+    await expect(loc).toHaveText(c2);
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 158,00');
+
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 1);
+    await expect(loc).toContainText('540000079');
+    await expect(page.locator('#extraDomPixTotal')).toHaveText('R$ 79,00');
+  });
+
+  test('CA3 — 1 → 0 → 1: painel some e volta com o mesmo código', async ({ page, erros }) => {
+    const c1 = await configurarExtraDom1(page);
+    const loc = page.locator('#extraDomPixCode');
+    const panel = page.locator('#extraDomPixPanel');
+
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 0);
+    await expect(panel).toBeHidden();
+
+    await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 1);
+    await expect(panel).toBeVisible();
+    await expect(loc).toHaveText(c1);
+  });
+});
+
 // CIT-31 CA6: precos.js antigo (sem PRECOS.dominio) aciona a mesma guarda de carga do CIT-22 — a
 // guarda lança erro de propósito, por isso usa o `test` puro do Playwright (testSemErros), como a
 // guarda "sem assets/precos.js" (~:1875), em vez da fixture `erros`.
