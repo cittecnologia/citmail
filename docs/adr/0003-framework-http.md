@@ -20,7 +20,7 @@ Framework HTTP leve, com foco em portabilidade entre runtimes (Node.js, edge).
 
 ## Decisão
 
-Fastify.
+Proposto: Fastify, com `trustProxy` restrito ao loopback (o Caddy do ADR 0006), para que o IP do cliente usado no limite de taxa e no bloqueio de força bruta não venha de um `X-Forwarded-For` forjado.
 
 ## Justificativa
 
@@ -49,9 +49,10 @@ fastify.post('/api/orcamento', {
 ## Consequências
 
 - Toda rota nova precisa declarar `schema`; a ausência de schema num endpoint de exemplo já é coberta por teste automatizado (E2-H3).
-- O logger `pino` do Fastify precisa de configuração para mascarar campos sensíveis (senha, token, CPF/CNPJ completo, cabeçalho `Authorization`), conforme E2-H9.
+- O logger `pino` do Fastify precisa de configuração para mascarar campos sensíveis, conforme E2-H9. A lista de caminhos fica no ADR 0013.
 - A equipe precisa aprender a API de plugins do Fastify (`fastify-plugin`), diferente do estilo de middleware do Express.
 
 ## Revisões
 
 - 2026-09-25: criação (CIT-47).
+- 2026-09-25: ajustes da revisão (CIT-47).

@@ -20,7 +20,8 @@ Um ORM que gera o schema a partir de um modelo declarado em código e abstrai a 
 
 ## Decisão
 
-PostgreSQL local na VPS (decidido). Migrações com `node-pg-migrate` e acesso por `pg` com consulta parametrizada (proposto).
+- **Decidido pelo responsável em 2026-09-25:** PostgreSQL local na VPS.
+- **Proposto:** migrações com `node-pg-migrate` e acesso por `pg` com consulta parametrizada.
 
 ## Justificativa
 
@@ -28,20 +29,28 @@ PostgreSQL local na VPS (decidido). Migrações com `node-pg-migrate` e acesso p
 - **Migração simples e isolada:** `node-pg-migrate` escreve migrações em SQL puro ou JS fino, sem acoplar o schema a um modelo de ORM; cada migração é testável isoladamente (aplicar e reverter num banco vazio, critério de E2-H3).
 - Knex resolveria migração e consulta no mesmo pacote, mas embute um *query builder* que a Definition of Done não pede; um ORM (Drizzle ou Prisma) exigiria mapear as sete entidades do modelo de dados num esquema próprio do ORM, o que adiciona uma camada de tradução sem necessidade clara neste porte de projeto.
 
-Exemplo ilustrativo de migração:
+Exemplo ilustrativo de migração (nomes do anexo de modelo de dados; ids UUID gerados pelo servidor):
 
 ```js
-// migrations/1695600000000_criar-tabela-pedido.js
+// migrations/1695600000000_criar-tabela-evento.js
 exports.up = pgm => {
-  pgm.createTable('pedido', {
-    id: 'id',
-    cliente_id: { type: 'integer', notNull: true },
-    status: { type: 'text', notNull: true },
-    criado_em: { type: 'timestamptz', notNull: true, default: pgm.func('now()') }
+  pgm.createTable('evento', {
+    id: { type: 'uuid', primaryKey: true },
+    nome: { type: 'text', notNull: true },
+    versao: { type: 'integer', notNull: true, default: 1 },
+    agregado_tipo: { type: 'text', notNull: true }, // pedido, conta_titular ou assinatura
+    agregado_id: { type: 'uuid', notNull: true },
+    chave_idempotencia: { type: 'text', notNull: true, unique: true },
+    payload: { type: 'jsonb', notNull: true },
+    request_id: { type: 'text' },
+    ocorrido_em: { type: 'timestamptz', notNull: true, default: pgm.func('now()') },
+    publicado_em: { type: 'timestamptz' }
   })
 }
-exports.down = pgm => pgm.dropTable('pedido')
+exports.down = pgm => pgm.dropTable('evento')
 ```
+
+A tabela `pedido` segue o mesmo padrão: `id` UUID, `cliente_id` UUID, coluna `estado` (não `status`) e `chave_idempotencia` única.
 
 ## Consequências
 
@@ -52,3 +61,4 @@ exports.down = pgm => pgm.dropTable('pedido')
 ## Revisões
 
 - 2026-09-25: criação (CIT-47).
+- 2026-09-25: ajustes da revisão (CIT-47).

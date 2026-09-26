@@ -1,6 +1,6 @@
 # 0010. Canal do e-mail transacional
 
-Status: aceito
+Status: proposto
 Data: 2026-09-25
 
 ## Contexto
@@ -20,12 +20,20 @@ Servidor SMTP próprio rodando na VPS da CIT, sem depender de terceiro.
 
 ## Decisão
 
-SMTP da Skymail, remetente do domínio CITMail (decidido). Envio só por job da fila com `nodemailer`, modelos versionados e reenvio (proposto).
+**Decidido pelo responsável em 2026-09-25:** SMTP da Skymail, remetente de um domínio da CITMail.
+
+**Proposto:**
+
+- Envio só por job da fila com `nodemailer`, modelos versionados e reenvio (ADR 0005).
+- Modelos HTML com escape automático de todo dado interpolado (nome, endereço de caixa, domínio); nenhum dado entra como HTML cru. Versão em texto sem HTML.
+- DMARC do domínio remetente em `p=none` com relatórios no início; depois de um período sem falhas de SPF e DKIM (proposta: 30 dias), passar a `p=quarantine`.
 
 ## Justificativa
 
 - **Um só provedor de e-mail:** a Skymail já é o provedor de caixas de e-mail e domínio (E4); usar o mesmo SMTP para transacional evita contratar e manter um segundo fornecedor (provedor dedicado, Opção 2) só para esse fim, e evita o esforço de rodar e reputar um SMTP próprio (Opção 3), que teria entrega pior sem histórico de reputação.
 - **Job da fila, não envio síncrono:** enviar dentro do job que processa o evento (ex.: `pedido_pago` → e-mail de confirmação) reaproveita o reprocessamento com backoff e o alerta de falha esgotada já decididos no ADR 0005, sem duplicar essa lógica no envio de e-mail.
+- **Escape nos modelos:** nome e domínio vêm do cliente; sem escape, um valor com HTML mudaria o conteúdo do e-mail (injeção de HTML, link falso).
+- **DMARC em etapas:** `p=none` mostra nos relatórios se algum envio legítimo falha antes de punir; `p=quarantine` depois reduz a falsificação do remetente.
 - **Modelos versionados:** manter os modelos HTML/texto no repositório da API (e não numa interface externa) os coloca sob revisão de PR, como qualquer outro código.
 
 Exemplo ilustrativo:
@@ -54,3 +62,4 @@ await transportador.sendMail({
 ## Revisões
 
 - 2026-09-25: criação (CIT-47).
+- 2026-09-25: ajustes da revisão (CIT-47).

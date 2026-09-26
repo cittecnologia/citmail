@@ -1,13 +1,13 @@
 # 0001. Registrar decisões de arquitetura em ADRs (MADR) em `docs/adr`
 
-Status: aceito
+Status: proposto
 Data: 2026-09-25
 
 ## Contexto
 
 O back-end do CITMail ainda não existe: histórias E2-H3 em diante (Taiga #53 a #99, mais #90) vão implementar API, banco, fila, deploy e integrações sobre decisões que hoje só estão no briefing e no plano de épicos. Sem um registro formal, cada história reabriria discussões já resolvidas ou tomaria decisões divergentes.
 
-Decidido pelo responsável em 2026-09-25: as decisões de arquitetura ficam em ADRs (registro de decisão de arquitetura, do inglês *architecture decision record*) no formato MADR (*Markdown Architectural Decision Records*), um arquivo por decisão em `docs/adr/NNNN-<slug>.md`, com índice em `docs/adr/README.md`.
+Decidido na análise da CIT-47: as decisões de arquitetura ficam em ADRs (registro de decisão de arquitetura, do inglês *architecture decision record*) no formato MADR (*Markdown Architectural Decision Records*), um arquivo por decisão em `docs/adr/NNNN-<slug>.md`, com índice em `docs/adr/README.md`.
 
 ## Opções consideradas
 
@@ -22,7 +22,7 @@ Um único arquivo longo (ex.: `ARQUITETURA.md`) reunindo todas as decisões.
 
 ## Decisão
 
-ADRs em `docs/adr/`, no formato MADR, um arquivo por decisão.
+Proposto (decidido na análise da CIT-47, sem decisão formal do responsável): ADRs em `docs/adr/`, no formato MADR, um arquivo por decisão. Passa a `aceito` quando o responsável aprovar o PR desta história.
 
 ## Justificativa
 
@@ -39,3 +39,4 @@ ADRs em `docs/adr/`, no formato MADR, um arquivo por decisão.
 ## Revisões
 
 - 2026-09-25: criação (CIT-47).
+- 2026-09-25: ajustes da revisão (CIT-47).

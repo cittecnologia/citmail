@@ -29,11 +29,12 @@ Unifica consulta e, no futuro, registro automático (E4-H6). Depende da PoC (#48
 
 ## Decisão
 
-Opção 1, provisória.
+Proposto: Opção 1, provisória.
 
 - A landing chama só a API CITMail. A API consulta o RDAP do Registro.br.
 - TLD aceito: só `.com.br`. Outro TLD responde 400.
-- Validação do nome antes da consulta, pelas regras de nome do Registro.br (tamanho, caracteres, hífen). Regras exatas na #90.
+- Validação do nome antes de montar a URL do RDAP, pelas regras de nome do Registro.br (tamanho, caracteres, hífen). Só nome validado e normalizado entra na URL, codificado. Regras exatas na #90.
+- Chamada ao RDAP sem seguir redirecionamentos (`redirect: 'manual'`; redirecionamento conta como "indisponível") e com limite de tamanho da resposta (proposta: 64 KiB; acima disso, "indisponível").
 - Cache curto no Redis por nome normalizado (proposta: 5 min, para livre e para ocupado).
 - Tempo limite de 5 s na chamada ao RDAP. Falha ou tempo esgotado: resposta "indisponível", sem cache.
 - Limite de taxa por IP no endpoint (proposta: 10 por minuto). Valor final na #90.
@@ -50,6 +51,7 @@ outro código, erro de rede ou > 5 s -> indisponível
 - RDAP é público, sem contrato e com resposta estruturada. Serve já no mvp.
 - A consulta pela API esconde o provedor da landing: trocar a fonte depois (Opção 3) não muda o front.
 - O cache e o limite de taxa protegem o Registro.br de excesso de consultas e a API de abuso.
+- Validar antes de montar a URL, não seguir redirecionamento e limitar o tamanho impedem que um nome forjado leve a API a outro destino (SSRF) ou a ler uma resposta enorme.
 - WHOIS é mais frágil de interpretar e não traz vantagem sobre o RDAP.
 
 ## Consequências
@@ -62,5 +64,6 @@ outro código, erro de rede ou > 5 s -> indisponível
 ## Revisões
 
 - 2026-09-25: criação (CIT-47).
+- 2026-09-25: ajustes da revisão (CIT-47).
 - Revisão prevista pela #48 (PoC Skymail): trocar para a Opção 3 se a Skymail ou um revendedor oferecer consulta e registro.
 - Revisão prevista pela #90: regras de nome, limite de taxa e duração do cache.

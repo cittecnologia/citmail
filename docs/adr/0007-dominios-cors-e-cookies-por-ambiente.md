@@ -30,7 +30,9 @@ O painel guarda um token e o envia no cabeçalho. Funciona entre sites, mas o to
 
 ## Decisão
 
-Opção 1. Origens permitidas por ambiente:
+**Decidido pelo responsável em 2026-09-25:** API de produção em `api.citmail.com.br`; homologação da API em subdomínio próprio; migração da landing para `citmail.com.br`.
+
+**Proposto:** Opção 1. Origens permitidas por ambiente:
 
 | Ambiente | API | Origens permitidas | `credentials` |
 |---|---|---|---|
@@ -42,10 +44,11 @@ Opção 1. Origens permitidas por ambiente:
 Regras:
 
 - Sem curinga (`*`) e sem refletir o `Origin` recebido. A lista vem da configuração do ambiente, com comparação exata.
-- `Access-Control-Allow-Credentials: true` só para as origens do painel. Rotas públicas (consulta de domínio, orçamento) aceitam também as origens da landing, sem credenciais.
+- `Access-Control-Allow-Credentials: true` só para as origens do painel. Rotas públicas (consulta de domínio, orçamento, criação de pedido) aceitam também as origens da landing, sem credenciais.
 - Resposta com `Vary: Origin`. Preflight com métodos e cabeçalhos explícitos.
 - Cookie de sessão sem atributo `Domain` (fica preso ao host da API) e com prefixo `__Host-`. Assim o cookie da API de produção não vaza para a homologação, que está no mesmo site.
 - Origem do painel após a migração: `https://citmail.com.br/painel` ou `https://painel.citmail.com.br`. Os dois servem, desde que fiquem sob `citmail.com.br`. Em aberto.
+- Homologação sem dados reais de clientes (só sandbox do Asaas e conta de teste da Skymail, E2-H5).
 
 ## Justificativa
 
@@ -56,7 +59,9 @@ Regras:
 
 ## Consequências
 
-- Enquanto a landing estiver no GitHub Pages, o painel com sessão real só funciona na homologação (`novo.citmail.com.br`) e em desenvolvimento. O painel de produção depende da migração para `citmail.com.br` (ou de publicar o painel num subdomínio de `citmail.com.br` antes disso).
+- **Origem compartilhada do GitHub Pages:** `https://cittecnologia.github.io` é a mesma origem para todos os repositórios da organização publicados no Pages. Qualquer um deles passa na allow-list de produção até a migração. Risco baixo: essa origem só acessa rotas públicas, sem credenciais. Some quando a origem sair da lista.
+- **Painel de produção depende de uma migração sem história.** Enquanto a landing estiver no GitHub Pages, o painel com sessão real só funciona na homologação (`novo.citmail.com.br`) e em desenvolvimento. Nenhuma história cobre a migração da landing para `citmail.com.br` (a E2-H6 a deixa fora do escopo). Caminhos: criar a história de migração ou publicar o painel antes em `painel.citmail.com.br`. Registrado em "Decisões em aberto" do README.
+- **Divergência com a E2-H5.** A API de homologação em subdomínio próprio contradiz a E2-H5: o critério 1 espera `https://novo.citmail.com.br/api/health`, e o critério 3 supõe a API no mesmo host do rsync do site. Ajuste proposto na seção "Ajustes de critérios em outras histórias" do README.
 - Na migração: incluir `https://citmail.com.br` na allow-list, marcar essa origem com `credentials`, manter `https://cittecnologia.github.io` por um período de transição e depois removê-la. O cookie não muda, porque é preso ao host da API.
 - Homologação e produção compartilham o site `citmail.com.br`: `SameSite` não os separa. A separação vem do cookie sem `Domain` e da checagem de `Origin` (ADR 0008).
 - Em desenvolvimento, confirmar na #53 se o navegador aceita cookie `Secure` na origem de desenvolvimento (HTTP sem TLS). Alternativa: proxy do Vite para a API local, deixando tudo na mesma origem.
@@ -65,3 +70,4 @@ Regras:
 ## Revisões
 
 - 2026-09-25: criação (CIT-47).
+- 2026-09-25: ajustes da revisão (CIT-47).

@@ -1,6 +1,6 @@
 # 0011. Canal de alerta da equipe
 
-Status: aceito
+Status: proposto
 Data: 2026-09-25
 
 ## Contexto
@@ -20,17 +20,28 @@ Um canal de mensagens de equipe em Slack ou Discord, com webhook de entrada.
 
 ## Decisão
 
-Grupo do Telegram com bot (decidido). Envio por job da fila, mensagem sem dado pessoal (só ids e tipo do alerta), token do bot como segredo, limite de mensagens por minuto (proposto).
+**Decidido pelo responsável em 2026-09-25:** grupo do Telegram com bot.
+
+**Proposto:**
+
+- **Dois caminhos de envio:**
+  - Falha de infraestrutura (Redis, banco, backup, disponibilidade; E2-H7, E2-H11): envio direto ao Telegram, fora da fila, pelo processo que detecta a falha (monitor ou script do backup). A fila depende do Redis e do banco, então não pode ser o canal que avisa da queda deles.
+  - Demais alertas (job esgotado, provisionamento, domínio, cancelamento): job da fila.
+- Mensagem sem dado pessoal (só ids e tipo do alerta).
+- Token do bot como segredo. O token vai na URL da API do Telegram: erro do `fetch` nunca é registrado com a URL; o log leva só o tipo do erro e o status.
+- Limite de mensagens por minuto.
 
 ## Justificativa
 
 - **Notificação imediata no celular:** Telegram entrega notificação push instantânea sem depender de a equipe estar com a caixa de e-mail aberta, ao contrário do e-mail (Opção 2), que é assíncrono por natureza e compete com outras mensagens.
 - **Sem contratação nem provisionamento adicional:** um bot do Telegram é criado em minutos e não exige assinatura paga nem workspace novo, ao contrário de Slack ou Discord (Opção 3), que exigiriam criar e manter um espaço de equipe só para isso.
-- **Reaproveita a fila:** o alerta sai por job da fila, como qualquer outro evento (ADR 0005), o que dá o mesmo reprocessamento e não bloqueia a requisição original em caso de lentidão do Telegram.
+- **Reaproveita a fila:** o alerta de negócio sai por job da fila, como qualquer outro evento (ADR 0005), o que dá o mesmo reprocessamento e não bloqueia a requisição original em caso de lentidão do Telegram.
+- **Caminho direto para infraestrutura:** se o Redis ou o banco caem, a fila para; o alerta dessa queda precisa sair por fora dela.
 
 Exemplo ilustrativo:
 
 ```js
+// A URL leva o token do bot. Em caso de erro, registrar só err.name e o status, nunca a URL.
 await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -51,3 +62,4 @@ await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendM
 ## Revisões
 
 - 2026-09-25: criação (CIT-47).
+- 2026-09-25: ajustes da revisão (CIT-47).

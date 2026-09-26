@@ -4,6 +4,20 @@ ADR é a sigla de *architecture decision record*, registro de decisão de arquit
 
 Estes ADRs registram as decisões de arquitetura do back-end do CITMail, tomadas na história CIT-47, antes da implementação das histórias dos épicos E2 a E7 (Taiga #53 a #99, mais #90).
 
+## Siglas e termos
+
+| Termo | Significado |
+|---|---|
+| API | Interface de programação (*application programming interface*): aqui, o back-end que o site chama por HTTP. |
+| CI | Integração contínua (*continuous integration*): os testes que o GitHub Actions roda em cada PR. |
+| CORS | Compartilhamento de recursos entre origens (*cross-origin resource sharing*): cabeçalhos que autorizam uma página de outra origem a ler respostas da API. |
+| DoR | *Definition of Ready*: critérios para uma história entrar numa sprint. |
+| HTTPS | HTTP cifrado com TLS, com certificado válido. |
+| MVP | Produto mínimo viável (*minimum viable product*): o escopo da primeira versão (marcado `mvp` nas histórias). |
+| PoC | Prova de conceito (*proof of concept*): aqui, a #48, que testa a API da Skymail. |
+| TLD | Domínio de topo (*top-level domain*): a terminação do domínio, como `.com.br`. |
+| VPS | Servidor virtual privado (*virtual private server*): o servidor da CIT onde rodam API, banco e fila. |
+
 ## Modelo de cada ADR
 
 ```
@@ -28,15 +42,15 @@ Data: 2026-09-25
 
 | Status | Significado |
 |---|---|
-| `proposto` | Decisão registrada, mas ainda sujeita a confirmação ou revisão (ex.: aguardando aprovação do responsável, ou dependente da PoC #48). |
-| `aceito` | Decisão confirmada pelo responsável, valendo para a implementação sem rediscussão. |
+| `proposto` | A Decisão tem pelo menos uma parte proposta, ainda sujeita a confirmação ou revisão (ex.: aguardando aprovação do responsável, ou dependente da PoC #48). O texto separa "Decidido pelo responsável em <data>" de "Proposto". |
+| `aceito` | Todo o conteúdo da Decisão foi decidido pelo responsável, valendo para a implementação sem rediscussão. |
 | `substituído por NNNN` | Decisão revogada; o ADR indicado por `NNNN` a substitui. O ADR antigo permanece no histórico, sem ser apagado. |
 
 ## Índice de ADRs
 
 | Nº | Arquivo | Título | Status | Data |
 |---|---|---|---|---|
-| 0001 | [0001-registrar-decisoes-em-adr.md](0001-registrar-decisoes-em-adr.md) | Registrar decisões de arquitetura em ADRs (MADR) em `docs/adr` | aceito | 2026-09-25 |
+| 0001 | [0001-registrar-decisoes-em-adr.md](0001-registrar-decisoes-em-adr.md) | Registrar decisões de arquitetura em ADRs (MADR) em `docs/adr` | proposto | 2026-09-25 |
 | 0002 | [0002-organizacao-do-codigo-da-api.md](0002-organizacao-do-codigo-da-api.md) | Organização do código da API | proposto | 2026-09-25 |
 | 0003 | [0003-framework-http.md](0003-framework-http.md) | Framework HTTP | proposto | 2026-09-25 |
 | 0004 | [0004-banco-e-migracoes.md](0004-banco-e-migracoes.md) | PostgreSQL, acesso ao banco e migrações | proposto | 2026-09-25 |
@@ -45,10 +59,12 @@ Data: 2026-09-25
 | 0007 | [0007-dominios-cors-e-cookies-por-ambiente.md](0007-dominios-cors-e-cookies-por-ambiente.md) | Domínios, CORS e cookies por ambiente | proposto | 2026-09-25 |
 | 0008 | [0008-sessao-do-painel-e-senhas.md](0008-sessao-do-painel-e-senhas.md) | Sessão do painel e armazenamento de senhas | proposto | 2026-09-25 |
 | 0009 | [0009-consulta-de-dominio-e-tlds.md](0009-consulta-de-dominio-e-tlds.md) | Fonte da consulta de domínio e TLDs aceitos | proposto | 2026-09-25 |
-| 0010 | [0010-email-transacional.md](0010-email-transacional.md) | Canal do e-mail transacional | aceito | 2026-09-25 |
-| 0011 | [0011-alertas-da-equipe.md](0011-alertas-da-equipe.md) | Canal de alerta da equipe | aceito | 2026-09-25 |
+| 0010 | [0010-email-transacional.md](0010-email-transacional.md) | Canal do e-mail transacional | proposto | 2026-09-25 |
+| 0011 | [0011-alertas-da-equipe.md](0011-alertas-da-equipe.md) | Canal de alerta da equipe | proposto | 2026-09-25 |
 | 0012 | [0012-fonte-unica-de-precos.md](0012-fonte-unica-de-precos.md) | Fonte única de preços com o servidor como autoridade | proposto | 2026-09-25 |
 | 0013 | [0013-seguranca-transversal-e-observabilidade.md](0013-seguranca-transversal-e-observabilidade.md) | Segurança transversal e observabilidade | proposto | 2026-09-25 |
+
+Hoje nenhum ADR está `aceito`: todos têm alguma parte proposta. Passam a `aceito` quando o responsável confirmar o que falta.
 
 **Anexos** (referência, não decisão — sem `Status` nem seções de ADR):
 
@@ -84,11 +100,41 @@ Pendências que não foram fechadas dentro do timebox do spike (3 dias úteis, a
 | Decisão | Dono | Prazo |
 |---|---|---|
 | Subdomínio da API de homologação (ex.: `api.novo.citmail.com.br` ou `api-homolog.citmail.com.br`); afeta CORS, certificado e cookie (ADR 0007). | responsável | 2026-10-01 |
-| Destino do backup fora da VPS (armazenamento de objetos, outro servidor da CIT ou outro); o ADR 0006 já decide o tipo, falta o provedor (E2-H7). | responsável | 2026-10-01 |
+| Provedor do backup fora da VPS; o ADR 0006 já decide o tipo (armazenamento de objetos, cifra assimétrica, bloqueio de objeto), falta o provedor. | responsável | na E2-H7 |
 | Código da API neste repositório público em `api/` ou em repositório separado; a proposta do ADR 0002 é `api/` aqui. Confirmar, porque muda o CI (E2-H4) e o deploy (E2-H5 em diante). | responsável | 2026-10-01 |
 | `assets/precos.js` gerado a partir da tabela do servidor ou continua manual com teste de paridade; a proposta do ADR 0012 é manual no MVP. Confirmar. | responsável | 2026-10-01 |
 | Nome do evento de desativação da E3-H7 (proposta: `assinatura_cancelada`) e se o cancelamento feito pela equipe no fim do ciclo (E5-H10) também o publica. | responsável | 2026-10-01 |
 | Origem que serve o painel depois da migração da landing (`citmail.com.br/painel` estático ou `painel.citmail.com.br`); afeta o cookie `SameSite` (ADR 0007 e 0008). A proposta aceita as duas, desde que fiquem sob `citmail.com.br`. | responsável | 2026-10-01 |
+| Painel de produção sem história: migrar a landing para `citmail.com.br` (criar a história; a E2-H6 a deixa fora do escopo) ou publicar o painel antes em `painel.citmail.com.br` (ADR 0007). | responsável | 2026-10-01 |
+| Confirmar o evento `cobranca_paga` (pagamentos seguintes ao 1º, para a reativação da E4-H5) e o critério novo na E3-H4 (anexo de eventos). | responsável | 2026-10-01 |
+| `assinatura_cancelada` e a efetivação manual do cancelamento no MVP: quem efetiva, e se publica o evento (anexo de eventos, divergência 1). | responsável | antes da E3-H7 entrar na DoR |
+| `fatura_criada` emitido pela E3-H4 para a E7-H4 (anexo de eventos, divergência 9). | responsável | quando a E7-H4 sair da pendência |
+| `falhou_na_criacao`: nova tentativa com a mesma chave de idempotência e tratamento de assinatura órfã no Asaas (anexo de modelo de dados). | planner da E3-H2 | no plano da E3-H2 |
+| Expiração de pedido `aguardando_pagamento` nunca pago (anexo de modelo de dados). | responsável | 2026-10-01 |
+| Retenções propostas: evento bruto do Asaas (90 dias, ADR 0005), auditoria (IP em claro por 6 meses, registro por 5 anos, ADR 0013) e sessão (até 8 h, ADR 0008). | responsável | 2026-10-01 |
+
+## Ajustes de critérios em outras histórias
+
+Ajustes que os ADRs pedem em critérios de aceite de outras histórias, para o PO aplicar no Taiga. Números de critério pela ordem em `.omc/plans/epicos-citmail.md`.
+
+| História | Critério | Ajuste | Origem |
+|---|---|---|---|
+| E2-H5 | 1 | Trocar `https://novo.citmail.com.br/api/health` pela URL do subdomínio da API de homologação (a definir). | ADR 0007 |
+| E2-H5 | 3 | A API não fica no host do rsync do site: o critério passa a conferir que o rsync do site e o deploy da API não se afetam. | ADR 0007 |
+| E3-H2 | 1 | `POST /api/pedidos` recebe `total_exibido_centavos` e a versão da tabela; total divergente responde 409 `total_divergente` com o total correto. | ADR 0012 |
+| E3-H2 | 4 e 6 | Rever depois da decisão sobre `falhou_na_criacao` (nova tentativa com a mesma chave, assinatura órfã). | Anexo de modelo de dados |
+| E3-H3 | novo | Com 409 `total_divergente`, o checkout mostra o novo total e pede nova confirmação. | ADR 0012 |
+| E3-H4 | 1 | Token do cabeçalho `asaas-access-token` comparado em tempo constante. | ADR 0005 |
+| E3-H4 | novo | Antes de mudar estado, a API consulta o pagamento no Asaas e confere pagamento, valor e pedido; divergência não muda estado e gera alerta. | ADR 0005 |
+| E3-H4 | 2 | `pedido_pago` só no 1º pagamento das contas; com domínio novo não pago, o pedido fica `aguardando_pagamento_do_dominio`. | Anexo de eventos, anexo de modelo de dados |
+| E3-H4 | 4 | Dois eventos diferentes do Asaas para o mesmo pagamento (`PAYMENT_CONFIRMED` e `PAYMENT_RECEIVED`) também publicam uma vez só. | Anexo de eventos |
+| E3-H4 | novo | Pagamento confirmado de cobrança seguinte ao 1º publica `cobranca_paga`. | Anexo de eventos |
+| E4-H5 | 2 | A reativação é disparada por `cobranca_paga`. | Anexo de eventos |
+| E4-H4 | 1 | Aceita `dominio_pago` com o pedido ainda `aguardando_pagamento`: abre a tarefa sem mudar o estado. | Anexo de modelo de dados |
+| E4-H4 | 2 | Só enfileira o provisionamento com as contas pagas; antes disso, só grava o registro. | Anexo de modelo de dados |
+| E5-H2 | 1 | Publica só `solicitacaoId` (tabela de solicitação de senha), sem gerar o token. | Anexo de eventos |
+| E7-H3 | 1 e 2 | O job gera o token no envio e grava só o hash; o link leva o token no fragmento da URL. | Anexo de eventos, ADR 0008 |
+| E6-H7 | 1 | Incluir o registro manual de domínio pela equipe (E4-H4) nas ações auditadas. | ADR 0013 |
 
 ## Como propor ou revisar um ADR
 
@@ -102,4 +148,4 @@ Pendências que não foram fechadas dentro do timebox do spike (3 dias úteis, a
 
 ## Regra de placeholders para dados da VPS
 
-Este repositório é público. Nenhum ADR, anexo ou este índice cita host, IP, porta, usuário de deploy ou credencial reais da VPS. Use sempre placeholders: `<host-da-vps>`, `<porta-ssh>`, `<usuario-de-deploy>`. Os únicos nomes de host permitidos em `docs/` são os públicos: `citmail.com.br` e subdomínios, `cittecnologia.github.io`, `registro.br` e `rdap.registro.br`, `github.com`, `letsencrypt.org`, `telegram.org`, e domínios de documentação de bibliotecas citadas. Valores reais (host, porta, usuário) ficam só nos secrets e variables do ambiente `homologacao`/`producao` do GitHub e em arquivo `chmod 600` no servidor, nunca neste repositório.
+Este repositório é público. Nenhum ADR, anexo ou este índice cita host, IP, porta, usuário de deploy ou credencial reais da VPS. Use sempre placeholders: `<host-da-vps>`, `<porta-ssh>`, `<usuario-de-deploy>`, `<usuario-de-servico>`. Os únicos nomes de host permitidos em `docs/` são os públicos: `citmail.com.br` e subdomínios, `cittecnologia.github.io`, `registro.br` e `rdap.registro.br`, `github.com`, `letsencrypt.org`, `telegram.org`, e domínios de documentação de bibliotecas citadas. Valores reais (host, porta, usuário) ficam só nos secrets e variables do ambiente `homologacao`/`producao` do GitHub e em arquivo `chmod 600` no servidor, nunca neste repositório.
