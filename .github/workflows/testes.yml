@@ -1,9 +1,16 @@
 name: Testes E2E
 
+# Três jobs, exigidos pelo ruleset em develop e main (nomes fixos: playwright, api, segredos):
+# - playwright: testes E2E do site (npm test da raiz);
+# - api: lint e testes da API (api/) com PostgreSQL de serviço;
+# - segredos: gitleaks com .gitleaks.toml nos commits do PR (base..head).
+# No workflow_call (publicar-homologacao.yml), playwright e api rodam e bloqueiam a publicação;
+# segredos fica "skipped" (o código já passou pelo scan no PR e o push não tem base..head).
+
 on:
   pull_request:
     branches: [develop, main]
-  # reaproveitado por publicar-homologacao.yml (o check "playwright" exigido pelo ruleset continua vindo do pull_request)
+  # reaproveitado por publicar-homologacao.yml (os checks exigidos pelo ruleset continuam vindo do pull_request)
   workflow_call:
 
 permissions:
@@ -14,17 +21,79 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm test
-      - uses: actions/upload-artifact@v4
+      # O artifact é público (repositório público): os specs só usam dados fictícios, nunca reais.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: playwright-results
           path: test-results/
           retention-days: 3
+
+  api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        # mesma imagem do compose.yaml; banco efêmero do runner, sem senha (como o banco-teste)
+        image: postgres:17-alpine
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 55433:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
+    env:
+      # loopback: único host aceito pela guarda test/sem-rede.js
+      DATABASE_URL_TESTE: postgres://postgres@127.0.0.1:55433/postgres
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+      - run: npm --prefix api ci
+      - run: npm --prefix api run lint
+      - run: npm --prefix api test
+
+  segredos:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # binário oficial; SHA-256 copiado do gitleaks_8.30.1_checksums.txt da release (não baixado na execução)
+      GITLEAKS_VERSAO: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Instalar gitleaks
+        run: |
+          arquivo="gitleaks_${GITLEAKS_VERSAO}_linux_x64.tar.gz"
+          curl -sSfL -o "$RUNNER_TEMP/$arquivo" "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSAO}/${arquivo}"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/$arquivo" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$arquivo" -C "$RUNNER_TEMP" gitleaks
+      - name: Procurar segredos nos commits do PR
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          "$RUNNER_TEMP/gitleaks" git --config .gitleaks.toml --redact --no-banner --exit-code 1 \
+            --log-opts="${BASE_SHA}..${HEAD_SHA}"
