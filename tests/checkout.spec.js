@@ -1895,6 +1895,7 @@ test.describe('checkout — domínio extra: Pix estável', { tag: '@CIT-30' }, (
     const c1 = await configurarExtraDom1(page);
     const loc = page.locator('#extraDomPixCode');
     const panel = page.locator('#extraDomPixPanel');
+    expect(c1).toContain('540000079');
 
     await definirQtdAddon(page, 'Domínio secundário', 'aqExtraDom', 0);
     await expect(panel).toBeHidden();
