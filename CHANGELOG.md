@@ -55,7 +55,7 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Checkout: o código Pix do domínio extra (passo 3) não muda mais ao alterar outros add-ons; só é gerado de novo quando o valor do domínio extra muda (CIT-30).
 
 ### Segurança
-- Arquivos `.env` locais ignorados pelo Git e com leitura negada a agentes (`.claude/settings.json`); regra de segredos documentada: só nos environments do GitHub ou em arquivo de ambiente com permissão 600 no servidor, nunca no repositório (CIT-46).
+- Arquivos de ambiente locais (`.env`, `.env.*` e `.envrc`, exceto `.env.example`) ignorados pelo Git e com leitura negada a agentes (`.claude/settings.json`); regra de segredos documentada: só nos environments do GitHub ou em arquivo de ambiente com permissão 600 no servidor, nunca no repositório (CIT-46).
 
 ## [1.0.0] - 2026-09-13
 
