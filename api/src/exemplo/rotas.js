@@ -12,7 +12,7 @@ const corpoExemplo = {
 }
 
 export default async function rotasExemplo(app) {
-  app.post('/api/exemplos', {
+  app.post('/exemplos', {
     schema: { body: corpoExemplo, response: { 200: corpoExemplo } }
   }, async (request) => {
     return { titulo: request.body.titulo, quantidade: request.body.quantidade }

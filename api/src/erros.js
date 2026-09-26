@@ -1,5 +1,16 @@
 // Respostas de erro padronizadas: nunca expõem stack, mensagem interna nem códigos FST_.
 
+// Erro de regra de negócio (409, 422, 429...): o serviço lança e o handler
+// responde com o status e `{ erro }`, sem expor mensagem interna.
+export class ErroDeDominio extends Error {
+  constructor({ status, erro }) {
+    super(erro)
+    this.name = 'ErroDeDominio'
+    this.status = status
+    this.erro = erro
+  }
+}
+
 const mensagensPorRegra = {
   required: 'obrigatório',
   type: 'tipo inválido',
@@ -23,6 +34,9 @@ function nomeDoCampo(item) {
 
 export function registrarErros(app) {
   app.setErrorHandler((erro, request, reply) => {
+    if (erro instanceof ErroDeDominio) {
+      return reply.code(erro.status).send({ erro: erro.erro })
+    }
     if (erro.validation) {
       const campos = erro.validation.map((item) => ({
         campo: nomeDoCampo(item),

@@ -17,6 +17,7 @@
     "test": "node --import ./test/sem-rede.js --test --test-concurrency=1"
   },
   "dependencies": {
+    "@fastify/ajv-compiler": "^4.0.6",
     "@fastify/cors": "^11.3.0",
     "fastify": "^5.12.5",
     "node-pg-migrate": "^9.0.0",

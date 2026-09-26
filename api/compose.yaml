@@ -9,7 +9,9 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: citmail
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina em api/.env}
+      # Sem `:?`: o compose interpola o arquivo inteiro e o perfil `teste` falharia sem .env.
+      # A imagem do postgres recusa subir sem senha, o que mantém a exigência aqui.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
     ports:
       - "127.0.0.1:55432:5432"
     volumes:

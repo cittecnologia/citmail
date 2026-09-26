@@ -14,8 +14,15 @@ const app = construirApp(config)
 for (const sinal of ['SIGTERM', 'SIGINT']) {
   process.once(sinal, async () => {
     app.log.info({ sinal }, 'encerrando')
-    await app.close()
-    process.exit(0)
+    let codigo = 0
+    try {
+      await app.close()
+    } catch (erro) {
+      codigo = 1
+      app.log.error({ err: erro }, 'falha ao encerrar')
+    } finally {
+      process.exit(codigo)
+    }
   })
 }
 

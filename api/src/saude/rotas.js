@@ -10,13 +10,14 @@ const corpoSaude = {
   }
 }
 
-export default async function rotasSaude(app, { pool }) {
-  app.get('/api/health', {
+// Rota técnica: acessa o pool direto (`app.banco`), sem serviço/repositório (ADR 0002).
+export default async function rotasSaude(app) {
+  app.get('/health', {
     schema: { response: { 200: corpoSaude, 503: corpoSaude } }
   }, async (request, reply) => {
     reply.header('cache-control', 'no-store')
     try {
-      await verificarBanco(pool)
+      await verificarBanco(app.banco)
       return { status: 'ok', banco: 'ok' }
     } catch (erro) {
       // Só o código do erro: a mensagem do driver pode trazer host, porta ou usuário.

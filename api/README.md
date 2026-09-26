@@ -15,15 +15,23 @@ api/
   src/
     config.js         lê e valida as variáveis de ambiente (carregarConfig)
     banco.js           pool do PostgreSQL (pg) e checagem de saúde (verificarBanco)
-    app.js             fábrica construirApp(config, { pool, logStream }): Fastify, CORS, log e erros
-    erros.js           tratamento padronizado de erro (400 por campo, 404, 500)
+    app.js             fábrica construirApp(config, { pool, logStream }): Fastify, CORS, log, validação e erros
+    erros.js           tratamento padronizado de erro (400 por campo, 404, 500) e ErroDeDominio
     servidor.js        ponto de entrada: carrega a config, sobe o Fastify, encerra em SIGTERM/SIGINT
     saude/rotas.js      GET /api/health
     exemplo/rotas.js    POST /api/exemplos (só fora de produção; fixa o padrão de schema e de erro)
   test/                suíte node:test (uma spec por critério de aceite)
 ```
 
-Rotas de negócio futuras (pedidos, pagamentos, contas etc.) seguem a organização por módulo de domínio do [ADR 0002](../docs/adr/0002-organizacao-do-codigo-da-api.md): camadas rota → serviço → repositório dentro de cada módulo.
+Rotas de negócio futuras (pedidos, pagamentos, contas etc.) seguem a organização por módulo de domínio do [ADR 0002](../docs/adr/0002-organizacao-do-codigo-da-api.md): camadas rota → serviço → repositório dentro de cada módulo. A rota só valida e traduz HTTP; o serviço aplica a regra de negócio; o repositório é o único que consulta o banco. O health (`saude/rotas.js`) é a exceção: rota técnica, consulta o pool direto.
+
+Padrões de `src/app.js` para todo módulo:
+
+- Registro com prefixo: `app.register(rotasDoModulo, { prefix: '/api' })`; dentro do módulo, o caminho sem `/api` (ex.: `app.get('/health')`).
+- Pool do banco em `app.banco` (`app.decorate('banco', pool)`), não por opção de plugin.
+- Rota `POST`, `PUT` ou `PATCH` sem `schema.body` derruba a subida (hook `onRoute`, [ADR 0003](../docs/adr/0003-framework-http.md)); exceção só com justificativa na lista `rotasSemSchemaDeCorpo`.
+- Corpo JSON validado sem coerção de tipo (`"2"` não vira `2`: responde 400 `tipo inválido`); querystring e params mantêm a coerção do Fastify.
+- Regra de negócio violada: `throw new ErroDeDominio({ status: 409, erro: 'codigo_do_erro' })` (de `src/erros.js`); a resposta é o status e `{ "erro": "codigo_do_erro" }`.
 
 ## Requisitos
 
@@ -74,12 +82,12 @@ Nomes usados por `src/config.js` e por `compose.yaml`; nenhum valor secreto vai 
 | Variável | Uso | Padrão |
 |---|---|---|
 | `DATABASE_URL` | String de conexão do PostgreSQL. | obrigatória, sem padrão |
-| `POSTGRES_PASSWORD` | Senha do PostgreSQL de desenvolvimento; lida pelo `docker compose` a partir de `api/.env` e usada dentro de `DATABASE_URL`. | obrigatória, sem padrão |
+| `POSTGRES_PASSWORD` | Senha do PostgreSQL de desenvolvimento; lida pelo `docker compose` a partir de `api/.env` e usada dentro de `DATABASE_URL`. Sem ela, o contêiner `banco` não sobe (a imagem do postgres recusa senha vazia); o `banco-teste` não precisa dela. | obrigatória para `banco`, sem padrão |
 | `HOST` | Endereço em que a API escuta. | `127.0.0.1` |
 | `PORT` | Porta em que a API escuta. | `3000` |
-| `CORS_ORIGENS` | Lista de origens permitidas, separadas por vírgula (CORS: Cross-Origin Resource Sharing, compartilhamento de recursos entre origens). Sem `*` e sem valor vazio. | obrigatória, sem padrão |
+| `CORS_ORIGENS` | Lista de origens permitidas, separadas por vírgula (CORS: Cross-Origin Resource Sharing, compartilhamento de recursos entre origens). Cada item é uma origem exata, `esquema://host[:porta]` (ex.: `https://novo.citmail.com.br`), sem caminho, sem barra final, sem `*` e sem `null`. | obrigatória, sem padrão |
 | `LOG_LEVEL` | Nível do log `pino` (`fatal`, `error`, `warn`, `info`, `debug`, `trace`). | `info` |
-| `NODE_ENV` | Ambiente (`development`, `test`, `production`); em produção, `POST /api/exemplos` não é registrado. | `development` |
+| `NODE_ENV` | Ambiente: só `production`, `development` ou `test` (outro valor impede a subida); em produção, `POST /api/exemplos` não é registrado. O `.env` de desenvolvimento deve definir `development`. | `production` (ausente = produção, falha fechada) |
 
 ## Como rodar os testes
 
@@ -92,7 +100,7 @@ npm test
 
 `npm test` roda com `--import ./test/sem-rede.js`: uma guarda que bloqueia qualquer conexão a um host fora de `127.0.0.1`/`::1`/`localhost`. Nenhum teste depende de serviço externo; integrações futuras (Asaas, Skymail, RDAP) devem ser mockadas, nunca chamadas de verdade.
 
-Sem Docker, um PostgreSQL 17 local serve no lugar do `banco:teste`: apontar `DATABASE_URL_TESTE` para ele (padrão: `postgres://postgres@127.0.0.1:55433/postgres`).
+Sem Docker, um PostgreSQL 17 local serve no lugar do `banco:teste`: apontar `DATABASE_URL_TESTE` para ele (padrão: `postgres://postgres@127.0.0.1:55433/postgres`). O host precisa ser loopback (`127.0.0.1`, `::1` ou `localhost`): a guarda sem-rede bloqueia qualquer outro.
 
 **Comando que a CI (Continuous Integration: verificação automática a cada mudança) da CIT-54 vai rodar:**
 
@@ -104,11 +112,11 @@ npm --prefix api ci && npm --prefix api run banco:teste && npm --prefix api test
 
 Definition of Done (DoD: lista do que precisa ser verdade antes de considerar uma rota ou mudança pronta). Vale para toda rota e mudança desta API:
 
-1. **Todo endpoint declara `schema`** (tipos, tamanhos e limites; corpo com `additionalProperties: false`). Como cumprir: seguir o padrão de `src/saude/rotas.js` e `src/exemplo/rotas.js` — toda rota nova define `schema.body`/`schema.response` com limites explícitos (`minLength`, `maxLength`, `minimum`, `maximum` etc.).
+1. **Todo endpoint declara `schema`** (tipos, tamanhos e limites; corpo com `additionalProperties: false`). Como cumprir: seguir o padrão de `src/saude/rotas.js` e `src/exemplo/rotas.js` — toda rota nova define `schema.body`/`schema.response` com limites explícitos (`minLength`, `maxLength`, `minimum`, `maximum` etc.). Rota `POST`/`PUT`/`PATCH` sem `schema.body` impede a API de subir.
 2. **O banco só é acessado por consulta parametrizada** (`$1`, `$2`; nunca concatenar valor em SQL). Como cumprir: usar sempre `pool.query(texto, valores)`, como em `src/banco.js`; nunca montar SQL com template string a partir de entrada do usuário.
 3. **Os testes automatizados rodam sem internet** (guarda `sem-rede`, serviços externos mockados). Como cumprir: manter `--import ./test/sem-rede.js` no script `test` e mockar qualquer serviço externo novo em vez de chamá-lo de verdade.
 4. **As ações críticas chamam a auditoria** (E6-H7; lista no [ADR 0013](../docs/adr/0013-seguranca-transversal-e-observabilidade.md), item 7). Como cumprir: ao implementar uma ação da lista (login, falha de login, bloqueio, criação/exclusão de caixa, troca de senha, alteração cadastral, cancelamento etc.), gravar na tabela de auditoria antes de responder — a auditoria em si ainda não existe nesta história (CIT-53), fica para a E6-H7.
-5. **Nenhum segredo, senha ou dado pessoal em log** (`redact` do [ADR 0013](../docs/adr/0013-seguranca-transversal-e-observabilidade.md); segredos só por variável de ambiente). Como cumprir: adicionar todo campo sensível novo à lista `caminhosMascarados` de `src/app.js`, e nunca logar `config.databaseUrl` nem outra variável de ambiente sensível.
+5. **Nenhum segredo, senha ou dado pessoal em log** (`redact` do [ADR 0013](../docs/adr/0013-seguranca-transversal-e-observabilidade.md); segredos só por variável de ambiente). Como cumprir: adicionar todo campo sensível novo à lista `caminhosMascarados` de `src/app.js` (que já mascara `err.detail`, `err.where`, `err.parameters` e similares do `pg`), e nunca logar `config.databaseUrl` nem outra variável de ambiente sensível.
 
 ## Próximos passos
 
