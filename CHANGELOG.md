@@ -54,6 +54,9 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 ### Corrigido
 - Checkout: o código Pix do domínio extra (passo 3) não muda mais ao alterar outros add-ons; só é gerado de novo quando o valor do domínio extra muda (CIT-30).
 
+### Segurança
+- Arquivos `.env` locais ignorados pelo Git e com leitura negada a agentes (`.claude/settings.json`); regra de segredos documentada: só nos environments do GitHub ou em arquivo de ambiente com permissão 600 no servidor, nunca no repositório (CIT-46).
+
 ## [1.0.0] - 2026-09-13
 
 Primeira versão publicada. Migra o site para o [Brandbook CIT v1.0](https://github.com/cittecnologia/brandbook-cit): história US#2 no Taiga, PR #2.
