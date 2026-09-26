@@ -11,6 +11,7 @@ api/
   compose.yaml        PostgreSQL local (desenvolvimento e teste) por Docker Compose
   .env.example        nomes das variáveis de ambiente (sem valores secretos)
   package.json        scripts e dependências da API
+  eslint.config.js    configuração do lint (ESLint, regras recomendadas)
   migrations/         migrações SQL do node-pg-migrate (uma por arquivo, com Up/Down)
   src/
     config.js         lê e valida as variáveis de ambiente (carregarConfig)
@@ -73,6 +74,7 @@ Resposta esperada: status `200`, cabeçalho `x-request-id` e corpo `{"status":"o
 | `npm run migrar:reverter` | Reverte a última leva de migrações (`node-pg-migrate down`). |
 | `npm run nova-migracao` | Cria um novo arquivo de migração SQL em `migrations/`. |
 | `npm run banco:teste` | Sobe o PostgreSQL de teste (perfil `teste` do `compose.yaml`, dados em `tmpfs`, sem senha, só loopback). |
+| `npm run lint` | Roda o ESLint (regras recomendadas, `eslint.config.js`) sem tolerar aviso (`--max-warnings=0`). |
 | `npm test` | Roda a suíte `node:test` sem acesso à rede externa (ver "Como rodar os testes"). |
 
 ## Variáveis de ambiente
@@ -102,11 +104,13 @@ npm test
 
 Sem Docker, um PostgreSQL 17 local serve no lugar do `banco:teste`: apontar `DATABASE_URL_TESTE` para ele (padrão: `postgres://postgres@127.0.0.1:55433/postgres`). O host precisa ser loopback (`127.0.0.1`, `::1` ou `localhost`): a guarda sem-rede bloqueia qualquer outro.
 
-**Comando que a CI (Continuous Integration: verificação automática a cada mudança) da CIT-54 vai rodar:**
+**O que a CI (Continuous Integration: verificação automática a cada mudança) roda** (job `api` de `.github/workflows/testes.yml`, em todo PR para `develop` e `main` e antes da publicação da homologação): um PostgreSQL 17 de serviço do GitHub Actions (`postgres:17-alpine`, sem senha, na porta `55433`), `DATABASE_URL_TESTE=postgres://postgres@127.0.0.1:55433/postgres` e, a partir da raiz do repositório:
 
 ```sh
-npm --prefix api ci && npm --prefix api run banco:teste && npm --prefix api test
+npm --prefix api ci && npm --prefix api run lint && npm --prefix api test
 ```
+
+Para reproduzir localmente, subir antes o `banco-teste` (`npm --prefix api run banco:teste`), que usa a mesma porta. Lint ou teste falhando bloqueia o merge do PR.
 
 ## Definition of Done
 

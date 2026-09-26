@@ -23,6 +23,7 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Testes E2E dos preços com desconto e testes que fixam os valores cobrados antes da mudança (CIT-22).
 - Registros de decisão de arquitetura (ADRs) do back-end em `docs/adr/`: organização da API, framework HTTP, banco e migrações, fila e eventos, execução na VPS, CORS e cookies, sessão do painel, consulta de domínio, e-mail transacional, alertas, fonte única de preços e segurança, com anexos de modelo de dados e eventos de domínio (CIT-47).
 - API em `api/` (Node.js, Fastify e PostgreSQL): `GET /api/health` com o estado do banco (200 ou 503), migrações SQL com `node-pg-migrate`, validação por schema com erro 400 por campo, CORS por lista de origens do ambiente, log JSON com `requestId` e dados sensíveis mascarados, PostgreSQL local por Docker Compose e testes com `node:test` que rodam sem internet. O `api/README.md` traz o setup e a Definition of Done da API (CIT-53).
+- CI da API em todo PR para `develop` e `main`: lint (ESLint) e testes com PostgreSQL de serviço (job `api`) e scan de segredos nos commits do PR com gitleaks e regras em `.gitleaks.toml` (job `segredos`), ambos exigidos para o merge (CIT-54).
 
 ### Alterado
 - Landing: novos textos do hero (título, subtítulo e indicadores), da faixa de confiança e da seção Recursos (CIT-15).
@@ -47,6 +48,7 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Checkout: aviso dos add-ons passa a "GARANTA 15% DE DESCONTO NESTA CONTRATAÇÃO" (CIT-22).
 - Checkout: valores calculados em centavos inteiros; Pix e boleto de demonstração sem erro de ponto flutuante (CIT-22).
 - Checkout: o preço do registro do domínio principal (passo 2) e do domínio extra vem da mesma constante `PRECOS.dominio` em `assets/precos.js`, sem valor escrito à mão; os valores exibidos e cobrados não mudam (CIT-31).
+- Actions do workflow de testes fixadas por SHA, como na homologação (CIT-54).
 
 ### Removido
 - `serve.py`, substituído pelo Vite.
