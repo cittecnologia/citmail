@@ -13,6 +13,7 @@
 
 import { Client, Pool } from 'pg';
 import { Writable } from 'node:stream';
+import { fileURLToPath } from 'node:url';
 import { runner } from 'node-pg-migrate';
 import { construirApp } from '../src/app.js';
 
@@ -78,7 +79,10 @@ export async function removerBancoTemporario(nomeBanco) {
  * opções válidas.
  */
 export async function aplicarMigracoes(url, direcao = 'up', quantidade = Infinity) {
-  const diretorioMigracoes = new URL('../migrations', import.meta.url).pathname;
+  // `fileURLToPath` (não `new URL(...).pathname`) para funcionar também no
+  // Windows, onde `pathname` de uma `file:` URL traz uma barra inicial
+  // espúria antes da letra da unidade (ex.: "/C:/...").
+  const diretorioMigracoes = fileURLToPath(new URL('../migrations', import.meta.url));
 
   return runner({
     databaseUrl: url,
