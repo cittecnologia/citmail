@@ -1,5 +1,7 @@
 # Scan de segredos do CI (job "segredos" de .github/workflows/testes.yml, CIT-54).
 # Regras padrão do gitleaks + os padrões da CIT-46 (CA6), sensíveis a maiúsculas como no grep original.
+# Nas regras de atribuição, o valor precisa ser literal com 8+ caracteres: schemas (`password: {`),
+# placeholders (`<senha>`) e referências (`${VAR}`, `$VAR`) não casam, para não dar falso positivo.
 # Rodar localmente: gitleaks git --config .gitleaks.toml --redact --log-opts="origin/develop..HEAD"
 
 title = "CITMail"
@@ -10,13 +12,13 @@ useDefault = true
 [[rules]]
 id = "citmail-skymail-private-key"
 description = "Chave privada da Skymail atribuída em texto"
-regex = '''SKYMAIL_PRIVATE_KEY\s*[:=]\s*\S'''
+regex = '''SKYMAIL_PRIVATE_KEY\s*[:=]\s*(?:['"][^'"\s]{8,}['"]|[^\s'"$<{(,;]{8,})'''
 keywords = ["SKYMAIL_PRIVATE_KEY"]
 
 [[rules]]
 id = "citmail-user-password"
 description = "Senha de usuário (USER_PASSWORD) atribuída em texto"
-regex = '''USER_PASSWORD\s*[:=]\s*\S'''
+regex = '''USER_PASSWORD\s*[:=]\s*(?:['"][^'"\s]{8,}['"]|[^\s'"$<{(,;]{8,})'''
 keywords = ["USER_PASSWORD"]
 
 [[rules]]
@@ -28,11 +30,11 @@ keywords = ["PRIVATE KEY"]
 [[rules]]
 id = "citmail-api-key"
 description = "Chave de API atribuída em texto"
-regex = '''api[_-]?key\s*[:=]\s*\S'''
+regex = '''api[_-]?key\s*[:=]\s*(?:['"][^'"\s]{8,}['"]|[^\s'"$<{(,;]{8,})'''
 keywords = ["apikey", "api_key", "api-key"]
 
 [[rules]]
 id = "citmail-password"
 description = "Senha atribuída em texto"
-regex = '''password\s*[:=]\s*\S'''
+regex = '''password\s*[:=]\s*(?:['"][^'"\s]{8,}['"]|[^\s'"$<{(,;]{8,})'''
 keywords = ["password"]
