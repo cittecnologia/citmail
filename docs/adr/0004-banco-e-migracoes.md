@@ -1,6 +1,6 @@
 # 0004. PostgreSQL, acesso ao banco e migrações
 
-Status: proposto
+Status: aceito
 Data: 2026-09-25
 
 ## Contexto
@@ -63,3 +63,4 @@ A tabela `pedido` segue o mesmo padrão: `id` UUID, `cliente_id` UUID, coluna `e
 
 - 2026-09-25: criação (CIT-47).
 - 2026-09-25: ajustes da revisão (CIT-47).
+- 2026-09-26: aceito pelo responsável (CIT-47). Itens em "Decisões em aberto" do README e revisões previstas pela #48 continuam valendo.

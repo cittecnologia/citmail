@@ -1,6 +1,6 @@
 # 0001. Registrar decisões de arquitetura em ADRs (MADR) em `docs/adr`
 
-Status: proposto
+Status: aceito
 Data: 2026-09-25
 
 ## Contexto
@@ -40,3 +40,4 @@ Proposto (decidido na análise da CIT-47, sem decisão formal do responsável): 
 
 - 2026-09-25: criação (CIT-47).
 - 2026-09-25: ajustes da revisão (CIT-47).
+- 2026-09-26: aceito pelo responsável (CIT-47). Itens em "Decisões em aberto" do README e revisões previstas pela #48 continuam valendo.

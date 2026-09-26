@@ -1,6 +1,6 @@
 # 0008. Sessão do painel e armazenamento de senhas
 
-Status: proposto
+Status: aceito
 Data: 2026-09-25
 
 ## Contexto
@@ -106,3 +106,4 @@ const hash = await argon2.hash(senha, { type: argon2.argon2id, memoryCost: 19456
 
 - 2026-09-25: criação (CIT-47).
 - 2026-09-25: ajustes da revisão (CIT-47).
+- 2026-09-26: aceito pelo responsável (CIT-47). Itens em "Decisões em aberto" do README e revisões previstas pela #48 continuam valendo.
