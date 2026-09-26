@@ -51,6 +51,9 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - Prazo de ativação de 5 minutos dos textos da landing e do checkout (CIT-15).
 - Opção de registro de domínio .com no checkout (CIT-15).
 
+### Corrigido
+- Checkout: o código Pix do domínio extra (passo 3) não muda mais ao alterar outros add-ons; só é gerado de novo quando o valor do domínio extra muda (CIT-30).
+
 ## [1.0.0] - 2026-09-13
 
 Primeira versão publicada. Migra o site para o [Brandbook CIT v1.0](https://github.com/cittecnologia/brandbook-cit): história US#2 no Taiga, PR #2.
