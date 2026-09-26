@@ -1706,6 +1706,7 @@
     let domPixIntvl   = null;
     const addonQtys   = { talk: 0, backup90: 0, backup365: 0, grupoEmail: 0, skybox: 0, extraDom: 0 };
     let   skyboxPlan  = null; // '50gb' | '100gb' | '1tb'
+    let   extraDomPixVal = null; // centavos do último Pix gerado para os domínios extras
 
     /* ---- DOMAIN STEP ---- */
     const DOMAIN_OPTS = { 'new-br':'doptBr', 'existing':'doptExist' };
@@ -1924,7 +1925,12 @@
         pixPanel.style.display = domQ > 0 ? 'block' : 'none';
         if (domQ > 0) {
           document.getElementById('extraDomPixTotal').textContent = `R$ ${fmtCentavos(domVal)}`;
-          document.getElementById('extraDomPixCode').textContent  = genFakePix(domVal / 100);
+          // refreshAddons roda a cada add-on alterado: o código só é gerado de novo quando o valor muda,
+          // para o código já copiado continuar valendo.
+          if (domVal !== extraDomPixVal) {
+            document.getElementById('extraDomPixCode').textContent = genFakePix(domVal / 100);
+            extraDomPixVal = domVal;
+          }
         }
       }
 
