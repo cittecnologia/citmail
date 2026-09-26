@@ -45,7 +45,8 @@ Sessão no Redis (a mesma instância da fila, configurada no ADR 0006):
 CSRF (falsificação de requisição entre sites):
 
 - `SameSite=Lax` impede o envio do cookie em requisições vindas de outros sites, exceto navegação GET.
-- Toda rota autenticada por cookie do painel que altera estado (POST, PUT, PATCH, DELETE) exige `Origin` presente e igual a uma origem do painel do ambiente (ADR 0007). Sem `Origin` ou com outro valor, 403.
+- Toda rota do painel que altera estado (POST, PUT, PATCH, DELETE) exige `Origin` presente e igual a uma origem do painel do ambiente (ADR 0007), com ou sem sessão já aberta. Sem `Origin` ou com outro valor, 403.
+- A checagem vale também para login, verificação de 2FA (E5-H11) e logout do painel, mesmo sem sessão ainda: sem ela, uma página de terceiros poderia forçar o navegador da vítima a logar numa conta do atacante ou a se deslogar (CSRF de login), já que essas rotas não exigem o cookie de sessão para ser aceitas.
 - Rotas GET não alteram estado.
 
 Rotas isentas da checagem de `Origin` do painel (não usam o cookie de sessão), cada uma com sua autenticação:
@@ -57,6 +58,8 @@ Rotas isentas da checagem de `Origin` do painel (não usam o cookie de sessão),
 | `POST /api/orcamento` (E3-H1) | pública; allow-list do ADR 0007, sem cookie |
 | `GET /api/dominios/disponibilidade` (#90) | pública; allow-list do ADR 0007, sem cookie; limite de taxa (ADR 0009) |
 | "Esqueci a senha" e definição de senha por link (E5-H2) | token de uso único no corpo; limite de taxa (ADR 0013) |
+
+Login, verificação de 2FA e logout do painel **não** estão na tabela acima: mesmo sem sessão, entram na regra geral de `Origin` do primeiro item.
 
 Link de definição ou redefinição de senha (E5-H2, E7-H3):
 
@@ -72,6 +75,7 @@ Senhas:
   - Login com e-mail inexistente roda Argon2id contra um hash falso fixo, para o tempo de resposta não revelar se o e-mail existe.
   - Mensagem, código HTTP e contador de falhas iguais para e-mail inexistente e senha errada.
   - "Esqueci a senha" responde sempre igual; só contas existentes geram `definicao_senha_solicitada`.
+  - A gravação da solicitação e a publicação do evento acontecem fora do caminho da resposta (job da fila, depois de responder): se só acontecessem para conta existente antes de responder, o tempo de resposta revelaria o que a mensagem igual já esconde.
 - Bloqueio por tentativas no ADR 0013.
 
 ```js

@@ -35,7 +35,7 @@ Cada ação vira uma linha de log marcada. Mais simples, mas o log é rotacionad
 2. **Senhas:** Argon2id com m=19 MiB, t=2, p=1, e login sem enumeração de contas (ADR 0008).
 3. **IP do cliente:** o Fastify usa `trustProxy` restrito ao loopback (o Caddy, ADR 0006). Um `X-Forwarded-For` enviado pelo cliente não muda o IP usado no limite de taxa, no bloqueio e na auditoria.
 4. **Força bruta (E6-H4):**
-   - Contador de falhas por conta no Redis, com expiração de 15 min a partir da primeira falha. Chave pelo hash do e-mail normalizado, sem e-mail em claro. O contador existe também para e-mail inexistente, com a mesma resposta (sem enumeração).
+   - Contador de falhas por conta no Redis, com expiração de 15 min a partir da primeira falha. Chave por HMAC (segredo do servidor) do e-mail normalizado, sem e-mail em claro; HMAC e não hash simples, porque o espaço de e-mails é adivinhável (busca por dicionário reverteria um SHA-256 puro) e o segredo do HMAC impede reconstruir a chave sem ele. O contador existe também para e-mail inexistente, com a mesma resposta (sem enumeração).
    - Com 5 falhas, a 6ª tentativa de login é recusada até o contador expirar: **HTTP 429 com `Retry-After`** (segundos até liberar). Mesma resposta para conta existente e inexistente.
    - Contador por IP entre contas diferentes, também 429 com `Retry-After` acima do limite (valor na E6-H4).
    - "Esqueci a senha" (E5-H2) e o 2FA (E5-H11) têm limite próprio, por IP + conta. O bloqueio de login da conta **não** impede a recuperação de senha: um atacante que trava a conta não tira da vítima o caminho de volta.
@@ -53,7 +53,7 @@ Cada ação vira uma linha de log marcada. Mais simples, mas o log é rotacionad
 8. **Logs (E2-H9):**
    - `pino` em JSON (logger do Fastify, ADR 0003) com `requestId`, rota, status e duração.
    - O `requestId` nasce na requisição, vai nos dados do job da fila e no registro do evento (ADR 0005), e o log do job repete o mesmo valor.
-   - `redact` com caminhos explícitos em cada nível usado (o `redact` do pino aceita `*` para um nível, não curinga profundo): `senha`, `token`, `email`, `telefone`, `nome`, `cpf`, `cnpj`, `documento` na raiz, em `*.` e em `*.*.`; mais `req.headers.cookie`, `req.headers.authorization`, `req.headers["asaas-access-token"]` e `res.headers["set-cookie"]`. Teste automatizado confere cada caminho.
+   - `redact` com caminhos explícitos em cada nível usado (o `redact` do pino aceita `*` para um nível, não curinga profundo): `senha`, `token`, `email`, `telefone`, `nome`, `cpf`, `cnpj`, `documento` na raiz, em `*.` e em `*.*.`; mais `req.headers.cookie`, `req.headers.authorization`, `req.headers["asaas-access-token"]` e `res.headers["set-cookie"]`. Esses quatro últimos caminhos só existem no log se o serializer de requisição e resposta do Fastify for customizado para incluir `headers` (o serializer padrão não os expõe); o teste automatizado de mascaramento roda sobre o serializer real configurado, não sobre um objeto de log fabricado à parte.
    - A query string não leva segredo: o token de senha vai no fragmento da URL (ADR 0008).
    - Retenção definida no plano da E2-H9.
 9. **Retenção e LGPD** (prazos propostos, a confirmar pelo responsável):

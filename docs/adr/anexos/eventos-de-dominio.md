@@ -20,7 +20,7 @@ Payload só com ids e dados não pessoais. Sem nome, e-mail, documento, telefone
 
 ## Tabela de eventos
 
-A chave de idempotência é o valor gravado em `evento.chave_idempotencia` (restrição única, ADR 0005). Formato: `<nome>-<id>`. Ela identifica o fato de negócio, não o evento externo: o Asaas manda `PAYMENT_CONFIRMED` e `PAYMENT_RECEIVED` com ids diferentes para o mesmo pagamento, e a chave pelo id do evento do Asaas deixaria passar os dois.
+A chave de idempotência é o valor gravado em `evento.chave_idempotencia` (restrição única, ADR 0005). Formato: `<nome>-<id>[-<id>]`, com um segundo id só quando o fato de negócio exige chave composta (`conta_suspensa` e `conta_reativada`, abaixo, chaveados por conta e cobrança). Ela identifica o fato de negócio, não o evento externo: o Asaas manda `PAYMENT_CONFIRMED` e `PAYMENT_RECEIVED` com ids diferentes para o mesmo pagamento, e a chave pelo id do evento do Asaas deixaria passar os dois.
 
 | nome | emite (história) | consome (histórias) | payload mínimo | chave de idempotência |
 |---|---|---|---|---|

@@ -9,8 +9,8 @@ Decidido pelo responsável em 2026-09-25: os alertas da equipe (falha de job esg
 
 ## Opções consideradas
 
-### Opção 1: Bot do Telegram, por job da fila
-Um job dedicado de alerta, consumido pela fila (ADR 0005), que envia mensagem a um grupo do Telegram via bot, com token do bot como segredo e limite de mensagens por minuto.
+### Opção 1: Bot do Telegram, com dois caminhos de envio
+Um bot do Telegram envia a mensagem ao grupo da equipe. Alertas de negócio (job esgotado, provisionamento, domínio, cobrança vencida, cancelamento) saem por um job dedicado, consumido pela fila (ADR 0005); alertas de infraestrutura (Redis, banco, backup, disponibilidade) saem direto do processo que detecta a falha, sem passar pela fila. Token do bot como segredo e limite de mensagens por minuto, nos dois caminhos.
 
 ### Opção 2: E-mail (descartada)
 Alertas por e-mail para a equipe, pelo mesmo canal do ADR 0010.
@@ -26,7 +26,7 @@ Um canal de mensagens de equipe em Slack ou Discord, com webhook de entrada.
 
 - **Dois caminhos de envio:**
   - Falha de infraestrutura (Redis, banco, backup, disponibilidade; E2-H7, E2-H11): envio direto ao Telegram, fora da fila, pelo processo que detecta a falha (monitor ou script do backup). A fila depende do Redis e do banco, então não pode ser o canal que avisa da queda deles.
-  - Demais alertas (job esgotado, provisionamento, domínio, cancelamento): job da fila.
+  - Demais alertas (job esgotado, provisionamento, domínio, cobrança vencida, cancelamento): job da fila.
 - Mensagem sem dado pessoal (só ids e tipo do alerta).
 - Token do bot como segredo. O token vai na URL da API do Telegram: erro do `fetch` nunca é registrado com a URL; o log leva só o tipo do erro e o status.
 - Limite de mensagens por minuto.

@@ -44,7 +44,8 @@ exports.up = pgm => {
     payload: { type: 'jsonb', notNull: true },
     request_id: { type: 'text' },
     ocorrido_em: { type: 'timestamptz', notNull: true, default: pgm.func('now()') },
-    publicado_em: { type: 'timestamptz' }
+    publicado_em: { type: 'timestamptz' },
+    tentativas_publicacao: { type: 'integer', notNull: true, default: 0 }
   })
 }
 exports.down = pgm => pgm.dropTable('evento')

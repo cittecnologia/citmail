@@ -24,12 +24,12 @@ A gravação do evento na tabela `evento` acontece na mesma transação da mudan
 **Proposto:**
 
 1. **Outbox simples (Opção 2).** O evento é gravado na tabela `evento` na mesma transação da mudança de estado. Um publicador lê a tabela e envia à fila depois do commit.
-2. **Tabela `evento`** (anexo de modelo de dados): `id` UUID (é o `eventoId`), `nome`, `agregado_tipo` e `agregado_id`, `chave_idempotencia` com restrição única, `payload`, `publicado_em`.
+2. **Tabela `evento`** (anexo de modelo de dados): `id` UUID (é o `eventoId`), `nome`, `versao`, `agregado_tipo` e `agregado_id`, `chave_idempotencia` com restrição única, `payload`, `request_id`, `ocorrido_em`, `publicado_em`, `tentativas_publicacao`.
 3. **Chave de idempotência por fato de negócio**, não pelo id do evento externo. Ex.: `pedido_pago-<pedidoId>`, `cobranca_paga-<cobrancaAsaasId>`. O Asaas manda `PAYMENT_CONFIRMED` e `PAYMENT_RECEIVED` com ids diferentes para o mesmo pagamento; a chave pelo id do evento do Asaas deixaria passar os dois. Lista completa no anexo de eventos.
 4. **Um job por consumidor.** Cada consumidor recebe o evento num job próprio, com `jobId = <consumidor>-<eventoId>`. Separador hífen: o BullMQ pode rejeitar `:` em `jobId` customizado.
 5. **Novas tentativas com backoff.** Tentativas esgotadas levam o job a "falhou" e geram alerta (ADR 0011).
 6. **Webhook do Asaas (E3-H4):**
-   - Exige o cabeçalho `asaas-access-token`, comparado em tempo constante (`crypto.timingSafeEqual`) com o token configurado. Ausente ou diferente: 401, nada gravado.
+   - Exige o cabeçalho `asaas-access-token`. Comparação em tempo constante: calcula o digest SHA-256 do token recebido e do token configurado (ambos 32 bytes) e compara os dois digests com `crypto.timingSafeEqual`, que exige buffers do mesmo tamanho — comparar os tokens brutos falharia (exceção, não 401) para um token recebido de tamanho diferente do configurado. Ausente ou com digest diferente: 401, nada gravado, sem expor o tamanho do token esperado.
    - Grava o evento bruto (tabela própria, única pelo id do evento do Asaas) e responde 200. O processamento segue em job.
    - Antes de mudar estado, o job consulta o pagamento na API do Asaas e confere pagamento, valor e pedido (assinatura ligada ao pedido). Divergência: não muda estado, gera alerta.
    - Evento bruto com dados pessoais minimizados (LGPD): guarda só os campos usados (ids, tipo, estado, valor, datas); descarta nome, e-mail, documento e endereço do payload antes de gravar.
@@ -39,6 +39,8 @@ Exemplo ilustrativo do outbox:
 
 ```sql
 BEGIN;
+-- caso sem domínio novo (anexo de modelo de dados); com domínio novo, o estado calculado
+-- é 'pago' ou 'aguardando_pagamento_do_dominio', conforme a tabela de estados do pedido
 UPDATE pedido SET estado = 'pago' WHERE id = $1 AND estado = 'aguardando_pagamento';
 INSERT INTO evento (id, nome, agregado_tipo, agregado_id, chave_idempotencia, payload)
 VALUES ($2, 'pedido_pago', 'pedido', $1, 'pedido_pago-' || $1, $3)

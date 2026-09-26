@@ -23,7 +23,7 @@ Estes ADRs registram as decisões de arquitetura do back-end do CITMail, tomadas
 ```
 # NNNN. <Título>
 
-Status: <proposto|aceito>
+Status: <proposto|aceito|substituído por NNNN>
 Data: 2026-09-25
 
 ## Contexto
@@ -103,11 +103,10 @@ Pendências que não foram fechadas dentro do timebox do spike (3 dias úteis, a
 | Provedor do backup fora da VPS; o ADR 0006 já decide o tipo (armazenamento de objetos, cifra assimétrica, bloqueio de objeto), falta o provedor. | responsável | na E2-H7 |
 | Código da API neste repositório público em `api/` ou em repositório separado; a proposta do ADR 0002 é `api/` aqui. Confirmar, porque muda o CI (E2-H4) e o deploy (E2-H5 em diante). | responsável | 2026-10-01 |
 | `assets/precos.js` gerado a partir da tabela do servidor ou continua manual com teste de paridade; a proposta do ADR 0012 é manual no MVP. Confirmar. | responsável | 2026-10-01 |
-| Nome do evento de desativação da E3-H7 (proposta: `assinatura_cancelada`) e se o cancelamento feito pela equipe no fim do ciclo (E5-H10) também o publica. | responsável | 2026-10-01 |
+| Nome do evento de desativação da E3-H7 (proposta: `assinatura_cancelada`), se o cancelamento feito pela equipe no fim do ciclo (E5-H10) também o publica, e quem efetiva o cancelamento no mvp (anexo de eventos, divergência 1). | responsável | 2026-10-01 |
 | Origem que serve o painel depois da migração da landing (`citmail.com.br/painel` estático ou `painel.citmail.com.br`); afeta o cookie `SameSite` (ADR 0007 e 0008). A proposta aceita as duas, desde que fiquem sob `citmail.com.br`. | responsável | 2026-10-01 |
 | Painel de produção sem história: migrar a landing para `citmail.com.br` (criar a história; a E2-H6 a deixa fora do escopo) ou publicar o painel antes em `painel.citmail.com.br` (ADR 0007). | responsável | 2026-10-01 |
 | Confirmar o evento `cobranca_paga` (pagamentos seguintes ao 1º, para a reativação da E4-H5) e o critério novo na E3-H4 (anexo de eventos). | responsável | 2026-10-01 |
-| `assinatura_cancelada` e a efetivação manual do cancelamento no MVP: quem efetiva, e se publica o evento (anexo de eventos, divergência 1). | responsável | antes da E3-H7 entrar na DoR |
 | `fatura_criada` emitido pela E3-H4 para a E7-H4 (anexo de eventos, divergência 9). | responsável | quando a E7-H4 sair da pendência |
 | `falhou_na_criacao`: nova tentativa com a mesma chave de idempotência e tratamento de assinatura órfã no Asaas (anexo de modelo de dados). | planner da E3-H2 | no plano da E3-H2 |
 | Expiração de pedido `aguardando_pagamento` nunca pago (anexo de modelo de dados). | responsável | 2026-10-01 |
@@ -135,6 +134,7 @@ Ajustes que os ADRs pedem em critérios de aceite de outras histórias, para o P
 | E5-H2 | 1 | Publica só `solicitacaoId` (tabela de solicitação de senha), sem gerar o token. | Anexo de eventos |
 | E7-H3 | 1 e 2 | O job gera o token no envio e grava só o hash; o link leva o token no fragmento da URL. | Anexo de eventos, ADR 0008 |
 | E6-H7 | 1 | Incluir o registro manual de domínio pela equipe (E4-H4) nas ações auditadas. | ADR 0013 |
+| E2-H6 | 3 | CORS aceita duas origens em produção até a migração da landing: `https://cittecnologia.github.io` e `https://citmail.com.br`. | ADR 0007 |
 
 ## Como propor ou revisar um ADR
 
