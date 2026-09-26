@@ -22,6 +22,7 @@ Ambiente de desenvolvimento e processo: história CIT-12 no Taiga.
 - `assets/precos.js`: fonte única de preços e da regra de desconto, compartilhada pela landing e pelo checkout, inclusive a montagem da cascata, conferida no build e no smoke da homologação (CIT-22).
 - Testes E2E dos preços com desconto e testes que fixam os valores cobrados antes da mudança (CIT-22).
 - Registros de decisão de arquitetura (ADRs) do back-end em `docs/adr/`: organização da API, framework HTTP, banco e migrações, fila e eventos, execução na VPS, CORS e cookies, sessão do painel, consulta de domínio, e-mail transacional, alertas, fonte única de preços e segurança, com anexos de modelo de dados e eventos de domínio (CIT-47).
+- API em `api/` (Node.js, Fastify e PostgreSQL): `GET /api/health` com o estado do banco (200 ou 503), migrações SQL com `node-pg-migrate`, validação por schema com erro 400 por campo, CORS por lista de origens do ambiente, log JSON com `requestId` e dados sensíveis mascarados, PostgreSQL local por Docker Compose e testes com `node:test` que rodam sem internet. O `api/README.md` traz o setup e a Definition of Done da API (CIT-53).
 
 ### Alterado
 - Landing: novos textos do hero (título, subtítulo e indicadores), da faixa de confiança e da seção Recursos (CIT-15).
