@@ -4,6 +4,10 @@
 // responde com o status e `{ erro }`, sem expor mensagem interna.
 export class ErroDeDominio extends Error {
   constructor({ status, erro }) {
+    // Status inválido quebraria o handler e cairia no 500 genérico, fora do contrato `{ erro }`.
+    if (!Number.isInteger(status) || status < 400 || status > 499) {
+      throw new TypeError('ErroDeDominio: status deve ser inteiro entre 400 e 499')
+    }
     super(erro)
     this.name = 'ErroDeDominio'
     this.status = status
