@@ -14,7 +14,7 @@
     "migrar:reverter": "node --env-file-if-exists=.env node_modules/node-pg-migrate/bin/node-pg-migrate.js down -m migrations",
     "nova-migracao": "node-pg-migrate create -m migrations --migration-file-language sql",
     "banco:teste": "docker compose --profile teste up -d --wait banco-teste",
-    "test": "node --import ./test/sem-rede.js --test --test-concurrency=1 test/"
+    "test": "node --import ./test/sem-rede.js --test --test-concurrency=1"
   },
   "dependencies": {
     "@fastify/cors": "^11.3.0",
